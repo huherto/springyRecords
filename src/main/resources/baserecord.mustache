@@ -1,0 +1,17 @@
+package {{baseRecordPackageName}};
+
+{{#baseRecordImports}}
+{{toString}}
+{{/baseRecordImports}}
+
+/**
+ * {{baseRecordClassName}} – 
+ * 
+ */
+public class {{baseRecordClassName}} extends BaseRecord {
+    {{#columns}}
+    {{#isAutoincrement}}@Autoincrement{{/isAutoincrement}}
+    @Column(name="{{columnName}}", sqlType={{sqlTypeConstant}})
+    public {{javaTypeName}} {{javaFieldName}};
+    {{/columns}}
+}

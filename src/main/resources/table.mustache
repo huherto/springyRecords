@@ -1,0 +1,39 @@
+package {{tablePackageName}};
+
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+
+import {{mydomain}}.BaseRecord;
+import {{mydomain}}.BaseTable;
+import {{mydomain}}.RecordMapper;
+
+/**
+ * {{tableClassName}} – 
+ * 
+ */
+@Repository
+public class {{tableClassName}} extends BaseTable<{{concreteRecordClassName}}> {
+
+    private RowMapper<{{concreteRecordClassName}}> rm = RecordMapper.newInstance({{concreteRecordClassName}}.class);
+
+    public {{tableClassName}}(DataSource dataSource) {
+        super(dataSource);
+    }
+
+    @Override
+    protected RowMapper<{{concreteRecordClassName}}> rowMapper() {
+        return rm;
+    }
+
+    @Override
+    public String tableName() {
+        return "{{tableName}}";
+    }
+    
+    @Override
+    public Class<? extends BaseRecord> recordClass() {
+        return {{concreteRecordClassName}}.class;
+    }
+}
