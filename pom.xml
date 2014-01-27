@@ -5,8 +5,8 @@
         http://maven.apache.org/maven-v4_0_0.xsd">
     <artifactId>springRecords</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <inceptionYear>2011</inceptionYear>
-    <packaging>war</packaging>
+    <inceptionYear>2013</inceptionYear>
+    <packaging>jar</packaging>
     <groupId>com.github.huherto</groupId>
     <version>1.0</version>
     <properties>
