@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <inceptionYear>2013</inceptionYear>
     <packaging>jar</packaging>
-    <groupId>com.github.huherto</groupId>
+    <groupId>com.github</groupId>
     <version>1.0</version>
     <properties>
         <releaseCandidate>1</releaseCandidate>
@@ -40,7 +40,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.properties</include>
+                    <include>**/*.mustache</include>
                 </includes>
             </resource>
         </resources>
@@ -59,6 +59,18 @@
                 <configuration>
                     <warName>${project.build.finalName}</warName>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

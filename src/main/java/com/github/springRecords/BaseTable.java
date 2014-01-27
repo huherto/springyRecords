@@ -53,13 +53,16 @@ public abstract class  BaseTable<R extends BaseRecord> {
 
 	public Number insert(R record) {
 
-        Field[] fields = record.getClass().getFields();
+        Field[] fields = recordClass().getFields();
+        String autoIncrementFieldName = null;
+        if (autoIncrementField != null)
+        	autoIncrementFieldName = autoIncrementField.getName();
         Map<String, Object> parameters = new HashMap<String, Object>(fields.length);
         for(Field field : fields) {
         	int mod = field.getModifiers();
         	if (Modifier.isPublic(mod) && !Modifier.isStatic(mod)) {
         		Column col = field.getAnnotation(Column.class);
-        		if (col != null && field != autoIncrementField) {
+        		if (col != null && !field.getName().equals(autoIncrementFieldName)) {
         			Object value;
 					try {
 						value = field.get(record);

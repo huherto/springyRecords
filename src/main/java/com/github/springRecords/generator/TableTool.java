@@ -3,6 +3,7 @@ package com.github.springRecords.generator;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -16,10 +17,14 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 
 public class TableTool {
+	
+	@SuppressWarnings("unused")
+	private static final Logger logger = Logger.getLogger(TableTool.class);
 
 	public static class Column {
 		String columnName;
@@ -28,12 +33,17 @@ public class TableTool {
 		boolean isAutoincrement;
 		int columnType;
 
-		public Column(ResultSetMetaData rsmd, int index) throws SQLException {
+		public Column() {
+			
+		}
+				
+		public Column(ResultSet rs, ResultSetMetaData rsmd, int index) throws SQLException {
 			columnName = JdbcUtils.lookupColumnName(rsmd, index);
 			isNullable = rsmd.isNullable(index) == ResultSetMetaData.columnNullable;
 			isAutoincrement = rsmd.isAutoIncrement(index);
 			columnType = rsmd.getColumnType(index);
-			columnTypeName = rsmd.getColumnTypeName(index);
+			//columnTypeName = rsmd.getColumnTypeName(index);
+			columnTypeName = rs.getString("TYPE_NAME");
 		}
 
 		public String javaTypeName() {
@@ -49,39 +59,49 @@ public class TableTool {
 		}
 	}
 
-	private final ResultSetMetaData rsmd;
 	private final String basePackageName;
 	private final String tableName;
 	private final String mydomain = "com.github.springRecords";
 
 	List<TableTool.Column> columns = new ArrayList<TableTool.Column>();
 
-	public TableTool(ResultSetMetaData rsmd, String basePackage) throws SQLException {
-
-		this.rsmd = rsmd;
-		this.tableName = rsmd.getTableName(1);
+	public TableTool(DatabaseMetaData dbmd, ResultSetMetaData rsmd, String tableName, String basePackage) throws SQLException {
+		this.tableName = tableName;
 		this.basePackageName = basePackage;
-		for (int index = 1; index <= rsmd.getColumnCount(); index++) {
-			columns.add(createColumn(rsmd, index));
+		try {
+			ResultSet rs = dbmd.getColumns(null, null, tableName, null);
+			for (int index = 1; index <= rsmd.getColumnCount() && rs.next(); index++) {
+				columns.add(createColumn(rs, rsmd, index));
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
-	public Column createColumn(ResultSetMetaData rsmd, int index) throws SQLException {
-		return new Column(rsmd, index);
+	public Column createColumn(ResultSet rs, ResultSetMetaData rsmd, int index) throws SQLException {
+		return new Column(rs, rsmd, index);
 	}
 
-	public static TableTool createTableTool(DataSource ds, String schema, String tableName, String basePackage) {
+	public static TableTool createTableTool(DataSource ds, String catalog, String schema, String tableName, String basePackage) {
 		try {
 			Connection con = DataSourceUtils.getConnection(ds);
+			
+			DatabaseMetaData dbmd = con.getMetaData();
+			
 			Statement stmt = con.createStatement();
 
 			String completeTableName = tableName;
 			if (schema != null && schema.length() > 0) {
 				completeTableName = schema + "." + tableName;
 			}
+			if (catalog != null && catalog.length() > 0 && !catalog.equals("def")) {
+				// 'def' is used in mysql databases. TODO: 
+				completeTableName = catalog + "." + completeTableName;
+			}
 
-			ResultSet rs = stmt.executeQuery("select * from "+completeTableName+"");
-			TableTool tableTool = new TableTool(rs.getMetaData(), basePackage);
+			ResultSet rs = stmt.executeQuery("select * from "+completeTableName+" where 1 = 0");
+			TableTool tableTool = new TableTool(dbmd, rs.getMetaData(), tableName, basePackage);
 			DataSourceUtils.releaseConnection(con, ds);
 			return tableTool;
 		}
@@ -159,11 +179,9 @@ public class TableTool {
 	public static String converJavaTypeName(String typeName, boolean nullable) {
 
 		typeName = typeName.toLowerCase();
-		if (typeName.equals("char"))
+		if (typeName.contains("char"))
 			return "String";
 		if (typeName.equals("text"))
-			return "String";
-		if (typeName.equals("varchar"))
 			return "String";
 		if (typeName.contains("date"))
 			return "Date";

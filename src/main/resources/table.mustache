@@ -1,5 +1,6 @@
 package {{tablePackageName}};
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -10,14 +11,15 @@ import {{mydomain}}.BaseTable;
 import {{mydomain}}.RecordMapper;
 
 /**
- * {{tableClassName}} – 
- * 
+ * {{tableClassName}} –
+ *
  */
 @Repository
 public class {{tableClassName}} extends BaseTable<{{concreteRecordClassName}}> {
 
     private RowMapper<{{concreteRecordClassName}}> rm = RecordMapper.newInstance({{concreteRecordClassName}}.class);
 
+    @Autowired
     public {{tableClassName}}(DataSource dataSource) {
         super(dataSource);
     }
@@ -31,7 +33,7 @@ public class {{tableClassName}} extends BaseTable<{{concreteRecordClassName}}> {
     public String tableName() {
         return "{{tableName}}";
     }
-    
+
     @Override
     public Class<? extends BaseRecord> recordClass() {
         return {{concreteRecordClassName}}.class;

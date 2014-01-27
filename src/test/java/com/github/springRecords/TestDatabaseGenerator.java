@@ -32,7 +32,7 @@ public class TestDatabaseGenerator {
 	public void generateAll() {
 		DataSource ds = createDs();
 
-		DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "test","com.github.springRecords.test");
+		DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test");
 		dbGenerator.processAllTables();
 	}
 
@@ -52,7 +52,6 @@ public class TestDatabaseGenerator {
 		List<PetRecord> pets = table.queryAll();
 		assertTrue(pets.size() >= 1);
 
-		r = table.queryByName("Lady");
 	}
 
 	@Test
