@@ -37,13 +37,13 @@ public class TableTool {
 			
 		}
 				
-		public Column(ResultSet rs, ResultSetMetaData rsmd, int index) throws SQLException {
+		public Column(ResultSetMetaData rsmd, int index) throws SQLException {
 			columnName = JdbcUtils.lookupColumnName(rsmd, index);
 			isNullable = rsmd.isNullable(index) == ResultSetMetaData.columnNullable;
 			isAutoincrement = rsmd.isAutoIncrement(index);
 			columnType = rsmd.getColumnType(index);
-			//columnTypeName = rsmd.getColumnTypeName(index);
-			columnTypeName = rs.getString("TYPE_NAME");
+			columnTypeName = rsmd.getColumnTypeName(index);
+			//columnTypeName = rs.getString("TYPE_NAME");
 		}
 
 		public String javaTypeName() {
@@ -69,9 +69,9 @@ public class TableTool {
 		this.tableName = tableName;
 		this.basePackageName = basePackage;
 		try {
-			ResultSet rs = dbmd.getColumns(null, null, tableName, null);
-			for (int index = 1; index <= rsmd.getColumnCount() && rs.next(); index++) {
-				columns.add(createColumn(rs, rsmd, index));
+			//ResultSet rs = dbmd.getColumns(null, null, tableName, null);
+			for (int index = 1; index <= rsmd.getColumnCount(); index++) {
+				columns.add(createColumn(rsmd, index));
 			}
 		}
 		catch (SQLException e) {
@@ -79,8 +79,8 @@ public class TableTool {
 		}
 	}
 
-	public Column createColumn(ResultSet rs, ResultSetMetaData rsmd, int index) throws SQLException {
-		return new Column(rs, rsmd, index);
+	public Column createColumn(ResultSetMetaData rsmd, int index) throws SQLException {
+		return new Column(rsmd, index);
 	}
 
 	public static TableTool createTableTool(DataSource ds, String catalog, String schema, String tableName, String basePackage) {
@@ -141,6 +141,8 @@ public class TableTool {
 				importSet.add("import java.math.BigDecimal;");
 			if (column.javaTypeName().contains("Date"))
 				importSet.add("import java.util.Date;");
+            if (column.javaTypeName().contains("Timestamp"))
+                importSet.add("import java.sql.Timestamp;");
 			if (column.isAutoincrement)
 				importSet.add("import "+mydomain+".Autoincrement;");
 		}
@@ -189,6 +191,9 @@ public class TableTool {
 		if (typeName.contains("unsigned")) {
 			typeName = typeName.replaceAll("\\s*unsigned\\s*", "");
 		}
+		
+		if (typeName.equals("timestamp"))
+		    return "Timestamp";
 
 		if (typeName.equals("numeric"))
 			return "BigDecimal";

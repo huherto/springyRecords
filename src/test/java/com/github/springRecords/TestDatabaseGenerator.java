@@ -2,12 +2,14 @@ package com.github.springRecords;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.junit.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.github.springRecords.generator.DataBaseGenerator;
@@ -24,7 +26,7 @@ public class TestDatabaseGenerator {
 		ds.setDriverClass(Driver.class);
 		ds.setUrl("jdbc:mysql://localhost:3306/test");
 		ds.setUsername("root");
-		ds.setPassword("root");
+		ds.setPassword("mysql");
 		return ds;
 	}
 
@@ -33,16 +35,19 @@ public class TestDatabaseGenerator {
 		DataSource ds = createDs();
 
 		DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test");
-		dbGenerator.processAllTables();
+		dbGenerator.processTableList(Arrays.asList("owner", "pet"));
 	}
 
 	@Test
 	public void insertPet() {
 		DataSource ds = createDs();
+		
+		JdbcTemplate jt = new JdbcTemplate(ds);
+		jt.execute("delete from pet");
 
 		PetTable table = new PetTable(ds);
 		PetRecord r = new PetRecord();
-		r.birth = new Date();
+		r.birthDate = new Date();
 		r.name = "Manchas";
 		r.owner = "Humberto";
 		r.sex = "M";
