@@ -12,7 +12,7 @@
     <properties>
         <releaseCandidate>1</releaseCandidate>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <java.version>1.6</java.version>
+        <java.version>1.7</java.version>
         <jackson.mapper.version>1.9.12</jackson.mapper.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -48,8 +48,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>

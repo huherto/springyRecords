@@ -19,11 +19,11 @@ public class BasePetRecord extends BaseRecord {
     @Column(name="species", sqlType=java.sql.Types.VARCHAR)
     public String species;
     
-    @Column(name="sex", sqlType=java.sql.Types.VARCHAR)
+    @Column(name="sex", sqlType=java.sql.Types.CHAR)
     public String sex;
     
-    @Column(name="birth_date", sqlType=java.sql.Types.DATE)
-    public Date birthDate;
+    @Column(name="birth", sqlType=java.sql.Types.DATE)
+    public Date birth;
     
     @Column(name="death", sqlType=java.sql.Types.DATE)
     public Date death;

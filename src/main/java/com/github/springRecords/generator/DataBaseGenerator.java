@@ -4,12 +4,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -125,10 +131,42 @@ public class DataBaseGenerator {
 		}
 	}
 
+	private TableTool createTableTool(DataSource ds, String catalog, String schema, String tableName, String basePackage) {
+		try {
+			Connection con = DataSourceUtils.getConnection(ds);
+
+			DatabaseMetaData dbmd = con.getMetaData();
+
+			Statement stmt = con.createStatement();
+
+			String completeTableName = tableName;
+			if (schema != null && schema.length() > 0) {
+				completeTableName = schema + "." + tableName;
+			}
+			if (catalog != null && catalog.length() > 0 && !catalog.equals("def")) {
+				// 'def' is used in mysql databases. TODO:
+				completeTableName = catalog + "." + completeTableName;
+			}
+
+			ResultSet rs = stmt.executeQuery("select * from "+completeTableName+" where 1 = 0");
+			TableTool tableTool = createTableTool();
+			tableTool.initialize(dbmd, rs.getMetaData(), tableName, basePackage);
+			DataSourceUtils.releaseConnection(con, ds);
+			return tableTool;
+		}
+		catch(Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public TableTool createTableTool() {
+		return new TableTool();
+	}
+
 	public void processTableList(List<String> tableNames) {
 
 		for(String tableName : tableNames) {
-			TableTool tableTool = TableTool.createTableTool(ds, catalog, schema, tableName, packageName);
+			TableTool tableTool = createTableTool(ds, catalog, schema, tableName, packageName);
 			makeBaseRecord(tableTool, tableName);
 			makeConcreteRecord(tableTool, tableName);
 			makeTable(tableTool, tableName);

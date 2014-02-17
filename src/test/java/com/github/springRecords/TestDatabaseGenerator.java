@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.github.springRecords.generator.DataBaseGenerator;
+import com.github.springRecords.generator.TableTool;
 import com.github.springRecords.test.OwnerRecord;
 import com.github.springRecords.test.OwnerTable;
 import com.github.springRecords.test.PetRecord;
@@ -37,7 +38,22 @@ public class TestDatabaseGenerator {
 		DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test");
 		dbGenerator.processTableList(Arrays.asList("owner", "pet"));
 	}
+	
+	@Test
+	public void generateExtendTableTool() {
+		DataSource ds = createDs();
 
+		DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test") {
+
+			@Override
+			public TableTool createTableTool() {
+				return new ExtendedTableTool();
+			}
+			
+		};
+		dbGenerator.processTableList(Arrays.asList("owner", "pet"));
+	}
+	
 	@Test
 	public void insertPet() {
 		DataSource ds = createDs();
@@ -47,7 +63,7 @@ public class TestDatabaseGenerator {
 
 		PetTable table = new PetTable(ds);
 		PetRecord r = new PetRecord();
-		r.birthDate = new Date();
+		r.birth = new Date();
 		r.name = "Manchas";
 		r.owner = "Humberto";
 		r.sex = "M";
