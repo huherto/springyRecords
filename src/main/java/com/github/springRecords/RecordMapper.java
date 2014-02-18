@@ -150,7 +150,7 @@ public class RecordMapper<T> implements RowMapper<T> {
 
 		for (int index = 1; index <= columnCount; index++) {
 			String column = JdbcUtils.lookupColumnName(rsmd, index);
-			Field field = this.mappedFields.get(column.replaceAll(" ", "").toLowerCase());
+			Field field = this.mappedFields.get(column.replaceAll(" ", ""));
 			if (field != null) {
 				Object value = getColumnValue(rs, index, field);
 				if (logger.isTraceEnabled() && rowNumber == 0) {
