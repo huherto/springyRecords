@@ -1,4 +1,4 @@
 springRecords
 =============
 
-Generate record and tabla data gatway classes that run on top of spring-jdbc.
+Generate record and table data gateway classes that run on top of spring-jdbc.
