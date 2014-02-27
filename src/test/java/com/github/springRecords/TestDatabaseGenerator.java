@@ -64,16 +64,16 @@ public class TestDatabaseGenerator {
             public TableTool createTableTool() {
                 return new ExtendedTableTool();
             }
-            
+
         };
 
         dbGenerator.processTableList(Arrays.asList("owner", "pet"));
     }
-    
+
     @Test
     public void insertPet() {
         DataSource ds = createDs();
-        
+
         JdbcTemplate jt = new JdbcTemplate(ds);
         jt.execute("delete from pet");
 

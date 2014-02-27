@@ -33,8 +33,8 @@ import com.github.springRecords.BaseTable;
 import com.github.springRecords.RecordMapper;
 
 /**
- * PetTable – 
- * 
+ * PetTable –
+ *
  */
 @Repository
 public class PetTable extends BaseTable<PetRecord> {
@@ -54,7 +54,7 @@ public class PetTable extends BaseTable<PetRecord> {
     public String tableName() {
         return "pet";
     }
-    
+
     @Override
     public Class<? extends BaseRecord> recordClass() {
         return PetRecord.class;

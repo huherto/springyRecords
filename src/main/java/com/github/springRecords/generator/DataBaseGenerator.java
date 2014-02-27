@@ -49,7 +49,7 @@ public class DataBaseGenerator {
     private static final Logger logger = Logger.getLogger(DataBaseGenerator.class);
 
     private final String schema;
-    
+
     private final String catalog;
 
     private final String packageName;
@@ -93,9 +93,9 @@ public class DataBaseGenerator {
         }
         catch(Exception ex) {
             throw new RuntimeException(ex);
-        }        
+        }
     }
-    
+
     public void makeConcreteRecord(TableTool tableTool, String tableName) {
         try {
             String className = tableTool.concreteRecordClassName();
@@ -212,9 +212,9 @@ public class DataBaseGenerator {
             makeBaseRecord(tableTool, tableName);
             makeConcreteRecord(tableTool, tableName);
             makeTable(tableTool, tableName);
-            dbTool.add(tableTool);            
+            dbTool.add(tableTool);
         }
-        
+
         makeDatabase(dbTool);
 
     }

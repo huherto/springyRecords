@@ -12,7 +12,7 @@ public class BaseTool {
     }
 
     public static String convertToCamelCase(String columnName, boolean upperCaseFirst) {
-    
+
         String words[] = columnName.toLowerCase().split("_");
         String camelCase = "";
         for(int i = 0; i < words.length; i++) {
@@ -31,7 +31,7 @@ public class BaseTool {
     }
 
     public static String converJavaTypeName(String typeName, boolean nullable) {
-    
+
         typeName = typeName.toLowerCase();
         if (typeName.contains("char"))
             return "String";
@@ -39,19 +39,19 @@ public class BaseTool {
             return "String";
         if (typeName.contains("date"))
             return "Date";
-    
+
         if (typeName.contains("unsigned")) {
             typeName = typeName.replaceAll("\\s*unsigned\\s*", "");
         }
-    
+
         if (typeName.equals("timestamp"))
             return "Timestamp";
-    
+
         if (typeName.equals("numeric"))
             return "BigDecimal";
         if (typeName.equals("decimal"))
             return "BigDecimal";
-    
+
         if (typeName.equals("int") || typeName.equals("smallint") || typeName.equals("tinyint"))
             return nullable?"Integer":"int";
         if (typeName.equals("int identity")|| typeName.equals("bigint"))

@@ -1,8 +1,8 @@
 package com.github.springRecords.test;
 
 /**
- * OwnerRecord – 
- * 
+ * OwnerRecord –
+ *
  */
 public class OwnerRecord extends BaseOwnerRecord {
 

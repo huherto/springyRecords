@@ -96,7 +96,7 @@ public class TableTool extends BaseTool {
                 cols.add(col);
         }
         return cols;
-    } 
+    }
 
     public boolean ignoreColumn(Column col) {
         return false;

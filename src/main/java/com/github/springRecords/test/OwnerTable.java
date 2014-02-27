@@ -10,8 +10,8 @@ import com.github.springRecords.BaseTable;
 import com.github.springRecords.RecordMapper;
 
 /**
- * OwnerTable – 
- * 
+ * OwnerTable –
+ *
  */
 @Repository
 public class OwnerTable extends BaseTable<OwnerRecord> {
@@ -31,7 +31,7 @@ public class OwnerTable extends BaseTable<OwnerRecord> {
     public String tableName() {
         return "owner";
     }
-    
+
     @Override
     public Class<? extends BaseRecord> recordClass() {
         return OwnerRecord.class;

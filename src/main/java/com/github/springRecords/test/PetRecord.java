@@ -1,8 +1,8 @@
 package com.github.springRecords.test;
 
 /**
- * PetRecord – 
- * 
+ * PetRecord –
+ *
  */
 public class PetRecord extends BasePetRecord {
 
