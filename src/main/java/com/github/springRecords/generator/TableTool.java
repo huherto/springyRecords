@@ -1,4 +1,27 @@
 package com.github.springRecords.generator;
+/*
+The MIT License (MIT)
+
+Copyright (c) 2014 <copyright holders>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,11 +34,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.support.JdbcUtils;
 
-public class TableTool {
+public class TableTool extends BaseTool {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = Logger.getLogger(TableTool.class);
@@ -49,7 +71,6 @@ public class TableTool {
 		}
 	}
 
-	private String basePackageName;
 	private String tableName;
 	private String mydomain = "com.github.springRecords";
 	private List<TableTool.Column> columns = new ArrayList<TableTool.Column>();
@@ -107,7 +128,7 @@ public class TableTool {
 
 	public List<String> baseRecordImports() {
 		Set<String> importSet = new HashSet<String>();
-		for(Column column : columns ) {
+		for(Column column : getColumns() ) {
 			if (column.javaTypeName().contains("BigDecimal"))
 				importSet.add("import java.math.BigDecimal;");
 			if (column.javaTypeName().contains("Date"))
@@ -131,7 +152,11 @@ public class TableTool {
 	}
 
 	public String tableClassName() {
-		return convertToCamelCase(tableName ,true) + "Table";
+		return convertToCamelCase(tableName, true) + "Table";
+	}
+
+	public String tableInstanceName() {
+		return convertToCamelCase(tableName, false) + "Table";
 	}
 
 	public String javaTypeName(Column col) {
@@ -140,21 +165,6 @@ public class TableTool {
 
 	public String javaFieldName(Column col) {
 		return convertToCamelCase(col.columnName , false);
-	}
-
-	public static String convertToCamelCase(String columnName, boolean upperCaseFirst) {
-
-		String words[] = columnName.toLowerCase().split("_");
-		String camelCase = "";
-		for(int i = 0; i < words.length; i++) {
-			if (i > 0 || upperCaseFirst) {
-				camelCase += StringUtils.capitalize(words[i]);
-			}
-			else {
-				camelCase += words[i];
-			}
-		}
-		return camelCase;
 	}
 
 	public static String converJavaTypeName(String typeName, boolean nullable) {

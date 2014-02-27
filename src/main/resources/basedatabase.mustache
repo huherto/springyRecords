@@ -1,0 +1,30 @@
+package {{baseDatabasePackageName}};
+
+import javax.sql.DataSource;
+
+/**
+ * {{baseDatabaseClassName}} – 
+ * Automatically generated. Do not modify or your changes might be lost.
+ */
+public class {{baseDatabaseClassName}} {
+	
+	private DataSource dataSource;
+
+    {{#tables}}
+    private {{tableClassName}} {{tableInstanceName}} = null;
+    {{/tables}}
+    	
+	protected {{baseDatabaseClassName}}(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+    {{#tables}}
+    public {{tableClassName}} get{{tableClassName}}() {
+    	if ({{tableInstanceName}} == null) {
+    		{{tableInstanceName}} = new {{tableClassName}}(dataSource);
+    	}
+    	return {{tableInstanceName}};
+    }
+
+    {{/tables}}
+}
