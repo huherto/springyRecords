@@ -2,7 +2,6 @@ package com.github.springRecords.test;
 
 import javax.sql.DataSource;
 
-
 /**
  * BaseDatabase – 
  * Automatically generated. Do not modify or your changes might be lost.
