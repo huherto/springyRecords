@@ -45,65 +45,65 @@ import com.mysql.jdbc.Driver;
 
 public class TestDatabaseGenerator {
 
-	public DataSource createDs() {
-		SimpleDriverDataSource ds = new SimpleDriverDataSource();
-		ds.setDriverClass(Driver.class);
-		ds.setUrl("jdbc:mysql://localhost:3306/test");
-		ds.setUsername("root");
-		ds.setPassword("mysql");
-		return ds;
-	}
+    public DataSource createDs() {
+        SimpleDriverDataSource ds = new SimpleDriverDataSource();
+        ds.setDriverClass(Driver.class);
+        ds.setUrl("jdbc:mysql://localhost:3306/test");
+        ds.setUsername("root");
+        ds.setPassword("mysql");
+        return ds;
+    }
 
-	@Test
-	public void generateExtendTableTool() {
-		DataSource ds = createDs();
+    @Test
+    public void generateExtendTableTool() {
+        DataSource ds = createDs();
 
-		DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test") {
+        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test") {
 
-			@Override
-			public TableTool createTableTool() {
-				return new ExtendedTableTool();
-			}
-			
-		};
+            @Override
+            public TableTool createTableTool() {
+                return new ExtendedTableTool();
+            }
+            
+        };
 
-		dbGenerator.processTableList(Arrays.asList("owner", "pet"));
-	}
-	
-	@Test
-	public void insertPet() {
-		DataSource ds = createDs();
-		
-		JdbcTemplate jt = new JdbcTemplate(ds);
-		jt.execute("delete from pet");
+        dbGenerator.processTableList(Arrays.asList("owner", "pet"));
+    }
+    
+    @Test
+    public void insertPet() {
+        DataSource ds = createDs();
+        
+        JdbcTemplate jt = new JdbcTemplate(ds);
+        jt.execute("delete from pet");
 
-		PetTable table = new PetTable(ds);
-		PetRecord r = new PetRecord();
-		r.birth = new Date();
-		r.name = "Manchas";
-		r.owner = "Humberto";
-		r.sex = "M";
-		r.species = "Dog";
-		table.insert(r);
+        PetTable table = new PetTable(ds);
+        PetRecord r = new PetRecord();
+        r.birth = new Date();
+        r.name = "Manchas";
+        r.owner = "Humberto";
+        r.sex = "M";
+        r.species = "Dog";
+        table.insert(r);
 
-		List<PetRecord> pets = table.queryAll();
-		assertTrue(pets.size() >= 1);
+        List<PetRecord> pets = table.queryAll();
+        assertTrue(pets.size() >= 1);
 
-	}
+    }
 
-	@Test
-	public void insertOwner() {
-		DataSource ds = createDs();
+    @Test
+    public void insertOwner() {
+        DataSource ds = createDs();
 
-		OwnerTable table = new OwnerTable(ds);
-		OwnerRecord r = new OwnerRecord();
-		r.name = "Humberto";
+        OwnerTable table = new OwnerTable(ds);
+        OwnerRecord r = new OwnerRecord();
+        r.name = "Humberto";
 
-		table.insert(r);
+        table.insert(r);
 
-		List<OwnerRecord> owners = table.queryAll();
-		assertTrue(owners.size() >= 1);
+        List<OwnerRecord> owners = table.queryAll();
+        assertTrue(owners.size() >= 1);
 
-	}
+    }
 
 }

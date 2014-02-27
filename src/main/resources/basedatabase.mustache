@@ -7,23 +7,23 @@ import javax.sql.DataSource;
  * Automatically generated. Do not modify or your changes might be lost.
  */
 public class {{baseDatabaseClassName}} {
-	
-	private DataSource dataSource;
+    
+    private DataSource dataSource;
 
     {{#tables}}
     private {{tableClassName}} {{tableInstanceName}} = null;
     {{/tables}}
-    	
-	protected {{baseDatabaseClassName}}(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-	
+        
+    protected {{baseDatabaseClassName}}(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    
     {{#tables}}
     public {{tableClassName}} get{{tableClassName}}() {
-    	if ({{tableInstanceName}} == null) {
-    		{{tableInstanceName}} = new {{tableClassName}}(dataSource);
-    	}
-    	return {{tableInstanceName}};
+        if ({{tableInstanceName}} == null) {
+            {{tableInstanceName}} = new {{tableClassName}}(dataSource);
+        }
+        return {{tableInstanceName}};
     }
 
     {{/tables}}
