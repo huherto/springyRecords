@@ -96,7 +96,7 @@ public class DataBaseGenerator {
         }
     }
 
-    public void makeConcreteRecord(TableTool tableTool, String tableName) {
+    public void makeConcreteRecord(TableTool tableTool) {
         try {
             String className = tableTool.concreteRecordClassName();
             File sourceFile = sourceFile(packageName, className);
@@ -117,7 +117,7 @@ public class DataBaseGenerator {
         return mf.compile("record.mustache");
     }
 
-    public void makeBaseRecord(TableTool tableTool, String tableName) {
+    public void makeBaseRecord(TableTool tableTool) {
         try {
             File sourceFile = sourceFile(tableTool.baseRecordPackageName(), tableTool.baseRecordClassName());
             if (sourceFile.exists()) {
@@ -131,14 +131,30 @@ public class DataBaseGenerator {
         }
     }
 
-    public void makeTable(TableTool tableTool, String tableName) {
+    public void makeConcreteTable(TableTool tableTool) {
         try {
-            File sourceFile = sourceFile(tableTool.tablePackageName(), tableTool.tableClassName());
+            String className = tableTool.concreteTableClassName();
+            File sourceFile = sourceFile(tableTool.concreteTablePackageName(), className);
             if (sourceFile.exists()) {
                 logger.info("Skipping source "+sourceFile);
                 return;
             }
-            writeCode(sourceFile, tableTemplate(), tableTool);
+
+            writeCode(sourceFile, concreteTableTemplate(), tableTool);
+        }
+        catch(Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void makeBaseTable(TableTool tableTool) {
+        try {
+            File sourceFile = sourceFile(tableTool.baseTablePackageName(), tableTool.baseTableClassName());
+            if (sourceFile.exists()) {
+                sourceFile.delete();
+                sourceFile.createNewFile();
+            }
+            writeCode(sourceFile, baseTableTemplate(), tableTool);
         }
         catch(Exception ex) {
             throw new RuntimeException(ex);
@@ -150,7 +166,12 @@ public class DataBaseGenerator {
         return mf.compile("basedatabase.mustache");
     }
 
-    public Mustache tableTemplate() {
+    public Mustache baseTableTemplate() {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        return mf.compile("basetable.mustache");
+    }
+
+    public Mustache concreteTableTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("table.mustache");
     }
@@ -209,14 +230,14 @@ public class DataBaseGenerator {
         DatabaseTool dbTool = new DatabaseTool(packageName);
         for(String tableName : tableNames) {
             TableTool tableTool = createTableTool(ds, catalog, schema, tableName, packageName);
-            makeBaseRecord(tableTool, tableName);
-            makeConcreteRecord(tableTool, tableName);
-            makeTable(tableTool, tableName);
+            makeBaseRecord(tableTool);
+            makeConcreteRecord(tableTool);
+            makeBaseTable(tableTool);
+            makeConcreteTable(tableTool);
             dbTool.add(tableTool);
         }
 
         makeDatabase(dbTool);
-
     }
 
     public void processAllTables() {

@@ -105,5 +105,4 @@ public class TestDatabaseGenerator {
         assertTrue(owners.size() >= 1);
 
     }
-
 }

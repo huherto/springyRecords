@@ -147,19 +147,28 @@ public class TableTool extends BaseTool {
         return imports;
     }
 
-    public String tablePackageName() {
-        return basePackageName;
-    }
+	public String concreteTablePackageName() {
+		return basePackageName;
+	}
 
-    public String tableClassName() {
+    public String concreteTableClassName() {
         return convertToCamelCase(tableName, true) + "Table";
     }
 
-    public String tableInstanceName() {
-        return convertToCamelCase(tableName, false) + "Table";
+    public String baseTablePackageName() {
+        return basePackageName;
     }
 
-    public String javaTypeName(Column col) {
+    public String baseTableClassName() {
+        return "Base" + convertToCamelCase(tableName, true) + "Table";
+    }
+
+    public String tableInstanceName() {
+        return lowerCaseFirst(concreteTableClassName());
+    }
+
+	@Override
+	public String javaTypeName(Column col) {
         return converJavaTypeName(col.columnTypeName, col.isNullable);
     }
 

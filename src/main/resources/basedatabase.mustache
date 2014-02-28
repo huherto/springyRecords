@@ -11,7 +11,7 @@ public class {{baseDatabaseClassName}} {
     private DataSource dataSource;
 
     {{#tables}}
-    private {{tableClassName}} {{tableInstanceName}} = null;
+    private {{concreteTableClassName}} {{tableInstanceName}} = null;
     {{/tables}}
 
     protected {{baseDatabaseClassName}}(DataSource dataSource) {
@@ -19,9 +19,9 @@ public class {{baseDatabaseClassName}} {
     }
 
     {{#tables}}
-    public {{tableClassName}} get{{tableClassName}}() {
+    public {{concreteTableClassName}} get{{concreteTableClassName}}() {
         if ({{tableInstanceName}} == null) {
-            {{tableInstanceName}} = new {{tableClassName}}(dataSource);
+            {{tableInstanceName}} = new {{concreteTableClassName}}(dataSource);
         }
         return {{tableInstanceName}};
     }
