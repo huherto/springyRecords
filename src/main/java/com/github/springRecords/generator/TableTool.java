@@ -135,6 +135,10 @@ public class TableTool extends BaseTool {
                 importSet.add("import java.util.Date;");
             if (column.javaTypeName().contains("Timestamp"))
                 importSet.add("import java.sql.Timestamp;");
+            if (column.javaTypeName().contains("Blob"))
+                importSet.add("import java.sql.Blob;");
+            if (column.javaTypeName().contains("Clob"))
+                importSet.add("import java.sql.Clob;");
             if (column.isAutoincrement)
                 importSet.add("import "+mydomain+".Autoincrement;");
         }
@@ -198,12 +202,19 @@ public class TableTool extends BaseTool {
         if (typeName.equals("decimal"))
             return "BigDecimal";
 
-        if (typeName.equals("int") || typeName.equals("smallint") || typeName.equals("tinyint"))
+        if (typeName.equals("int") || typeName.equals("smallint") || typeName.equals("tinyint") || typeName.equals("integer"))
             return nullable?"Integer":"int";
         if (typeName.equals("int identity")|| typeName.equals("bigint"))
             return nullable?"Long":"long";
         if (typeName.equals("bit")) {
             return nullable?"Boolean":"boolean";
+        }
+
+        if (typeName.equals("blob")) {
+        	return "Blob";
+        }
+        if (typeName.equals("clob")) {
+        	return "Clob";
         }
         return typeName;
     }

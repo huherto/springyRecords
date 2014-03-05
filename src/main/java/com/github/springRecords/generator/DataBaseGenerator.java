@@ -245,11 +245,11 @@ public class DataBaseGenerator {
         JdbcTemplate jt = new JdbcTemplate(ds);
         String sql =
                 "select table_name " +
-                "from information_schema.tables ";
-//                "where table_catalog = ? and table_schema = ?";
+                "from information_schema.tables "+
+                "where table_catalog = ? and table_schema = ?";
 
-        List<String> tableNames = jt.queryForList(sql, String.class);
-        if (tableNames.size() != 0) {
+        List<String> tableNames = jt.queryForList(sql, String.class, catalog, schema);
+        if (tableNames.size() == 0) {
             String select = String.format(
                     "select table_name " +
                     "from information_schema.tables " +
