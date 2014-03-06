@@ -67,6 +67,7 @@ public class TestDatabaseGenerator {
 
         };
 
+        dbGenerator.printInformationSchema();
         dbGenerator.processTableList(Arrays.asList("owner", "pet"));
     }
 
