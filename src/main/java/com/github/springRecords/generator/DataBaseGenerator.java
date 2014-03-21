@@ -23,8 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import static java.lang.String.format;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,7 +32,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -45,6 +42,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.github.springRecords.PrintRowCallbackHandler;
 import com.google.common.io.Files;
 
 public class DataBaseGenerator {
@@ -250,13 +248,16 @@ public class DataBaseGenerator {
                 "select table_name, table_catalog, table_schema " +
                 "from information_schema.tables ";
 
+        jt.query(sql, new PrintRowCallbackHandler());
+
+        /*
         List<Map<String, Object>> table = jt.queryForList(sql);
 
     	System.out.println(format("%-20s %-20s %-20s", "table_catalog","table_schema", "table_name"));
         for(Map<String, Object> row: table) {
         	System.out.println(format("%-20s %-20s %-20s", row.get("table_catalog"), row.get("table_schema"), row.get("table_name")));
         }
-
+*/
     }
 
     public void processAllTables() {
