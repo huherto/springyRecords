@@ -1,4 +1,4 @@
-package com.github.springRecords;
+package com.github.springyRecords;
 /*
 The MIT License (MIT)
 
@@ -23,8 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import com.github.springRecords.generator.TableTool;
+public abstract class BaseRecord {
 
-public class ExtendedTableTool extends TableTool {
 
 }

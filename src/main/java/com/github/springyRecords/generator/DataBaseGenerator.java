@@ -1,4 +1,4 @@
-package com.github.springRecords.generator;
+package com.github.springyRecords.generator;
 /*
 The MIT License (MIT)
 
@@ -46,7 +46,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.github.springRecords.PrintRowCallbackHandler;
+import com.github.springyRecords.PrintRowCallbackHandler;
 import com.google.common.io.Files;
 
 public class DataBaseGenerator {

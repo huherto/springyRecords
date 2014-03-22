@@ -1,4 +1,4 @@
-package com.github.springRecords;
+package com.github.springyRecords;
 /*
 The MIT License (MIT)
 

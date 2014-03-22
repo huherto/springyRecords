@@ -1,8 +1,8 @@
-package com.github.springRecords.generator;
+package com.github.springyRecords.generator;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.github.springRecords.generator.TableTool.Column;
+import com.github.springyRecords.generator.TableTool.Column;
 
 public class BaseTool {
 

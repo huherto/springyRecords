@@ -1,4 +1,4 @@
-package com.github.springRecords;
+package com.github.springyRecords;
 /*
 The MIT License (MIT)
 
@@ -35,12 +35,12 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-import com.github.springRecords.generator.DataBaseGenerator;
-import com.github.springRecords.generator.TableTool;
-import com.github.springRecords.test.OwnerRecord;
-import com.github.springRecords.test.OwnerTable;
-import com.github.springRecords.test.PetRecord;
-import com.github.springRecords.test.PetTable;
+import com.github.springyRecords.generator.DataBaseGenerator;
+import com.github.springyRecords.generator.TableTool;
+import com.github.springyRecords.test.OwnerRecord;
+import com.github.springyRecords.test.OwnerTable;
+import com.github.springyRecords.test.PetRecord;
+import com.github.springyRecords.test.PetTable;
 import com.mysql.jdbc.Driver;
 
 public class TestDatabaseGenerator {

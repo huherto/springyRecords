@@ -1,4 +1,4 @@
-package com.github.springRecords;
+package com.github.springyRecords;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 import org.junit.Test;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-import com.github.springRecords.test.OwnerRecord;
-import com.github.springRecords.test.PetStoreDatabase;
+import com.github.springyRecords.test.OwnerRecord;
+import com.github.springyRecords.test.PetStoreDatabase;
 import com.mysql.jdbc.Driver;
 
 public class SimpleQueries {

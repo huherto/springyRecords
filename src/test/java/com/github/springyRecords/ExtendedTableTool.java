@@ -1,4 +1,4 @@
-package com.github.springRecords;
+package com.github.springyRecords;
 /*
 The MIT License (MIT)
 
@@ -23,24 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import com.github.springyRecords.generator.TableTool;
 
-public class RecordUtils {
-
-    public static Field autoIncrementField(Class<?> recClass) {
-        for(Field field: recClass.getFields()) {
-            int mod =recClass.getModifiers();
-            if (Modifier.isPublic(mod) && !Modifier.isStatic(mod)) {
-                for(Annotation a: field.getAnnotations()) {
-                    if (a.annotationType().isAssignableFrom(Autoincrement.class)) {
-                        return field;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+public class ExtendedTableTool extends TableTool {
 
 }

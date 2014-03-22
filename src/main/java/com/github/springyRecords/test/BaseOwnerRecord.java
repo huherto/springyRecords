@@ -1,8 +1,8 @@
-package com.github.springRecords.test;
+package com.github.springyRecords.test;
 
-import com.github.springRecords.Autoincrement;
-import com.github.springRecords.BaseRecord;
-import com.github.springRecords.Column;
+import com.github.springyRecords.Autoincrement;
+import com.github.springyRecords.BaseRecord;
+import com.github.springyRecords.Column;
 
 /**
  * BaseOwnerRecord –

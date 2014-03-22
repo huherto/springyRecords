@@ -1,12 +1,12 @@
-package com.github.springRecords.test;
+package com.github.springyRecords.test;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 
-import com.github.springRecords.BaseRecord;
-import com.github.springRecords.BaseTable;
-import com.github.springRecords.RecordMapper;
+import com.github.springyRecords.BaseRecord;
+import com.github.springyRecords.BaseTable;
+import com.github.springyRecords.RecordMapper;
 
 /**
  * BaseOwnerTable –

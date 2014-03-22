@@ -1,4 +1,4 @@
-package com.github.springRecords.test;
+package com.github.springyRecords.test;
 
 /**
  * PetRecord –

@@ -1,4 +1,4 @@
-package com.github.springRecords;
+package com.github.springyRecords;
 /*
 The MIT License (MIT)
 
@@ -23,7 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-public abstract class BaseRecord {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Column {
+    String name();
 
+    int sqlType();
 }
