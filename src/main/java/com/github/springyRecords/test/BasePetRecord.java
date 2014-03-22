@@ -2,7 +2,6 @@ package com.github.springyRecords.test;
 
 import com.github.springyRecords.BaseRecord;
 import com.github.springyRecords.Column;
-
 import java.util.Date;
 
 /**

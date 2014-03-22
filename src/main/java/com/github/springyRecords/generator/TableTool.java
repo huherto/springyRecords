@@ -72,7 +72,8 @@ public class TableTool extends BaseTool {
     }
 
     private String tableName;
-    private String mydomain = "com.github.springRecords";
+    // private String mydomain = "com.github.springyRecords";
+    private String mydomain = getClass().getPackage().getName();
     private List<TableTool.Column> columns = new ArrayList<TableTool.Column>();
 
     public void initialize(DatabaseMetaData dbmd, ResultSetMetaData rsmd, String tableName, String basePackage) throws SQLException {

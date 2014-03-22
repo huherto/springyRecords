@@ -58,7 +58,7 @@ public class TestDatabaseGenerator {
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.github.springRecords.test") {
+        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.github.springyRecords.test") {
 
             @Override
             public TableTool createTableTool() {
