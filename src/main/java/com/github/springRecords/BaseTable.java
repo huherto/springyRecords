@@ -31,8 +31,11 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 public abstract class  BaseTable<R extends BaseRecord> {
@@ -64,8 +67,19 @@ public abstract class  BaseTable<R extends BaseRecord> {
         return query("select * from "+tableName());
     }
 
-    protected R queryForObject(String sql, Object...args) {
+    /**
+     * @throws DataAccessException if the object is not found.
+     */
+    protected R queryForRequiredObject(String sql, Object...args) {
         return jdbcTemplate.queryForObject(sql, rowMapper(), args);
+    }
+
+    /**
+     * @return null if the object is not found.
+     */
+    protected R queryForSingleObject(String sql, Object...args) {
+		List<R> results = query(sql, args, new RowMapperResultSetExtractor<R>(rowMapper(), 1));
+		return DataAccessUtils.singleResult(results);
     }
 
     protected abstract RowMapper<R> rowMapper();

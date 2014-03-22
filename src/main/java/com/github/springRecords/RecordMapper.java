@@ -227,7 +227,7 @@ public class RecordMapper<T> implements RowMapper<T> {
 
 
     /**
-     * Static factory method to create a new DtoRowMapper
+     * Static factory method to create a new RecordMapper
      * (with the mapped class specified only once).
      * @param mappedClass the class that each row should be mapped to
      */
