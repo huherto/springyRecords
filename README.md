@@ -1,4 +1,4 @@
-springRecords
+springyRecords
 =============
 
 A Record Mapper that runs on top of spring-jdbc.
