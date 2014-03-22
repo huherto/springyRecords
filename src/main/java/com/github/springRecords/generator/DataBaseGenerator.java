@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -51,30 +53,33 @@ public class DataBaseGenerator {
 
     private static final Logger logger = Logger.getLogger(DataBaseGenerator.class);
 
-    private final String schema;
-
-    private final String catalog;
-
     private final String packageName;
 
-    DataSource ds;
+    private DataSource ds;
 
-    public DataBaseGenerator(DataSource ds, String catalog, String schema, String packageName) {
+    private Path sourceDir = null;
+
+    public DataBaseGenerator(DataSource ds, String packageName) {
         this.ds = ds;
-        this.catalog = catalog;
-        this.schema = schema;
         this.packageName = packageName;
     }
 
-    public File sourceDir() {
-        return new File(new File(new File(new File(System.getProperty("user.dir")),"src"), "main"), "java");
+    public Path getSourceDir() {
+    	if (sourceDir == null) {
+            sourceDir = FileSystems.getDefault().getPath(System.getProperty("user.dir"), "src", "main", "java");
+    	}
+    	return sourceDir;
+    }
+
+    public void setSourceDir(Path path) {
+    	this.sourceDir = path;
     }
 
     public File sourceFile(String packageName, String className) throws IOException {
 
-        File dir =sourceDir();
         String[] segments = packageName.split("\\.");
 
+        File dir = getSourceDir().toFile();
         for(String seg : segments) {
             dir = new File(dir, seg);
         }
@@ -209,7 +214,7 @@ public class DataBaseGenerator {
                 completeTableName = schema + "." + tableName;
             }
             if (catalog != null && catalog.length() > 0 && !catalog.equals("def")) {
-                // 'def' is used in mysql databases. TODO:
+                // 'def' is used in mysql databases.
                 completeTableName = catalog + "." + completeTableName;
             }
 
@@ -228,7 +233,7 @@ public class DataBaseGenerator {
         return new TableTool();
     }
 
-    public void processTableList(List<String> tableNames) {
+    public void processTableList(String catalog, String schema, List<String> tableNames) {
 
         DatabaseTool dbTool = new DatabaseTool(packageName);
         for(String tableName : tableNames) {
@@ -256,7 +261,7 @@ public class DataBaseGenerator {
         jt.query(sql, prch);
     }
 
-    public void processAllTables() {
+    public void processAllTables(String catalog, String schema) {
 
         JdbcTemplate jt = new JdbcTemplate(ds);
         String sql =
@@ -273,7 +278,7 @@ public class DataBaseGenerator {
             logger.warn("Can't find tables: SQL ["+select+"]");
         }
 
-        processTableList(tableNames);
+        processTableList(catalog, schema, tableNames);
 
     }
 

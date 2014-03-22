@@ -58,7 +58,7 @@ public class TestDatabaseGenerator {
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "def", "test","com.github.springRecords.test") {
+        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.github.springRecords.test") {
 
             @Override
             public TableTool createTableTool() {
@@ -68,7 +68,7 @@ public class TestDatabaseGenerator {
         };
 
         dbGenerator.printInformationSchema();
-        dbGenerator.processTableList(Arrays.asList("owner", "pet"));
+        dbGenerator.processTableList("def", "test", Arrays.asList("owner", "pet"));
     }
 
     @Test
