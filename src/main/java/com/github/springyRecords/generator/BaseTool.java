@@ -1,7 +1,5 @@
 package com.github.springyRecords.generator;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.github.springyRecords.generator.TableTool.Column;
 
 public class BaseTool {
@@ -17,7 +15,7 @@ public class BaseTool {
         String camelCase = "";
         for(int i = 0; i < words.length; i++) {
             if (i > 0 || upperCaseFirst) {
-                camelCase += StringUtils.capitalize(words[i]);
+                camelCase += upperCaseFirst(words[i]);
             }
             else {
                 camelCase += words[i];
