@@ -33,7 +33,6 @@ import javax.sql.DataSource;
 
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.github.springyRecords.generator.DataBaseGenerator;
 import com.github.springyRecords.generator.TableTool;
@@ -41,18 +40,8 @@ import com.github.springyRecords.test.OwnerRecord;
 import com.github.springyRecords.test.OwnerTable;
 import com.github.springyRecords.test.PetRecord;
 import com.github.springyRecords.test.PetTable;
-import com.mysql.jdbc.Driver;
 
-public class TestDatabaseGenerator {
-
-    public DataSource createDs() {
-        SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(Driver.class);
-        ds.setUrl("jdbc:mysql://localhost:3306/test");
-        ds.setUsername("root");
-        ds.setPassword("mysql");
-        return ds;
-    }
+public class TestDatabaseGenerator extends BaseTest {
 
     @Test
     public void generateExtendTableTool() {

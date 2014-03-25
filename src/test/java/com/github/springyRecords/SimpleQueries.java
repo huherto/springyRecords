@@ -5,25 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.Test;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.github.springyRecords.test.OwnerRecord;
 import com.github.springyRecords.test.PetStoreDatabase;
-import com.mysql.jdbc.Driver;
 
-public class SimpleQueries {
-
-    public DataSource createDs() {
-        SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        ds.setDriverClass(Driver.class);
-        ds.setUrl("jdbc:mysql://localhost:3306/test");
-        ds.setUsername("root");
-        ds.setPassword("mysql");
-        return ds;
-    }
+public class SimpleQueries extends BaseTest {
 
     @Test
     public void queryAll() {
@@ -46,7 +33,6 @@ public class SimpleQueries {
     	assertEquals("Humberto", ownerRecord.name);
 
     }
-
 
     @Test
     public void querySome() {

@@ -72,7 +72,6 @@ public class TableTool extends BaseTool {
     }
 
     private String tableName;
-    // private String mydomain = "com.github.springyRecords";
     private String mydomain = getClass().getPackage().getName();
     private List<TableTool.Column> columns = new ArrayList<TableTool.Column>();
 
@@ -174,14 +173,14 @@ public class TableTool extends BaseTool {
 
 	@Override
 	public String javaTypeName(Column col) {
-        return converJavaTypeName(col.columnTypeName, col.isNullable);
+        return convertJavaTypeName(col.columnTypeName, col.isNullable);
     }
 
     public String javaFieldName(Column col) {
         return convertToCamelCase(col.columnName , false);
     }
 
-    public static String converJavaTypeName(String typeName, boolean nullable) {
+    public static String convertJavaTypeName(String typeName, boolean nullable) {
 
         typeName = typeName.toLowerCase();
         if (typeName.contains("char"))

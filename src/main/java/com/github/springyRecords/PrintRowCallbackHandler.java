@@ -44,16 +44,26 @@ public class PrintRowCallbackHandler implements RowCallbackHandler {
 		writer = new PrintWriter(System.out);
 	}
 
+	public PrintRowCallbackHandler(String format) {
+		this.writer = new PrintWriter(System.out);
+		this.format = format;
+	}
+
+	public PrintRowCallbackHandler(String format, PrintWriter writer) {
+		this.writer = writer;
+		this.format = format;
+	}
+
+	public PrintRowCallbackHandler(PrintWriter writer) {
+		this.writer = writer;
+	}
+
 	public String getFormat() {
 		return format;
 	}
 
 	public void setFormat(String format) {
 		this.format = format;
-	}
-
-	public PrintRowCallbackHandler(PrintWriter writer) {
-		this.writer = writer;
 	}
 
 	public String format(Object obj) {
