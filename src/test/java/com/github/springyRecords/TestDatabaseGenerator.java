@@ -58,6 +58,7 @@ public class TestDatabaseGenerator extends BaseTest {
 
         dbGenerator.printInformationSchema();
         dbGenerator.processTableList("def", "test", Arrays.asList("owner", "pet"));
+        dbGenerator.processAllTables("def", "test");
     }
 
     @Test

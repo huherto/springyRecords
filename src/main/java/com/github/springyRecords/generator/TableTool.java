@@ -25,8 +25,6 @@ THE SOFTWARE.
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,27 +33,23 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.springframework.jdbc.support.JdbcUtils;
+
+import schemacrawler.schema.Column;
+import schemacrawler.schema.Table;
 
 public class TableTool extends BaseTool {
 
     @SuppressWarnings("unused")
     private static final Logger logger = Logger.getLogger(TableTool.class);
 
-    public class Column {
-        public String columnName;
-        public String columnTypeName;
-        public boolean isNullable;
-        public boolean isAutoincrement;
-        public int columnType;
+    public class ColumnTool {
 
-        public Column(ResultSetMetaData rsmd, int index) throws SQLException {
-            columnName = JdbcUtils.lookupColumnName(rsmd, index);
-            isNullable = rsmd.isNullable(index) == ResultSetMetaData.columnNullable;
-            isAutoincrement = rsmd.isAutoIncrement(index);
-            columnType = rsmd.getColumnType(index);
-            columnTypeName = rsmd.getColumnTypeName(index);
-            //columnTypeName = rs.getString("TYPE_NAME");
+    	private Column col;
+    	private boolean isAutoincrement;
+
+        public ColumnTool(schemacrawler.schema.Column col) {
+        	this.col = col;
+        	isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
         }
 
         public String javaTypeName() {
@@ -67,38 +61,38 @@ public class TableTool extends BaseTool {
         }
 
         public String sqlTypeConstant() {
-            return findSqlTypeConstant(columnType);
+            return findSqlTypeConstant(col.getColumnDataType().getType());
+        }
+
+        public String columnName() {
+        	return col.getName();
         }
     }
 
-    private String tableName;
+    private Table table;
     private String mydomain = getClass().getPackage().getName();
-    private List<TableTool.Column> columns = new ArrayList<TableTool.Column>();
+    private List<TableTool.ColumnTool> columns = new ArrayList<TableTool.ColumnTool>();
 
-    public void initialize(DatabaseMetaData dbmd, ResultSetMetaData rsmd, String tableName, String basePackage) throws SQLException {
-        this.tableName = tableName;
+    public void initialize(Table table, String basePackage) throws SQLException {
         this.basePackageName = basePackage;
-        try {
-            //ResultSet rs = dbmd.getColumns(null, null, tableName, null);
-            for (int index = 1; index <= rsmd.getColumnCount(); index++) {
-                columns.add(new Column(rsmd, index));
-            }
+        this.table = table;
+
+        for(schemacrawler.schema.Column column :table.getColumns() ) {
+            columns.add(new ColumnTool(column));
         }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
-    public List<Column> getColumns() {
-        List<Column> cols = new ArrayList<>();
-        for(Column col : columns) {
+    public List<ColumnTool> getColumns() {
+        List<ColumnTool> cols = new ArrayList<>();
+        for(ColumnTool col : columns) {
             if (!ignoreColumn(col))
                 cols.add(col);
         }
         return cols;
     }
 
-    public boolean ignoreColumn(Column col) {
+    public boolean ignoreColumn(ColumnTool col) {
         return false;
     }
 
@@ -107,7 +101,7 @@ public class TableTool extends BaseTool {
     }
 
     public String tableName(){
-        return tableName;
+        return table.getName();
     }
 
     public String baseRecordPackageName() {
@@ -123,12 +117,12 @@ public class TableTool extends BaseTool {
     }
 
     public String concreteRecordClassName() {
-        return convertToCamelCase(tableName ,true) + "Record";
+        return convertToCamelCase(tableName() ,true) + "Record";
     }
 
     public List<String> baseRecordImports() {
         Set<String> importSet = new HashSet<String>();
-        for(Column column : getColumns() ) {
+        for(ColumnTool column : getColumns() ) {
             if (column.javaTypeName().contains("BigDecimal"))
                 importSet.add("import java.math.BigDecimal;");
             if (column.javaTypeName().contains("Date"))
@@ -156,7 +150,7 @@ public class TableTool extends BaseTool {
 	}
 
     public String concreteTableClassName() {
-        return convertToCamelCase(tableName, true) + "Table";
+        return convertToCamelCase(tableName(), true) + "Table";
     }
 
     public String baseTablePackageName() {
@@ -164,20 +158,21 @@ public class TableTool extends BaseTool {
     }
 
     public String baseTableClassName() {
-        return "Base" + convertToCamelCase(tableName, true) + "Table";
+        return "Base" + convertToCamelCase(tableName(), true) + "Table";
     }
 
     public String tableInstanceName() {
         return lowerCaseFirst(concreteTableClassName());
     }
 
-	@Override
-	public String javaTypeName(Column col) {
-        return convertJavaTypeName(col.columnTypeName, col.isNullable);
+	public String javaTypeName(ColumnTool columnTool) {
+        return convertJavaTypeName(
+        			columnTool.col.getColumnDataType().getName(),
+        			columnTool.col.isNullable());
     }
 
-    public String javaFieldName(Column col) {
-        return convertToCamelCase(col.columnName , false);
+    public String javaFieldName(ColumnTool columnTool) {
+        return convertToCamelCase(columnTool.col.getName(), false);
     }
 
     public static String convertJavaTypeName(String typeName, boolean nullable) {

@@ -1,6 +1,5 @@
 package com.github.springyRecords.generator;
 
-import com.github.springyRecords.generator.TableTool.Column;
 
 public class BaseTool {
 
@@ -24,11 +23,7 @@ public class BaseTool {
         return camelCase;
     }
 
-    public String javaTypeName(Column col) {
-        return converJavaTypeName(col.columnTypeName, col.isNullable);
-    }
-
-    public static String converJavaTypeName(String typeName, boolean nullable) {
+    public static String convertJavaTypeName(String typeName, boolean nullable) {
 
         typeName = typeName.toLowerCase();
         if (typeName.contains("char"))

@@ -31,17 +31,21 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceUtils;
+
+import schemacrawler.crawl.SchemaCrawler;
+import schemacrawler.schema.Database;
+import schemacrawler.schema.Schema;
+import schemacrawler.schema.Table;
+import schemacrawler.schemacrawler.SchemaCrawlerException;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -59,9 +63,18 @@ public class DataBaseGenerator {
 
     private Path sourceDir = null;
 
+	private Database database;
+
     public DataBaseGenerator(DataSource ds, String packageName) {
         this.ds = ds;
         this.packageName = packageName;
+
+        try {
+			SchemaCrawler crawler = new SchemaCrawler(ds.getConnection());
+			database = crawler.crawl(new SchemaCrawlerOptions());
+		} catch (SchemaCrawlerException | SQLException e) {
+			throw new RuntimeException(e);
+		}
     }
 
     public Path getSourceDir() {
@@ -201,27 +214,10 @@ public class DataBaseGenerator {
         }
     }
 
-    private TableTool createTableTool(DataSource ds, String catalog, String schema, String tableName, String basePackage) {
+    private TableTool createTableTool(DataSource ds, Table table, String basePackage) {
         try {
-            Connection con = DataSourceUtils.getConnection(ds);
-
-            DatabaseMetaData dbmd = con.getMetaData();
-
-            Statement stmt = con.createStatement();
-
-            String completeTableName = tableName;
-            if (schema != null && schema.length() > 0) {
-                completeTableName = schema + "." + tableName;
-            }
-            if (catalog != null && catalog.length() > 0 && !catalog.equals("def")) {
-                // 'def' is used in mysql databases.
-                completeTableName = catalog + "." + completeTableName;
-            }
-
-            ResultSet rs = stmt.executeQuery("select * from "+completeTableName+" where 1 = 0");
             TableTool tableTool = createTableTool();
-            tableTool.initialize(dbmd, rs.getMetaData(), tableName, basePackage);
-            DataSourceUtils.releaseConnection(con, ds);
+            tableTool.initialize(table, basePackage);
             return tableTool;
         }
         catch(Exception ex) {
@@ -233,11 +229,14 @@ public class DataBaseGenerator {
         return new TableTool();
     }
 
-    public void processTableList(String catalog, String schema, List<String> tableNames) {
+    public void processTableList(String catalog, String schemaName, List<String> tableNames) {
 
+    	Schema schema = database.getSchema(schemaName);
         DatabaseTool dbTool = new DatabaseTool(packageName);
         for(String tableName : tableNames) {
-            TableTool tableTool = createTableTool(ds, catalog, schema, tableName, packageName);
+        	Table table = database.getTable(schema, tableName);
+
+            TableTool tableTool = createTableTool(ds, table, packageName);
             makeBaseRecord(tableTool);
             makeConcreteRecord(tableTool);
             makeBaseTable(tableTool);
@@ -261,24 +260,15 @@ public class DataBaseGenerator {
         jt.query(sql, prch);
     }
 
-    public void processAllTables(String catalog, String schema) {
+    public void processAllTables(String catalog, String schemaName) {
 
-        JdbcTemplate jt = new JdbcTemplate(ds);
-        String sql =
-                "select table_name " +
-                "from information_schema.tables "+
-                "where table_catalog = ? and table_schema = ?";
 
-        List<String> tableNames = jt.queryForList(sql, String.class, catalog, schema);
-        if (tableNames.size() == 0) {
-            String select = String.format(
-                    "select table_name " +
-                    "from information_schema.tables " +
-                    "where table_catalog = '%s' and table_schema = '%s' ", catalog, schema);
-            logger.warn("Can't find tables: SQL ["+select+"]");
+        List<String> tableNames = new ArrayList<>();
+
+        for(Table table : database.getTables(database.getSchema(schemaName))) {
+        	tableNames.add(table.getName());
         }
-
-        processTableList(catalog, schema, tableNames);
+        processTableList(catalog, schemaName, tableNames);
 
     }
 

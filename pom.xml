@@ -119,10 +119,10 @@
             <artifactId>compiler</artifactId>
             <version>0.8.12</version>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>net.sourceforge.schemacrawler</groupId>
             <artifactId>schemacrawler</artifactId>
             <version>10.08.02</version>
-        </dependency-->
+        </dependency>
     </dependencies>
 </project>
