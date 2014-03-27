@@ -61,7 +61,7 @@ public class TableTool extends BaseTool {
         }
 
         public String sqlTypeConstant() {
-            return findSqlTypeConstant(col.getColumnDataType().getType());
+            return findSqlTypeConstant(col.getColumnDataType().getJavaSqlType().getJavaSqlType());
         }
 
         public String columnName() {
@@ -170,6 +170,7 @@ public class TableTool extends BaseTool {
     }
 
 	public String javaTypeName(ColumnTool columnTool) {
+
         return convertJavaTypeName(
         			columnTool.col.getColumnDataType().getName(),
         			columnTool.col.isNullable());
@@ -177,45 +178,6 @@ public class TableTool extends BaseTool {
 
     public String javaFieldName(ColumnTool columnTool) {
         return convertToCamelCase(columnTool.col.getName(), false);
-    }
-
-    public static String convertJavaTypeName(String typeName, boolean nullable) {
-
-        typeName = typeName.toLowerCase();
-        if (typeName.contains("char"))
-            return "String";
-        if (typeName.equals("text"))
-            return "String";
-        if (typeName.contains("date"))
-            return "Date";
-
-        if (typeName.contains("unsigned")) {
-            typeName = typeName.replaceAll("\\s*unsigned\\s*", "");
-        }
-
-        if (typeName.equals("timestamp"))
-            return "Timestamp";
-
-        if (typeName.equals("numeric"))
-            return "BigDecimal";
-        if (typeName.equals("decimal"))
-            return "BigDecimal";
-
-        if (typeName.equals("int") || typeName.equals("smallint") || typeName.equals("tinyint") || typeName.equals("integer"))
-            return nullable?"Integer":"int";
-        if (typeName.equals("int identity")|| typeName.equals("bigint"))
-            return nullable?"Long":"long";
-        if (typeName.equals("bit")) {
-            return nullable?"Boolean":"boolean";
-        }
-
-        if (typeName.equals("blob")) {
-        	return "Blob";
-        }
-        if (typeName.equals("clob")) {
-        	return "Clob";
-        }
-        return typeName;
     }
 
     private static String findSqlTypeConstant(int sqlType) {
