@@ -67,6 +67,10 @@ public class TableTool extends BaseTool {
         public String columnName() {
         	return col.getName();
         }
+
+        public boolean isAutoincrement() {
+        	return isAutoincrement;
+        }
     }
 
     private Table table;

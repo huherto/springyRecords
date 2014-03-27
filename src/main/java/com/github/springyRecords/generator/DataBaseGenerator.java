@@ -47,9 +47,7 @@ import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaCrawlerException;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 
-import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import com.github.springyRecords.PrintRowCallbackHandler;
 import com.google.common.io.Files;
 
@@ -65,6 +63,16 @@ public class DataBaseGenerator {
 
 	private Database database;
 
+	private DatabaseClassWriter databaseClassWriter = new DatabaseClassWriter();
+
+	private BaseRecordClassWriter baseRecordClassWriter = new BaseRecordClassWriter();
+
+	private ConcreteRecordClassWriter concreteRecordClassWriter = new ConcreteRecordClassWriter();
+
+	private BaseTableClassWriter baseTableClassWriter = new BaseTableClassWriter();
+
+	private ConcreteTableClassWriter concreteTableClassWriter = new ConcreteTableClassWriter();
+
     public DataBaseGenerator(DataSource ds, String packageName) {
         this.ds = ds;
         this.packageName = packageName;
@@ -78,8 +86,9 @@ public class DataBaseGenerator {
     }
 
     public Path getSourceDir() {
+    	String userDir = System.getProperty("user.dir");
     	if (sourceDir == null) {
-            sourceDir = FileSystems.getDefault().getPath(System.getProperty("user.dir"), "src", "main", "java");
+            sourceDir = FileSystems.getDefault().getPath(userDir, "src", "main", "java");
     	}
     	return sourceDir;
     }
@@ -101,105 +110,6 @@ public class DataBaseGenerator {
         Files.createParentDirs(sourceFile);
 
         return sourceFile;
-    }
-
-    public void makeDatabase(DatabaseTool dbTool) {
-        try {
-            File sourceFile = sourceFile(dbTool.basePackageName, dbTool.baseDatabaseClassName());
-            if (sourceFile.exists()) {
-                sourceFile.delete();
-                sourceFile.createNewFile();
-            }
-            writeCode(sourceFile, baseDatabaseTemplate(), dbTool);
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public void makeConcreteRecord(TableTool tableTool) {
-        try {
-            String className = tableTool.concreteRecordClassName();
-            File sourceFile = sourceFile(packageName, className);
-            if (sourceFile.exists()) {
-                logger.info("Skipping source "+sourceFile);
-                return;
-            }
-
-            writeCode(sourceFile, concreteRecordTemplate(), tableTool);
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public Mustache concreteRecordTemplate() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("record.mustache");
-    }
-
-    public void makeBaseRecord(TableTool tableTool) {
-        try {
-            File sourceFile = sourceFile(tableTool.baseRecordPackageName(), tableTool.baseRecordClassName());
-            if (sourceFile.exists()) {
-                sourceFile.delete();
-                sourceFile.createNewFile();
-            }
-            writeCode(sourceFile, baseRecordTemplate(), tableTool);
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public void makeConcreteTable(TableTool tableTool) {
-        try {
-            String className = tableTool.concreteTableClassName();
-            File sourceFile = sourceFile(tableTool.concreteTablePackageName(), className);
-            if (sourceFile.exists()) {
-                logger.info("Skipping source "+sourceFile);
-                return;
-            }
-
-            writeCode(sourceFile, concreteTableTemplate(), tableTool);
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public void makeBaseTable(TableTool tableTool) {
-        try {
-            File sourceFile = sourceFile(tableTool.baseTablePackageName(), tableTool.baseTableClassName());
-            if (sourceFile.exists()) {
-                sourceFile.delete();
-                sourceFile.createNewFile();
-            }
-            writeCode(sourceFile, baseTableTemplate(), tableTool);
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public Mustache baseDatabaseTemplate() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("basedatabase.mustache");
-    }
-
-    public Mustache baseTableTemplate() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("basetable.mustache");
-    }
-
-    public Mustache concreteTableTemplate() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("table.mustache");
-    }
-
-    public Mustache baseRecordTemplate() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("baserecord.mustache");
     }
 
     public void writeCode(File sourceFile, Mustache template, BaseTool tableTool) {
@@ -237,14 +147,15 @@ public class DataBaseGenerator {
         	Table table = database.getTable(schema, tableName);
 
             TableTool tableTool = createTableTool(ds, table, packageName);
-            makeBaseRecord(tableTool);
-            makeConcreteRecord(tableTool);
-            makeBaseTable(tableTool);
-            makeConcreteTable(tableTool);
+
+            baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
+            concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
+            baseTableClassWriter.makeClass(getSourceDir(), tableTool);
+            concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
             dbTool.add(tableTool);
         }
 
-        makeDatabase(dbTool);
+        databaseClassWriter.makeClass(getSourceDir(), dbTool);
     }
 
     public void printInformationSchema() {
