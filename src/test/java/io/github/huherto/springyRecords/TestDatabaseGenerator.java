@@ -37,12 +37,13 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class TestDatabaseGenerator extends BaseTest {
 
-    @Test
+    @Test @Ignore
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
@@ -60,7 +61,7 @@ public class TestDatabaseGenerator extends BaseTest {
         dbGenerator.processAllTables("def", "test");
     }
 
-    @Test
+    @Test @Ignore
     public void insertPet() {
         DataSource ds = createDs();
 
@@ -81,7 +82,7 @@ public class TestDatabaseGenerator extends BaseTest {
 
     }
 
-    @Test
+    @Test @Ignore
     public void insertOwner() {
         DataSource ds = createDs();
 
