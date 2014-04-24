@@ -1,4 +1,4 @@
-package com.github.springyRecords;
+package io.github.huherto.springyRecords;
 /*
 The MIT License (MIT)
 

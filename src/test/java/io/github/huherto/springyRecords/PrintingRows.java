@@ -1,4 +1,4 @@
-package com.github.springyRecords;
+package io.github.huherto.springyRecords;
 
 import io.github.huherto.springyRecords.PrintRowCallbackHandler;
 

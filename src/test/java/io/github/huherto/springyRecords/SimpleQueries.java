@@ -1,4 +1,4 @@
-package com.github.springyRecords;
+package io.github.huherto.springyRecords;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
