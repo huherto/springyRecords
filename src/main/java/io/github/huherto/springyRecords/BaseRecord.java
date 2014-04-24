@@ -1,4 +1,4 @@
-package com.github.springyRecords;
+package io.github.huherto.springyRecords;
 /*
 The MIT License (MIT)
 
@@ -23,8 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import io.github.huherto.springyRecords.generator.TableTool;
+public abstract class BaseRecord {
 
-public class ExtendedTableTool extends TableTool {
 
 }

@@ -14,7 +14,7 @@
         <level value="info" />
     </logger>
 
-    <logger name="com.github.springyRecords">
+    <logger name="io.github.huherto.springyRecords">
         <level value="debug" />
     </logger>
 

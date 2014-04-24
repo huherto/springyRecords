@@ -2,13 +2,12 @@ package com.github.springyRecords;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import io.github.huherto.springyRecords.test.OwnerRecord;
+import io.github.huherto.springyRecords.test.PetStoreDatabase;
 
 import java.util.List;
 
 import org.junit.Test;
-
-import com.github.springyRecords.test.OwnerRecord;
-import com.github.springyRecords.test.PetStoreDatabase;
 
 public class SimpleQueries extends BaseTest {
 

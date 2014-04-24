@@ -24,6 +24,12 @@ THE SOFTWARE.
 */
 
 import static org.junit.Assert.assertTrue;
+import io.github.huherto.springyRecords.generator.DataBaseGenerator;
+import io.github.huherto.springyRecords.generator.TableTool;
+import io.github.huherto.springyRecords.test.OwnerRecord;
+import io.github.huherto.springyRecords.test.OwnerTable;
+import io.github.huherto.springyRecords.test.PetRecord;
+import io.github.huherto.springyRecords.test.PetTable;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -34,20 +40,13 @@ import javax.sql.DataSource;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.github.springyRecords.generator.DataBaseGenerator;
-import com.github.springyRecords.generator.TableTool;
-import com.github.springyRecords.test.OwnerRecord;
-import com.github.springyRecords.test.OwnerTable;
-import com.github.springyRecords.test.PetRecord;
-import com.github.springyRecords.test.PetTable;
-
 public class TestDatabaseGenerator extends BaseTest {
 
     @Test
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.github.springyRecords.test") {
+        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "io.github.huherto.springyRecords.test") {
 
             @Override
             public TableTool createTableTool() {

@@ -1,5 +1,7 @@
 package com.github.springyRecords;
 
+import io.github.huherto.springyRecords.PrintRowCallbackHandler;
+
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
