@@ -1,12 +1,12 @@
 package io.github.huherto.springyRecords.test;
 
-import io.github.huherto.springyRecords.BaseRecord;
-import io.github.huherto.springyRecords.BaseTable;
-import io.github.huherto.springyRecords.RecordMapper;
-
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
+
+import io.github.huherto.springyRecords.BaseRecord;
+import io.github.huherto.springyRecords.BaseTable;
+import io.github.huherto.springyRecords.RecordMapper;
 
 /**
  * BasePetTable –

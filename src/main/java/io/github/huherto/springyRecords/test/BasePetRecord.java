@@ -2,7 +2,6 @@ package io.github.huherto.springyRecords.test;
 
 import io.github.huherto.springyRecords.BaseRecord;
 import io.github.huherto.springyRecords.Column;
-
 import java.util.Date;
 
 /**

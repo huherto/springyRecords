@@ -24,7 +24,6 @@ THE SOFTWARE.
 */
 
 import static java.lang.String.format;
-import io.github.huherto.springyRecords.PrintRowCallbackHandler;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,7 +38,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
@@ -139,7 +137,7 @@ public class DataBaseGenerator {
         return new TableTool();
     }
 
-    public void processTableList(String catalog, String schemaName, List<String> tableNames) {
+    public void processTableList(String schemaName, List<String> tableNames) {
 
     	Schema schema = database.getSchema(schemaName);
         DatabaseTool dbTool = new DatabaseTool(packageName);
@@ -159,19 +157,13 @@ public class DataBaseGenerator {
     }
 
     public void printInformationSchema() {
-
-        JdbcTemplate jt = new JdbcTemplate(ds);
-        String sql =
-                "select table_catalog, table_schema, table_name " +
-                "from information_schema.tables ";
-
-    	System.out.println(format("%-20s %-20s %-20s", "table_catalog","table_schema", "table_name"));
-        PrintRowCallbackHandler prch = new PrintRowCallbackHandler();
-        prch.setFormat("%-20s %-20s %-20s");
-        jt.query(sql, prch);
+    	System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
+        for(Table table : database.getTables()) {
+        	System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
+        }
     }
 
-    public void processAllTables(String catalog, String schemaName) {
+    public void processAllTables(String schemaName) {
 
 
         List<String> tableNames = new ArrayList<>();
@@ -179,7 +171,7 @@ public class DataBaseGenerator {
         for(Table table : database.getTables(database.getSchema(schemaName))) {
         	tableNames.add(table.getName());
         }
-        processTableList(catalog, schemaName, tableNames);
+        processTableList(schemaName, tableNames);
 
     }
 
