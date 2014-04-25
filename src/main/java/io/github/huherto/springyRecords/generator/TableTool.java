@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+import io.github.huherto.springyRecords.BaseRecord;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.SQLException;
@@ -74,7 +76,7 @@ public class TableTool extends BaseTool {
     }
 
     private Table table;
-    private String mydomain = getClass().getPackage().getName();
+    private String mydomain = BaseRecord.class.getPackage().getName();
     private List<TableTool.ColumnTool> columns = new ArrayList<TableTool.ColumnTool>();
 
     public void initialize(Table table, String basePackage) throws SQLException {
@@ -177,7 +179,11 @@ public class TableTool extends BaseTool {
     }
 
     public String javaFieldName(ColumnTool columnTool) {
-        return convertToCamelCase(columnTool.col.getName(), false);
+    	// TODO: For some reason some fields names are quoted
+    	String columnName = columnTool.col.getName();
+    	if (columnName.startsWith("\"") && columnName.endsWith("\""))
+    		columnName = columnName.replaceAll("\"", "");
+        return convertToCamelCase(columnName, false);
     }
 
     private static String findSqlTypeConstant(int sqlType) {
