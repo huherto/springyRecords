@@ -14,4 +14,13 @@ public class {{baseRecordClassName}} extends BaseRecord {
     @Column(name="{{columnName}}", sqlType={{sqlTypeConstant}})
     public {{javaTypeName}} {{javaFieldName}};
     {{/columns}}
+    
+    public {{baseRecordClassName}}() {        
+    }
+    
+    public {{baseRecordClassName}}({{baseRecordClassName}} other) {
+    {{#columns}}
+        this.{{javaFieldName}} = other.{{javaFieldName}};
+    {{/columns}}
+    }
 }

@@ -15,4 +15,12 @@ public class BaseOwnerRecord extends BaseRecord {
     
     @Column(name="name", sqlType=java.sql.Types.VARCHAR)
     public String name;
+    
+    public BaseOwnerRecord() {        
+    }
+    
+    public BaseOwnerRecord(BaseOwnerRecord other) {
+        this.ownerId = other.ownerId;
+        this.name = other.name;
+    }
 }

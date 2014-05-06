@@ -27,4 +27,16 @@ public class BasePetRecord extends BaseRecord {
     
     @Column(name="death", sqlType=java.sql.Types.DATE)
     public Date death;
+    
+    public BasePetRecord() {        
+    }
+    
+    public BasePetRecord(BasePetRecord other) {
+        this.name = other.name;
+        this.owner = other.owner;
+        this.species = other.species;
+        this.sex = other.sex;
+        this.birthDate = other.birthDate;
+        this.death = other.death;
+    }
 }
