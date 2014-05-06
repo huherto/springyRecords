@@ -43,8 +43,10 @@ import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
 import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
+import schemacrawler.schemacrawler.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerException;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.schemacrawler.SchemaInfoLevel;
 
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
@@ -55,32 +57,33 @@ public class DataBaseGenerator {
 
     private final String packageName;
 
-    private DataSource ds;
+    private final DataSource ds;
 
     private Path sourceDir = null;
 
-	private Database database;
+	private final DatabaseClassWriter databaseClassWriter = new DatabaseClassWriter();
 
-	private DatabaseClassWriter databaseClassWriter = new DatabaseClassWriter();
+	private final BaseRecordClassWriter baseRecordClassWriter = new BaseRecordClassWriter();
 
-	private BaseRecordClassWriter baseRecordClassWriter = new BaseRecordClassWriter();
+	private final ConcreteRecordClassWriter concreteRecordClassWriter = new ConcreteRecordClassWriter();
 
-	private ConcreteRecordClassWriter concreteRecordClassWriter = new ConcreteRecordClassWriter();
+	private final BaseTableClassWriter baseTableClassWriter = new BaseTableClassWriter();
 
-	private BaseTableClassWriter baseTableClassWriter = new BaseTableClassWriter();
-
-	private ConcreteTableClassWriter concreteTableClassWriter = new ConcreteTableClassWriter();
+	private final ConcreteTableClassWriter concreteTableClassWriter = new ConcreteTableClassWriter();
 
     public DataBaseGenerator(DataSource ds, String packageName) {
         this.ds = ds;
         this.packageName = packageName;
 
+    }
+
+    private Database crawl(SchemaCrawlerOptions options) {
         try {
-			SchemaCrawler crawler = new SchemaCrawler(ds.getConnection());
-			database = crawler.crawl(new SchemaCrawlerOptions());
-		} catch (SchemaCrawlerException | SQLException e) {
-			throw new RuntimeException(e);
-		}
+            SchemaCrawler crawler = new SchemaCrawler(ds.getConnection());
+            return crawler.crawl(options);
+        } catch (SchemaCrawlerException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Path getSourceDir() {
@@ -139,6 +142,10 @@ public class DataBaseGenerator {
 
     public void processTableList(String schemaName, List<String> tableNames) {
 
+        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
+        Database database = crawl(options);
+
     	Schema schema = database.getSchema(schemaName);
         DatabaseTool dbTool = new DatabaseTool(packageName);
         for(String tableName : tableNames) {
@@ -156,7 +163,13 @@ public class DataBaseGenerator {
         databaseClassWriter.makeClass(getSourceDir(), dbTool);
     }
 
-    public void printInformationSchema() {
+    public void printInformationSchema(String schemaInclusionRule) {
+
+        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+        options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
+        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaInclusionRule));
+        Database database = crawl(options);
+
     	System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
         for(Table table : database.getTables()) {
         	System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
@@ -165,12 +178,16 @@ public class DataBaseGenerator {
 
     public void processAllTables(String schemaName) {
 
+        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
+        Database database = crawl(options);
 
         List<String> tableNames = new ArrayList<>();
 
         for(Table table : database.getTables(database.getSchema(schemaName))) {
         	tableNames.add(table.getName());
         }
+        System.out.println("Found "+tableNames.size()+" tables");
         processTableList(schemaName, tableNames);
 
     }

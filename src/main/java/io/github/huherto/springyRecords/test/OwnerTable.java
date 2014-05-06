@@ -15,7 +15,7 @@ public class OwnerTable extends BaseOwnerTable {
     }
 
     public OwnerRecord findOwnerById(int id) {
-		return queryForRequiredObject("select * from owner where owner_id = ?", id);
+		return queryForObject("select * from owner where owner_id = ?", id);
     }
 
 	public List<OwnerRecord> findByName(String name) {

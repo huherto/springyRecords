@@ -70,14 +70,14 @@ public abstract class  BaseTable<R extends BaseRecord> {
     /**
      * @throws DataAccessException if the object is not found.
      */
-    protected R queryForRequiredObject(String sql, Object...args) {
+    protected R queryForObject(String sql, Object...args) {
         return jdbcTemplate.queryForObject(sql, rowMapper(), args);
     }
 
     /**
      * @return null if the object is not found.
      */
-    protected R queryForSingleObject(String sql, Object...args) {
+    protected R queryForObjectOrNull(String sql, Object...args) {
 		List<R> results = query(sql, args, new RowMapperResultSetExtractor<R>(rowMapper(), 1));
 		return DataAccessUtils.singleResult(results);
     }

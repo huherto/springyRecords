@@ -70,7 +70,7 @@ public class TestDatabaseGenerator extends BaseTest {
 
         PetTable table = new PetTable(ds);
         PetRecord r = new PetRecord();
-        r.birth = new Date();
+        r.birthDate = new Date();
         r.name = "Manchas";
         r.owner = "Humberto";
         r.sex = "M";
