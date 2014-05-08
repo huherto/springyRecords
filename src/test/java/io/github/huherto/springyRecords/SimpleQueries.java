@@ -16,7 +16,7 @@ public class SimpleQueries extends BaseTest {
 
     	PetStoreDatabase petStoreDb = new PetStoreDatabase(createDs());
 
-    	List<OwnerRecord> all = petStoreDb.getOwnerTable().queryAll();
+    	List<OwnerRecord> all = petStoreDb.ownerTable().queryAll();
 
     	assertTrue(all.size() >= 0);
 
@@ -27,7 +27,7 @@ public class SimpleQueries extends BaseTest {
 
     	PetStoreDatabase petStoreDb = new PetStoreDatabase(createDs());
 
-    	OwnerRecord ownerRecord = petStoreDb.getOwnerTable().findOwnerById(10);
+    	OwnerRecord ownerRecord = petStoreDb.ownerTable().findOwnerById(10);
 
     	assertEquals("Humberto", ownerRecord.name);
 
@@ -37,7 +37,7 @@ public class SimpleQueries extends BaseTest {
     public void querySome() {
     	PetStoreDatabase petStoreDb = new PetStoreDatabase(createDs());
 
-    	List<OwnerRecord> result = petStoreDb.getOwnerTable().findByName("Humberto");
+    	List<OwnerRecord> result = petStoreDb.ownerTable().findByName("Humberto");
 
     	assertTrue(result.size() >= 0);
 
