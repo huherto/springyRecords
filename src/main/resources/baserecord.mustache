@@ -8,4 +8,13 @@ public class {{baseRecordClassName}} extends BaseRecord {
     {{#columns}}
     public {{javaTypeName}} {{javaFieldName}};
     {{/columns}}
+    
+    public {{baseRecordClassName}}() {        
+    }
+    
+    public {{baseRecordClassName}}({{baseRecordClassName}} other) {
+    {{#columns}}
+        this.{{javaFieldName}} = other.{{javaFieldName}};
+    {{/columns}}
+    }
 }

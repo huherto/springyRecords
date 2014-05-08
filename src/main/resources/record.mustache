@@ -1,5 +1,10 @@
 package {{concreteRecordPackageName}};
 
 public class {{concreteRecordClassName}} extends {{baseRecordClassName}} {
+    public {{concreteRecordClassName}}() {
+    }
 
+    public {{concreteRecordClassName}}({{concreteRecordClassName}} other) {
+        super(other);
+    }
 }

@@ -41,6 +41,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 public abstract class  BaseTable<R extends BaseRecord> {
 
     protected JdbcTemplate jdbcTemplate;
+
+    // TODO:
+    // Design idea. Make a sublcass of SimpleJdbcInsert that understands BaseRecords.
+    // Similar to how row mapper is subclassed and used.
     protected SimpleJdbcInsert insertCommand;
     private final Field autoIncrementField;
 
