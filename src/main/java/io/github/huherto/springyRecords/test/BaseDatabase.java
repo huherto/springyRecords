@@ -17,14 +17,14 @@ public class BaseDatabase {
         this.dataSource = dataSource;
     }
 
-    public OwnerTable getOwnerTable() {
+    public OwnerTable ownerTable() {
         if (ownerTable == null) {
             ownerTable = new OwnerTable(dataSource);
         }
         return ownerTable;
     }
 
-    public PetTable getPetTable() {
+    public PetTable petTable() {
         if (petTable == null) {
             petTable = new PetTable(dataSource);
         }

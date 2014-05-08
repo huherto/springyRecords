@@ -19,7 +19,7 @@ public class {{baseDatabaseClassName}} {
     }
 
     {{#tables}}
-    public {{concreteTableClassName}} get{{concreteTableClassName}}() {
+    public {{concreteTableClassName}} {{tableInstanceName}}() {
         if ({{tableInstanceName}} == null) {
             {{tableInstanceName}} = new {{concreteTableClassName}}(dataSource);
         }
