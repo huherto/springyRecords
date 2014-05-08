@@ -41,7 +41,6 @@ import org.apache.log4j.Logger;
 
 import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
-import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerException;
@@ -146,18 +145,21 @@ public class DataBaseGenerator {
         options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
         Database database = crawl(options);
 
-    	Schema schema = database.getSchema(schemaName);
         DatabaseTool dbTool = new DatabaseTool(packageName);
-        for(String tableName : tableNames) {
-        	Table table = database.getTable(schema, tableName);
 
-            TableTool tableTool = createTableTool(ds, table, packageName);
+        for(Table table : database.getTables()) {
 
-            baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
-            concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
-            baseTableClassWriter.makeClass(getSourceDir(), tableTool);
-            concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
-            dbTool.add(tableTool);
+            if (tableNames.contains(table.getName())) {
+
+                System.out.println("tableName="+table.getName());
+                TableTool tableTool = createTableTool(ds, table, packageName);
+
+                baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
+                concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
+                baseTableClassWriter.makeClass(getSourceDir(), tableTool);
+                concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
+                dbTool.add(tableTool);
+            }
         }
 
         databaseClassWriter.makeClass(getSourceDir(), dbTool);
