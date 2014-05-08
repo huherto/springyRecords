@@ -4,14 +4,8 @@ package {{baseRecordPackageName}};
 {{toString}}
 {{/baseRecordImports}}
 
-/**
- * {{baseRecordClassName}} –
- * Automatically generated. Do not modify or your changes might be lost.
- */
 public class {{baseRecordClassName}} extends BaseRecord {
     {{#columns}}
-    {{#isAutoincrement}}@Autoincrement{{/isAutoincrement}}
-    @Column(name="{{columnName}}", sqlType={{sqlTypeConstant}})
     public {{javaTypeName}} {{javaFieldName}};
     {{/columns}}
 }

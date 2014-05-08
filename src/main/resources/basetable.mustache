@@ -3,18 +3,13 @@ package {{baseTablePackageName}};
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
+import com.onea.dale.DtoRowMapper;
+import com.onea.dale.BaseRecord;
+import com.onea.dale.BaseTable;
 
-import {{mydomain}}.BaseRecord;
-import {{mydomain}}.BaseTable;
-import {{mydomain}}.RecordMapper;
-
-/**
- * {{baseTableClassName}} –
- * Automatically generated. Do not modify or your changes might be lost.
- */
 public class {{baseTableClassName}} extends BaseTable<{{concreteRecordClassName}}> {
 
-    private RowMapper<{{concreteRecordClassName}}> rm = RecordMapper.newInstance({{concreteRecordClassName}}.class);
+    private RowMapper<{{concreteRecordClassName}}> rm = DtoRowMapper.newInstance({{concreteRecordClassName}}.class);
 
     public {{baseTableClassName}}(DataSource dataSource) {
         super(dataSource);
@@ -30,8 +25,4 @@ public class {{baseTableClassName}} extends BaseTable<{{concreteRecordClassName}
         return "{{tableName}}";
     }
 
-    @Override
-    public Class<? extends BaseRecord> recordClass() {
-        return {{concreteRecordClassName}}.class;
-    }
 }

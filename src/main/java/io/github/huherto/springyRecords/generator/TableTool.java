@@ -46,8 +46,8 @@ public class TableTool extends BaseTool {
 
     public class ColumnTool {
 
-    	private Column col;
-    	private boolean isAutoincrement;
+    	private final Column col;
+    	private final boolean isAutoincrement;
 
         public ColumnTool(schemacrawler.schema.Column col) {
         	this.col = col;
@@ -76,8 +76,8 @@ public class TableTool extends BaseTool {
     }
 
     private Table table;
-    private String mydomain = BaseRecord.class.getPackage().getName();
-    private List<TableTool.ColumnTool> columns = new ArrayList<TableTool.ColumnTool>();
+    private final String mydomain = BaseRecord.class.getPackage().getName();
+    private final List<TableTool.ColumnTool> columns = new ArrayList<TableTool.ColumnTool>();
 
     public void initialize(Table table, String basePackage) throws SQLException {
         this.basePackageName = basePackage;
@@ -139,12 +139,14 @@ public class TableTool extends BaseTool {
                 importSet.add("import java.sql.Blob;");
             if (column.javaTypeName().contains("Clob"))
                 importSet.add("import java.sql.Clob;");
-            if (column.isAutoincrement)
-                importSet.add("import "+mydomain+".Autoincrement;");
+//            if (column.isAutoincrement)
+//                importSet.add("import "+mydomain+".Autoincrement;");
         }
 
-        importSet.add("import "+mydomain+".Column;");
-        importSet.add("import "+mydomain+".BaseRecord;");
+        // importSet.add("import "+mydomain+".Column;");
+        // importSet.add("import "+mydomain+".BaseRecord;");
+
+        importSet.add("import com.onea.dale.BaseRecord;");
 
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
