@@ -4,6 +4,9 @@ import static java.util.Arrays.asList;
 import io.github.huherto.springyRecords.generator.DataBaseGenerator;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -29,7 +32,7 @@ public class MainGenerator {
     }
 
     @Test
-    public void slotGenearate() {
+    public void slotGenerate() {
 
         DataSource ds = createMssqlDS("slot");
 
@@ -39,6 +42,59 @@ public class MainGenerator {
         dbGenerator.printInformationSchema("slot\\.dbo");
         dbGenerator.setSourceDir(Paths.get(userHome+"/workspace/onea-ws/src/main/java"));
         dbGenerator.processTableList("slot\\.dbo", asList("replenish_ticket", "trailer", "transfer_que"));
+    }
+
+    @Test
+    public void thGenerate() {
+
+        DataSource ds = createMssqlDS("th");
+
+        String userHome = "/home/hhernandez";
+
+        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.onea.dal.th");
+        dbGenerator.printInformationSchema("th\\.TH_application");
+        dbGenerator.setSourceDir(Paths.get(userHome+"/workspace/onea-ws/src/main/java"));
+
+        List<String> tables = Arrays.asList(
+                "brands",
+                "categories",
+                "ebay_subtitles",
+                "ebay_vehicle_models",
+                "ebay_vehicle_model_attr",
+                "ebay_vehicle_models_map",
+                "engine_types",
+                "engine_displacements",
+                "fit_trims",
+                "fit_engines",
+                "fits",
+                "fits_years",
+                "images",
+                "inv_classes",
+                "item_images",
+                "item_options",
+                "item_option_values",
+                "item_qualifiers",
+                "item_references",
+                "item_sites",
+                "item_tags",
+                "items",
+                "product_descriptions",
+                "qualifiers",
+                "qualifier_classes",
+                "tags",
+                "trims",
+                "vehicle_makes",
+                "vehicle_model_engines",
+                "vehicle_model_trims",
+                "vehicle_models",
+                "vehicle_models_years",
+                "vendors"
+        );
+        Collections.sort(tables);
+        for(String tname:tables) {
+            // System.out.println("            \""+tname+"\",");           
+        }
+        dbGenerator.processTableList("th\\.TH_application", tables);
     }
 
 }
