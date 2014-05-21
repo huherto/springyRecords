@@ -149,6 +149,7 @@ public class DataBaseGenerator {
 
         for(Table table : database.getTables()) {
 
+            // TODO: If one of the tables is wrong. This will fail.
             if (tableNames.contains(table.getName())) {
 
                 System.out.println("tableName="+table.getName());
