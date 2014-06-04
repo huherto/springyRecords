@@ -41,8 +41,42 @@ public class MainGenerator {
         DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.onea.dal.slot");
         dbGenerator.printInformationSchema("slot\\.dbo");
         dbGenerator.setSourceDir(Paths.get(userHome+"/workspace/onea-ws/src/main/java"));
-        dbGenerator.processTableList("slot\\.dbo", asList("replenish_ticket", "trailer", "transfer_que"));
+        dbGenerator.processTableList("slot\\.dbo", asList("replenish_ticket", "trailer", "transfer_que", "trailer_orders"));
     }
+
+    @Test
+    public void amsGenerate() {
+
+        DataSource ds = createMssqlDS("ams_1_1a");
+
+        String userHome = "/home/hhernandez";
+
+        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.onea.dal.ams");
+        dbGenerator.printInformationSchema("ams_1_1a\\.dbo");
+        dbGenerator.setSourceDir(Paths.get(userHome+"/workspace/onea-ws/src/main/java"));
+
+        List<String> tables = Arrays.asList(
+                "country_profile",
+                "description",
+                "ebay_categories",
+                "fitment",
+                "images",
+                "item_option_values",
+                "item_specifics",
+                "listing",
+                "listing_profile",
+                "product_option_values",
+                "product_options",
+                "sku_class_mapping"
+        );
+        Collections.sort(tables);
+        for(String tname:tables) {
+            // System.out.println("            \""+tname+"\",");
+        }
+        dbGenerator.processTableList("ams_1_1a\\.dbo", tables);
+    }
+
+
 
     @Test
     public void thGenerate() {
@@ -58,6 +92,8 @@ public class MainGenerator {
         List<String> tables = Arrays.asList(
                 "brands",
                 "categories",
+                "description_types",
+                "descriptions",
                 "ebay_subtitles",
                 "ebay_vehicle_models",
                 "ebay_vehicle_model_attr",
@@ -70,6 +106,9 @@ public class MainGenerator {
                 "fits_years",
                 "images",
                 "inv_classes",
+                "inv_class_descriptions",
+                "item_class_descriptions",
+                "item_descriptions",
                 "item_images",
                 "item_options",
                 "item_option_values",
@@ -92,7 +131,7 @@ public class MainGenerator {
         );
         Collections.sort(tables);
         for(String tname:tables) {
-            // System.out.println("            \""+tname+"\",");           
+            // System.out.println("            \""+tname+"\",");
         }
         dbGenerator.processTableList("th\\.TH_application", tables);
     }

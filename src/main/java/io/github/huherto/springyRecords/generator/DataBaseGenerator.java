@@ -159,6 +159,11 @@ public class DataBaseGenerator {
                 concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
                 baseTableClassWriter.makeClass(getSourceDir(), tableTool);
                 concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
+/*
+                for(ColumnTool col: tableTool.getColumns()) {
+                    System.out.println(String.format("params.put(\"%s,\",rec.%s);",col.columnName(), col.javaFieldName()));
+                }
+*/
                 dbTool.add(tableTool);
             }
         }

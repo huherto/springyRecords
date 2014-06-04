@@ -47,8 +47,15 @@ public class BaseTool {
 
         if (typeName.equals("int") || typeName.equals("smallint") || typeName.equals("tinyint") || typeName.equals("integer"))
             return nullable?"Integer":"int";
-        if (typeName.equals("int identity")|| typeName.equals("bigint"))
+        if (typeName.equals("int identity"))
+            return "int";
+
+        if (typeName.equals("long identity"))
+            return "long";
+
+        if (typeName.equals("bigint"))
             return nullable?"Long":"long";
+
         if (typeName.equals("bit")) {
             return nullable?"Boolean":"boolean";
         }

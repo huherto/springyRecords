@@ -147,6 +147,8 @@ public class TableTool extends BaseTool {
         // importSet.add("import "+mydomain+".BaseRecord;");
 
         importSet.add("import com.onea.dale.BaseRecord;");
+        importSet.add("import java.util.HashMap;");
+        importSet.add("import java.util.Map;");
 
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
