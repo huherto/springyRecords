@@ -1,6 +1,7 @@
 package io.github.huherto.springyRecords;
 
 import static java.util.Arrays.asList;
+import io.github.huherto.springyRecords.exporter.SchemaExporter;
 import io.github.huherto.springyRecords.generator.DataBaseGenerator;
 
 import java.nio.file.Paths;
@@ -74,7 +75,34 @@ public class MainGenerator {
             // System.out.println("            \""+tname+"\",");
         }
         dbGenerator.processTableList("ams_1_1a\\.dbo", tables);
+
+        SchemaExporter exporter = new SchemaExporter(ds);
+
+        exporter.export("ams_1_1a\\.dbo", tables);
     }
+
+
+    @Test
+    public void pickTicketsGenerate() {
+
+        DataSource ds = createMssqlDS("picktickets");
+
+        String userHome = "/home/hhernandez";
+
+        List<String> tables = Arrays.asList(
+                "batch_tickets",
+                "options"
+        );
+        Collections.sort(tables);
+        for(String tname:tables) {
+            // System.out.println("            \""+tname+"\",");
+        }
+
+        SchemaExporter exporter = new SchemaExporter(ds);
+
+        exporter.export("picktickets\\.dbo", tables);
+    }
+
 
 
 
@@ -109,6 +137,7 @@ public class MainGenerator {
                 "inv_class_descriptions",
                 "item_class_descriptions",
                 "item_descriptions",
+                "item_holds",
                 "item_images",
                 "item_options",
                 "item_option_values",
