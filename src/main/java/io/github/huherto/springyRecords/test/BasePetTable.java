@@ -1,12 +1,12 @@
 package io.github.huherto.springyRecords.test;
 
-import org.springframework.jdbc.core.RowMapper;
-
-import javax.sql.DataSource;
-
 import io.github.huherto.springyRecords.BaseRecord;
 import io.github.huherto.springyRecords.BaseTable;
 import io.github.huherto.springyRecords.RecordMapper;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * BasePetTable –
@@ -21,7 +21,7 @@ public class BasePetTable extends BaseTable<PetRecord> {
     }
 
     @Override
-    protected RowMapper<PetRecord> rowMapper() {
+    public RowMapper<PetRecord> rowMapper() {
         return rm;
     }
 

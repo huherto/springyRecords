@@ -15,7 +15,7 @@ public class {{baseTableClassName}} extends BaseTable<{{concreteRecordClassName}
     }
 
     @Override
-    protected RowMapper<{{concreteRecordClassName}}> rowMapper() {
+    public RowMapper<{{concreteRecordClassName}}> rowMapper() {
         return rm;
     }
 

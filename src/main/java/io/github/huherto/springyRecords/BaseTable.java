@@ -86,7 +86,7 @@ public abstract class  BaseTable<R extends BaseRecord> {
 		return DataAccessUtils.singleResult(results);
     }
 
-    protected abstract RowMapper<R> rowMapper();
+    public abstract RowMapper<R> rowMapper();
 
     protected int update(String sql, Object...args) {
         return jdbcTemplate.update(sql, args);

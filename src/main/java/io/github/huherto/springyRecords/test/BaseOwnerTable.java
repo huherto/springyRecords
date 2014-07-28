@@ -1,12 +1,12 @@
 package io.github.huherto.springyRecords.test;
 
-import org.springframework.jdbc.core.RowMapper;
-
-import javax.sql.DataSource;
-
 import io.github.huherto.springyRecords.BaseRecord;
 import io.github.huherto.springyRecords.BaseTable;
 import io.github.huherto.springyRecords.RecordMapper;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * BaseOwnerTable –
@@ -21,7 +21,7 @@ public class BaseOwnerTable extends BaseTable<OwnerRecord> {
     }
 
     @Override
-    protected RowMapper<OwnerRecord> rowMapper() {
+    public RowMapper<OwnerRecord> rowMapper() {
         return rm;
     }
 

@@ -10,11 +10,7 @@
         </layout>
     </appender>
 
-    <logger name="org.springframework.jdbc.core.JdbcTemplate">
-        <level value="info" />
-    </logger>
-
-    <logger name="io.github.huherto.springyRecords">
+    <logger name="io.github">
         <level value="debug" />
     </logger>
 

@@ -18,6 +18,7 @@ public class {{baseRecordClassName}} extends BaseRecord {
     {{/columns}}
     }
 
+    @Override
     public Map<String, Object> asMap() {
         Map<String, Object> map = new HashMap<>();
         {{#columns}}
