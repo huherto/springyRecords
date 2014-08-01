@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,11 +77,11 @@ public class DataBaseGenerator {
 
     }
 
-    private Database crawl(SchemaCrawlerOptions options) {
+    private Database crawl(Connection dbconn, SchemaCrawlerOptions options) {
         try {
-            SchemaCrawler crawler = new SchemaCrawler(ds.getConnection());
+            SchemaCrawler crawler = new SchemaCrawler(dbconn);
             return crawler.crawl(options);
-        } catch (SchemaCrawlerException | SQLException e) {
+        } catch (SchemaCrawlerException e) {
             throw new RuntimeException(e);
         }
     }
@@ -141,31 +142,37 @@ public class DataBaseGenerator {
 
     public void processTableList(String schemaName, List<String> tableNames) {
 
-        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
-        Database database = crawl(options);
-
         DatabaseTool dbTool = new DatabaseTool(packageName);
 
-        for(Table table : database.getTables()) {
+        try(Connection con = ds.getConnection()) {
+            for(String tableName : tableNames) {
+                System.out.println("process table "+tableName);
+                SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+                options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
+                options.setTableNamePattern("%" + tableName + "%");
+                SchemaInfoLevel infoLevel = SchemaInfoLevel.standard();
+                options.setSchemaInfoLevel(infoLevel);
+                infoLevel.setRetrieveRoutines(false);
 
-            // TODO: If one of the tables is wrong. This will fail.
-            if (tableNames.contains(table.getName())) {
+                Database database = crawl(con, options);
 
-                System.out.println("tableName="+table.getName());
-                TableTool tableTool = createTableTool(ds, table, packageName);
+                Table table = database.getTable(database.getSchema(schemaName), tableName);
+                if (table != null) {
 
-                baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
-                concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
-                baseTableClassWriter.makeClass(getSourceDir(), tableTool);
-                concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
-/*
-                for(ColumnTool col: tableTool.getColumns()) {
-                    System.out.println(String.format("params.put(\"%s,\",rec.%s);",col.columnName(), col.javaFieldName()));
+                    System.out.println("tableName="+table.getName());
+                    TableTool tableTool = createTableTool(ds, table, packageName);
+
+                    baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
+                    concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
+                    baseTableClassWriter.makeClass(getSourceDir(), tableTool);
+                    concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
+
+                    dbTool.add(tableTool);
                 }
-*/
-                dbTool.add(tableTool);
             }
+        }
+        catch(SQLException ex) {
+            throw new RuntimeException(ex);
         }
 
         databaseClassWriter.makeClass(getSourceDir(), dbTool);
@@ -173,30 +180,41 @@ public class DataBaseGenerator {
 
     public void printInformationSchema(String schemaInclusionRule) {
 
-        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-        options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
-        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaInclusionRule));
-        Database database = crawl(options);
+        try (Connection con = ds.getConnection()) {
+            SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+            options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
+            options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaInclusionRule));
+            Database database = crawl(con, options);
 
-    	System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
-        for(Table table : database.getTables()) {
-        	System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
+        	System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
+            for(Table table : database.getTables()) {
+            	System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
+            }
+        }
+        catch(SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
     public void processAllTables(String schemaName) {
+        try (Connection con = ds.getConnection()) {
+            SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+            options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
+            options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
+            Database database = crawl(con, options);
 
-        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
-        Database database = crawl(options);
 
-        List<String> tableNames = new ArrayList<>();
+            List<String> tableNames = new ArrayList<>();
 
-        for(Table table : database.getTables(database.getSchema(schemaName))) {
-        	tableNames.add(table.getName());
+            for(Table table : database.getTables(database.getSchema(schemaName))) {
+            	tableNames.add(table.getName());
+            }
+            System.out.println("Found "+tableNames.size()+" tables");
+            processTableList(schemaName, tableNames);
         }
-        System.out.println("Found "+tableNames.size()+" tables");
-        processTableList(schemaName, tableNames);
+        catch(SQLException ex) {
+            throw new RuntimeException(ex);
+        }
 
     }
 

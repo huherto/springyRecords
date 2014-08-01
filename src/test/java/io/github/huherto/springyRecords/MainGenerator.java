@@ -74,6 +74,28 @@ public class MainGenerator {
 
             }
 
+            if (super.tableName().contains("IV00101")) {
+
+                return !Arrays.asList(
+                        "ITEMNMBR", "ITEMDESC", "NOTEINDX",
+                        "ITMSHNAM", "ITEMTYPE", "ITMGEDSC",
+                        "STNDCOST", "CURRCOST", "ITEMSHWT",
+                        "USCATVLS_1", "USCATVLS_2", "USCATVLS_3",
+                        "USCATVLS_4", "USCATVLS_5", "USCATVLS_6",
+                        "DEX_ROW_ID"
+                        ).contains(col.columnName().toUpperCase().trim());
+
+            }
+
+            if (super.tableName().contains("IV00102")) {
+
+                return !Arrays.asList(
+                        "ITEMNMBR","LOCNCODE", "RCRDTYPE",
+                        "PRIMVNDR", "QTYONHND", "ATYALLOC",
+                        "ORDRUPTOLVL", "").contains(col.columnName().toUpperCase().trim());
+
+            }
+
             if (super.tableName().contains("POP10100")) {
 
                 return !Arrays.asList(
@@ -120,7 +142,10 @@ public class MainGenerator {
         dbGenerator.printInformationSchema("auto\\.dbo");
         dbGenerator.setSourceDir(Paths.get(userHome+"/workspace/onea-ws/src/main/java"));
 
-        dbGenerator.processTableList("auto\\.dbo", asList("IV00104", "POP10100", "POP10110"));
+        dbGenerator.processTableList("auto.dbo", asList(
+                "IV00101", "IV00102", "IV00103",
+                "IV00104", "IV40600", "IV40700",
+                "POP10100", "POP10110"));
     }
 
     @Test
