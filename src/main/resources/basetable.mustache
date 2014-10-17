@@ -24,4 +24,25 @@ public class {{baseTableClassName}} extends BaseTable<{{concreteRecordClassName}
         return "{{tableName}}";
     }
 
+    {{#primaryKey}}
+    public {{concreteRecordClassName}} findObject({{pkMethodParameterList}}) {
+        String sql =
+            "select * "+
+            "from {{tableName}} "+
+            "where {{pkSqlCondition}} ";
+
+        return singleResult(sql, {{pkArgumentList}});
+    }
+
+    public {{concreteRecordClassName}} fetchObject({{pkMethodParameterList}}) {
+        String sql =
+            "select * "+
+            "from {{tableName}} "+
+            "where {{pkSqlCondition}} ";
+
+        return requiredSingleResult(sql, {{pkArgumentList}});
+    }
+
+    {{/primaryKey}}
+
 }

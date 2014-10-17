@@ -37,6 +37,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import schemacrawler.schema.Column;
+import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Table;
 
 public class TableTool extends BaseTool {
@@ -206,5 +207,68 @@ public class TableTool extends BaseTool {
         }
         return "" + sqlType;
     }
+
+    public PrimaryKey getPrimaryKey() {
+        return table.getPrimaryKey();
+    }
+
+    public String pkSqlCondition() {
+        return sqlCondition(table.getPrimaryKey());
+    }
+
+    public String sqlCondition(PrimaryKey pk) {
+        StringBuilder sb = new StringBuilder();
+
+        for(Column col : pk.getColumns()) {
+
+            if (sb.length() > 0)
+                sb.append(" and ");
+
+            String columnName = col.getName();
+            sb.append(columnName);
+            sb.append("  = ?");
+        }
+        return sb.toString();
+    }
+
+    public String pkMethodParameterList() {
+        return methodParameterList(table.getPrimaryKey());
+    }
+
+    private String methodParameterList(PrimaryKey pk) {
+        StringBuilder sb = new StringBuilder();
+
+        for(Column col : pk.getColumns()) {
+
+            if (sb.length() > 0)
+                sb.append(", ");
+
+            String columnType = col.getColumnDataType().getName();
+            String columnName = col.getName();
+            sb.append(convertJavaTypeName(columnType, col.isNullable()));
+            sb.append(" ");
+            sb.append(convertToCamelCase(columnName, false));
+        }
+        return sb.toString();
+    }
+
+    public String pkArgumentList() {
+        return argumentList(table.getPrimaryKey());
+    }
+
+    private String argumentList(PrimaryKey pk) {
+        StringBuilder sb = new StringBuilder();
+
+        for(Column col : pk.getColumns()) {
+
+            if (sb.length() > 0)
+                sb.append(", ");
+
+            String columnName = col.getName();
+            sb.append(convertToCamelCase(columnName, false));
+        }
+        return sb.toString();
+    }
+
 
 }
