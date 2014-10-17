@@ -11,7 +11,7 @@
     <groupId>io.github.huherto</groupId>
     <packaging>jar</packaging>
     <name>springyRecords</name>
-    <version>1.02-SNAPSHOT</version>
+    <version>1.03-SNAPSHOT</version>
     <description>A Record Mapper on top of spring-jdbc</description>
     <licenses>
         <license>

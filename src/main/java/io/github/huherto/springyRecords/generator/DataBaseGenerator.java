@@ -146,28 +146,12 @@ public class DataBaseGenerator {
 
         try(Connection con = ds.getConnection()) {
             for(String tableName : tableNames) {
+
                 System.out.println(format("process schema:%s table:%s ", schemaName, tableName));
-                SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-                options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
-                options.setTableNamePattern("%" + tableName + "%");
-                SchemaInfoLevel infoLevel = SchemaInfoLevel.standard();
-                options.setSchemaInfoLevel(infoLevel);
-                infoLevel.setRetrieveRoutines(false);
-
-                Database database = crawl(con, options);
-
+                Database database = crawl(con, schemaName, tableName);
                 Table table = database.getTable(database.getSchema(schemaName), tableName);
                 if (table != null) {
-
-                    System.out.println("tableName="+table.getName());
-                    TableTool tableTool = createTableTool(ds, table, packageName);
-
-                    baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
-                    concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
-                    baseTableClassWriter.makeClass(getSourceDir(), tableTool);
-                    concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
-
-                    dbTool.add(tableTool);
+                    processTable(table, dbTool);
                 }
                 else {
                     System.out.println("not found");
@@ -179,6 +163,32 @@ public class DataBaseGenerator {
         }
 
         databaseClassWriter.makeClass(getSourceDir(), dbTool);
+    }
+
+    private void processTable(Table table, DatabaseTool dbTool) {
+
+        System.out.println("tableName="+table.getName());
+
+        TableTool tableTool = createTableTool(ds, table, packageName);
+
+        baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
+        concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
+        baseTableClassWriter.makeClass(getSourceDir(), tableTool);
+        concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
+
+        dbTool.add(tableTool);
+    }
+
+    private Database crawl(Connection con, String schemaName, String tableName) {
+
+        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+        options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
+        options.setTableNamePattern("%" + tableName + "%");
+        SchemaInfoLevel infoLevel = SchemaInfoLevel.standard();
+        options.setSchemaInfoLevel(infoLevel);
+        infoLevel.setRetrieveRoutines(false);
+
+        return crawl(con, options);
     }
 
     public void printInformationSchema(String schemaInclusionRule) {
