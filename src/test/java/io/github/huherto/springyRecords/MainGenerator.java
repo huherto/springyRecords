@@ -42,9 +42,9 @@ public class MainGenerator {
         DataSource ds = createMssqlDS("slot");
 
         DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "com.onea.dal.slot");
-        dbGenerator.printInformationSchema("slot\\.dbo");
+        dbGenerator.printInformationSchema("slot.dbo");
         dbGenerator.setSourceDir(Paths.get(userHome+"/workspace/onea-ws/src/main/java"));
-        dbGenerator.processTableList("slot\\.dbo", slotTables());
+        dbGenerator.processTableList("slot.dbo", slotTables());
     }
 
     @Test
@@ -114,6 +114,23 @@ public class MainGenerator {
 
             }
 
+            if (super.tableName().contains("SOP10100") || super.tableName().contains("SOP30200")) {
+
+                return !Arrays.asList(
+                        "VOIDSTTS", "SOPTYPE", "BACHNUMB",
+                        "SOPNUMBE", "PRSTADCD", "DOCDATE",
+                        "CUSTNMBR", "CSTPONBR", "ZIPCODE",
+                        "UPSZONE", "STATE", "SHIPTONAME",
+                        "SHIPMTHD", "PHNUMBR1", "LOCNCODE",
+                        "DOCID", "DOCAMNT", "COUNTRY",
+                        "CNTCPRSN", "CITY", "CUSTNAME",
+                        "ADDRESS1", "ADDRESS2", "ADDRESS3",
+                        "SUBTOTAL", "NOTEINDX", "TRDISAMT",
+                        "ORTAXAMT", "FRTAMNT"
+                        ).contains(col.columnName().toUpperCase().trim());
+
+            }
+
 
             return super.ignoreColumn(col);
         }
@@ -145,7 +162,11 @@ public class MainGenerator {
         dbGenerator.processTableList("auto.dbo", asList(
                 "IV00101", "IV00102", "IV00103",
                 "IV00104", "IV40600", "IV40700",
-                "POP10100", "POP10110"));
+                "POP10100", "POP10110", "RM00102",
+                "Shipper_Tracking",
+                "SOP10100","SOP10103","SOP10107",
+                "SOP10200","SOP30200",
+                "SY01200", "SY03900"));
     }
 
     @Test
@@ -254,7 +275,21 @@ public class MainGenerator {
     }
 
     private List<String> slotTables() {
-        return sortedList("replenish_ticket", "trailer", "transfer_que", "trailer_orders", "replenish_edits", "intersite_move_request");
+        return sortedList(
+                "carton",
+                "container_sort",
+                "intersite_move_request",
+                "order_boxes",
+                "pallet",
+                "replenish_ticket",
+                "replenish_edits",
+                "sku_location",
+                "trailer",
+                "transfer_que",
+                "trailer_orders",
+                "transfer_ticket",
+                "user_action"
+                );
     }
 
     private List<String> pickTicketsTables() {

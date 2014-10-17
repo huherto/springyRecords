@@ -146,7 +146,7 @@ public class DataBaseGenerator {
 
         try(Connection con = ds.getConnection()) {
             for(String tableName : tableNames) {
-                System.out.println("process table "+tableName);
+                System.out.println(format("process schema:%s table:%s ", schemaName, tableName));
                 SchemaCrawlerOptions options = new SchemaCrawlerOptions();
                 options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
                 options.setTableNamePattern("%" + tableName + "%");
@@ -168,6 +168,9 @@ public class DataBaseGenerator {
                     concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
 
                     dbTool.add(tableTool);
+                }
+                else {
+                    System.out.println("not found");
                 }
             }
         }
