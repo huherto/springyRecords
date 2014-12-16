@@ -37,6 +37,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import schemacrawler.schema.Column;
+import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Table;
 
@@ -150,6 +151,21 @@ public class TableTool extends BaseTool {
         importSet.add("import com.onea.dale.BaseRecord;");
         importSet.add("import java.util.HashMap;");
         importSet.add("import java.util.Map;");
+
+        List<String> imports = new ArrayList<String>(importSet);
+        Collections.sort(imports);
+        return imports;
+    }
+
+    public List<String> baseTableImports() {
+        Set<String> importSet = new HashSet<String>();
+        if (getPrimaryKey() != null) {
+            for(IndexColumn column : getPrimaryKey().getColumns()) {
+                if (column.getColumnDataType().getName().contains("BigDecimal")) {
+                    importSet.add("import java.math.BigDecimal;");
+                }
+            }
+        }
 
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);

@@ -56,6 +56,9 @@ public class BaseTool {
         if (typeName.equals("bigint"))
             return nullable?"Long":"long";
 
+        if (typeName.equals("bigint identity"))
+            return "long";
+
         if (typeName.equals("bit")) {
             return nullable?"Boolean":"boolean";
         }
