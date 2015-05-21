@@ -69,7 +69,10 @@ public class TableTool extends BaseTool {
         }
 
         public String columnName() {
-        	return col.getName();
+            String columnName = col.getName();
+            if (columnName.startsWith("\"") && columnName.endsWith("\""))
+                columnName = columnName.replaceAll("\"", "");
+        	return columnName;
         }
 
         public boolean isAutoincrement() {
@@ -161,7 +164,8 @@ public class TableTool extends BaseTool {
         Set<String> importSet = new HashSet<String>();
         if (getPrimaryKey() != null) {
             for(IndexColumn column : getPrimaryKey().getColumns()) {
-                if (column.getColumnDataType().getName().contains("BigDecimal")) {
+                String javaType = convertJavaTypeName(column.getColumnDataType().getName(), false);
+                if (javaType.contains("BigDecimal")) {
                     importSet.add("import java.math.BigDecimal;");
                 }
             }
@@ -200,10 +204,7 @@ public class TableTool extends BaseTool {
     }
 
     public String javaFieldName(ColumnTool columnTool) {
-    	// TODO: For some reason some fields names are quoted
-    	String columnName = columnTool.col.getName();
-    	if (columnName.startsWith("\"") && columnName.endsWith("\""))
-    		columnName = columnName.replaceAll("\"", "");
+    	String columnName = columnTool.columnName();
         return convertToCamelCase(columnName, false);
     }
 
