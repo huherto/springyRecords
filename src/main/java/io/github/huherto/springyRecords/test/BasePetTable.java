@@ -1,6 +1,5 @@
 package io.github.huherto.springyRecords.test;
 
-import io.github.huherto.springyRecords.BaseRecord;
 import io.github.huherto.springyRecords.BaseTable;
 import io.github.huherto.springyRecords.RecordMapper;
 
@@ -28,10 +27,5 @@ public class BasePetTable extends BaseTable<PetRecord> {
     @Override
     public String tableName() {
         return "pet";
-    }
-
-    @Override
-    public Class<? extends BaseRecord> recordClass() {
-        return PetRecord.class;
     }
 }
