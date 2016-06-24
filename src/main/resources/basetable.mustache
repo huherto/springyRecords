@@ -3,8 +3,12 @@ package {{baseTablePackageName}};
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
-import com.onea.dale.DtoRowMapper;
-import com.onea.dale.BaseTable;
+import io.github.huherto.springyRecords.DtoRowMapper;
+import io.github.huherto.springyRecords.BaseTable;
+
+// import com.onea.dale.DtoRowMapper;
+// import com.onea.dale.BaseTable;
+
 {{#baseTableImports}}
 {{toString}}
 {{/baseTableImports}}
