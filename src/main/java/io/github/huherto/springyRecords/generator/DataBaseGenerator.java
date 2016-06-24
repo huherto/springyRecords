@@ -147,13 +147,14 @@ public class DataBaseGenerator {
         try(Connection con = ds.getConnection()) {
             for(String tableName : tableNames) {
 
-                System.out.println(format("process schema:%s table:%s ", schemaName, tableName));
+                System.out.println(format("process schema:[%s] table:[%s] ", schemaName, tableName));
                 Database database = crawl(con, schemaName, tableName);
                 Table table = database.getTable(database.getSchema(schemaName), tableName);
                 if (table != null) {
                     processTable(table, dbTool);
                 }
                 else {
+
                     System.out.println("not found");
                 }
             }

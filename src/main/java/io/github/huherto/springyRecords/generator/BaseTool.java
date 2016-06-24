@@ -63,6 +63,10 @@ public class BaseTool {
             return nullable?"Boolean":"boolean";
         }
 
+        if (typeName.equals("binary")) {
+            return "byte[]";
+        }
+
         if (typeName.equals("blob"))
         	return "Blob";
 
