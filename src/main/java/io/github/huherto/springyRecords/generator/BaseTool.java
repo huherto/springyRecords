@@ -28,7 +28,7 @@ public class BaseTool {
         typeName = typeName.toLowerCase();
         if (typeName.contains("char"))
             return "String";
-        if (typeName.equals("text"))
+        if (typeName.contains("text"))
             return "String";
         if (typeName.contains("date"))
             return "Date";
@@ -67,7 +67,7 @@ public class BaseTool {
             return "byte[]";
         }
 
-        if (typeName.equals("blob"))
+        if (typeName.contains("blob"))
         	return "Blob";
 
         if (typeName.equals("clob"))

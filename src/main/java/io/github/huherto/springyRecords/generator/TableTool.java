@@ -29,6 +29,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -72,6 +73,10 @@ public class TableTool extends BaseTool {
             String columnName = col.getName();
             if (columnName.startsWith("\"") && columnName.endsWith("\""))
                 columnName = columnName.replaceAll("\"", "");
+            if (columnName.startsWith("'") && columnName.endsWith("'"))
+                columnName = columnName.replaceAll("'", "");
+            if (columnName.startsWith("`") && columnName.endsWith("`"))
+                columnName = columnName.replaceAll("`", "");
         	return columnName;
         }
 
@@ -205,7 +210,12 @@ public class TableTool extends BaseTool {
 
     public String javaFieldName(ColumnTool columnTool) {
     	String columnName = columnTool.columnName();
-        return convertToCamelCase(columnName, false);
+        String javaFieldName =  convertToCamelCase(columnName, false);
+        List<String> reservedWords = Arrays.asList("protected");
+        if (reservedWords.contains(javaFieldName)) {
+            return "_" + javaFieldName;
+        }
+        return javaFieldName;
     }
 
     private static String findSqlTypeConstant(int sqlType) {

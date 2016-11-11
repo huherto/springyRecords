@@ -197,7 +197,9 @@ public class DataBaseGenerator {
         try (Connection con = ds.getConnection()) {
             SchemaCrawlerOptions options = new SchemaCrawlerOptions();
             options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
-            options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaInclusionRule));
+            if (schemaInclusionRule != null) {
+                options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaInclusionRule));
+            }
             Database database = crawl(con, options);
 
         	System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
@@ -216,7 +218,6 @@ public class DataBaseGenerator {
             options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
             options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
             Database database = crawl(con, options);
-
 
             List<String> tableNames = new ArrayList<>();
 
