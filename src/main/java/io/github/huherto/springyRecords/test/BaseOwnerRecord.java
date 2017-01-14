@@ -1,21 +1,10 @@
 package io.github.huherto.springyRecords.test;
 
-import io.github.huherto.springyRecords.Autoincrement;
-import io.github.huherto.springyRecords.BaseRecord;
-import io.github.huherto.springyRecords.Column;
-
+import java.util.HashMap;
 import java.util.Map;
 
-/**
- * BaseOwnerRecord –
- * Automatically generated. Do not modify or your changes might be lost.
- */
 public class BaseOwnerRecord extends BaseRecord {
-    @Autoincrement
-    @Column(name="owner_id", sqlType=java.sql.Types.INTEGER)
     public int ownerId;
-
-    @Column(name="name", sqlType=java.sql.Types.VARCHAR)
     public String name;
 
     public BaseOwnerRecord() {
@@ -28,6 +17,9 @@ public class BaseOwnerRecord extends BaseRecord {
 
     @Override
     public Map<String, Object> asMap() {
-        return null;
+        Map<String, Object> map = new HashMap<>();
+        map.put("OWNER_ID", this.ownerId);
+        map.put("NAME", this.name);
+        return map;
     }
 }

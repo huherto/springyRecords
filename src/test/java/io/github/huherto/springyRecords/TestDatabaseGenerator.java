@@ -24,12 +24,6 @@ THE SOFTWARE.
 */
 
 import static org.junit.Assert.assertTrue;
-import io.github.huherto.springyRecords.generator.DataBaseGenerator;
-import io.github.huherto.springyRecords.generator.TableTool;
-import io.github.huherto.springyRecords.test.OwnerRecord;
-import io.github.huherto.springyRecords.test.OwnerTable;
-import io.github.huherto.springyRecords.test.PetRecord;
-import io.github.huherto.springyRecords.test.PetTable;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -37,9 +31,15 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import io.github.huherto.springyRecords.generator.DataBaseGenerator;
+import io.github.huherto.springyRecords.generator.TableTool;
+import io.github.huherto.springyRecords.test.OwnerRecord;
+import io.github.huherto.springyRecords.test.OwnerTable;
+import io.github.huherto.springyRecords.test.PetRecord;
+import io.github.huherto.springyRecords.test.PetTable;
 
 public class TestDatabaseGenerator extends BaseTest {
 
@@ -56,12 +56,12 @@ public class TestDatabaseGenerator extends BaseTest {
 
         };
 
-        dbGenerator.printInformationSchema("test");
-        dbGenerator.processTableList("test", Arrays.asList("owner", "pet"));
-        dbGenerator.processAllTables("test");
+        dbGenerator.printInformationSchema(null);
+        dbGenerator.processTableList("PUBLIC.PUBLIC", Arrays.asList("ONWER", "pet"));
+        dbGenerator.processAllTables("PUBLIC.PUBLIC");
     }
 
-    @Test @Ignore
+    @Test
     public void insertPet() {
         DataSource ds = createDs();
 
@@ -82,7 +82,7 @@ public class TestDatabaseGenerator extends BaseTest {
 
     }
 
-    @Test @Ignore
+    @Test
     public void insertOwner() {
         DataSource ds = createDs();
 

@@ -23,8 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import io.github.huherto.springyRecords.BaseRecord;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.SQLException;
@@ -37,6 +35,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import io.github.huherto.springyRecords.BaseRecord;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
@@ -156,7 +155,6 @@ public class TableTool extends BaseTool {
         // importSet.add("import "+mydomain+".Column;");
         // importSet.add("import "+mydomain+".BaseRecord;");
 
-        importSet.add("import com.onea.dale.BaseRecord;");
         importSet.add("import java.util.HashMap;");
         importSet.add("import java.util.Map;");
 
@@ -175,7 +173,8 @@ public class TableTool extends BaseTool {
                 }
             }
         }
-
+        importSet.add("import io.github.huherto.springyRecords.BaseTable;");
+        importSet.add("import io.github.huherto.springyRecords.DtoRowMapper;");
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
         return imports;

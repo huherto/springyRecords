@@ -13,7 +13,7 @@
     <logger name="io.github">
         <level value="debug" />
     </logger>
-
+    
     <!-- Root Logger -->
     <root>
         <priority value="info" />

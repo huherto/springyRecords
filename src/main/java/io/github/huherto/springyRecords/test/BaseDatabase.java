@@ -2,10 +2,6 @@ package io.github.huherto.springyRecords.test;
 
 import javax.sql.DataSource;
 
-/**
- * BaseDatabase –
- * Automatically generated. Do not modify or your changes might be lost.
- */
 public class BaseDatabase {
 
     private DataSource dataSource;
