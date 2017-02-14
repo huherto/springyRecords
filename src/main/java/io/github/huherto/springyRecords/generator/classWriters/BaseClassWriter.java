@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator;
+package io.github.huherto.springyRecords.generator.classWriters;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
+
+import io.github.huherto.springyRecords.generator.tools.BaseTool;
 
 public abstract class BaseClassWriter {
 

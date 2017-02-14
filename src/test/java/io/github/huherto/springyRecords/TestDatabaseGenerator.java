@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.github.huherto.springyRecords.generator.DataBaseGenerator;
-import io.github.huherto.springyRecords.generator.TableTool;
+import io.github.huherto.springyRecords.generator.tools.TableTool;
 import io.github.huherto.springyRecords.test.OwnerRecord;
 import io.github.huherto.springyRecords.test.OwnerTable;
 import io.github.huherto.springyRecords.test.PetRecord;

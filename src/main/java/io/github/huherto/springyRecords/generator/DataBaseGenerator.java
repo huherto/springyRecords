@@ -51,6 +51,15 @@ import schemacrawler.schemacrawler.SchemaInfoLevel;
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
 
+import io.github.huherto.springyRecords.generator.classWriters.BaseRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BaseTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
+import io.github.huherto.springyRecords.generator.tools.BaseTool;
+import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
+import io.github.huherto.springyRecords.generator.tools.TableTool;
+
 public class DataBaseGenerator {
 
     private static final Logger logger = Logger.getLogger(DataBaseGenerator.class);
@@ -125,7 +134,7 @@ public class DataBaseGenerator {
         }
     }
 
-    private TableTool createTableTool(DataSource ds, Table table, String basePackage) {
+    private TableTool createTableTool(Table table, String basePackage) {
         try {
             TableTool tableTool = createTableTool();
             tableTool.initialize(table, basePackage);
@@ -170,7 +179,7 @@ public class DataBaseGenerator {
 
         System.out.println("tableName="+table.getName());
 
-        TableTool tableTool = createTableTool(ds, table, packageName);
+        TableTool tableTool = createTableTool(table, packageName);
 
         baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
         concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);

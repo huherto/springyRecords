@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator;
+package io.github.huherto.springyRecords.generator.tools;
 
 
 public class BaseTool {

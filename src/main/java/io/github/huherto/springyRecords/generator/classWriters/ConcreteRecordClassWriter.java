@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator;
+package io.github.huherto.springyRecords.generator.classWriters;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+
+import io.github.huherto.springyRecords.generator.tools.TableTool;
 
 public class ConcreteRecordClassWriter extends BaseClassWriter {
 

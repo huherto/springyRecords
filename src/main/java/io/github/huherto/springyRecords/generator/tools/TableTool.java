@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator;
+package io.github.huherto.springyRecords.generator.tools;
 /*
 The MIT License (MIT)
 

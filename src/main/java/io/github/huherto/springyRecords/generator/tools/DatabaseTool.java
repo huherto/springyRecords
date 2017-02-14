@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator;
+package io.github.huherto.springyRecords.generator.tools;
 
 import java.util.ArrayList;
 import java.util.List;
