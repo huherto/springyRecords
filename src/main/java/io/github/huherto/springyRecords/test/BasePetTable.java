@@ -1,14 +1,20 @@
-package io.github.huherto.springyRecords.test;
+ package io.github.huherto.springyRecords.test;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
-import io.github.huherto.springyRecords.BaseTable;
-import io.github.huherto.springyRecords.DtoRowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
 
-public class BasePetTable extends BaseTable<PetRecord> {
+public class BasePetTable extends AbstractBaseTable<PetRecord> {
 
-    private RowMapper<PetRecord> rm = DtoRowMapper.newInstance(PetRecord.class);
+    private RowMapper<PetRecord> rm = new RowMapper<PetRecord>() {
+        @Override
+        public PetRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+             return new PetRecord(rs, rowNum);
+        }
+    };
 
     public BasePetTable(DataSource dataSource) {
         super(dataSource);
@@ -24,22 +30,22 @@ public class BasePetTable extends BaseTable<PetRecord> {
         return "PET";
     }
 
-    public PetRecord findObject(String name) {
+    public Optional<PetRecord> findOptional(String name) {
         String sql =
             "select * "+
             "from PET "+
             "where NAME  = ? ";
 
-        return singleResult(sql, name);
+        return optionalSingle(sql, name);
     }
 
-    public PetRecord fetchObject(String name) {
+    public PetRecord findRequired(String name) {
         String sql =
             "select * "+
             "from PET "+
             "where NAME  = ? ";
 
-        return requiredSingleResult(sql, name);
+        return requiredSingle(sql, name);
     }
 
 

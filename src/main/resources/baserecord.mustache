@@ -4,7 +4,7 @@ package {{baseRecordPackageName}};
 {{toString}}
 {{/baseRecordImports}}
 
-public class {{baseRecordClassName}} extends BaseRecord {
+public class {{baseRecordClassName}} implements BaseRecord {
     {{#columns}}
     public {{javaTypeName}} {{javaFieldName}};
     {{/columns}}
@@ -15,6 +15,12 @@ public class {{baseRecordClassName}} extends BaseRecord {
     public {{baseRecordClassName}}({{baseRecordClassName}} other) {
     {{#columns}}
         this.{{javaFieldName}} = other.{{javaFieldName}};
+    {{/columns}}
+    }
+
+    public {{baseRecordClassName}}(ResultSet rs, int rowNum) throws SQLException {
+    {{#columns}}
+        this.{{javaFieldName}} = rs.{{{resultSetGetter}}};
     {{/columns}}
     }
 

@@ -25,10 +25,6 @@ THE SOFTWARE.
 
 import static java.lang.String.format;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -40,6 +36,14 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import io.github.huherto.springyRecords.generator.classWriters.BaseRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BaseTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.CommonBaseTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
+import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
+import io.github.huherto.springyRecords.generator.tools.TableTool;
 import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
 import schemacrawler.schema.Table;
@@ -47,18 +51,6 @@ import schemacrawler.schemacrawler.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerException;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaInfoLevel;
-
-import com.github.mustachejava.Mustache;
-import com.google.common.io.Files;
-
-import io.github.huherto.springyRecords.generator.classWriters.BaseRecordClassWriter;
-import io.github.huherto.springyRecords.generator.classWriters.BaseTableClassWriter;
-import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
-import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
-import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
-import io.github.huherto.springyRecords.generator.tools.BaseTool;
-import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
-import io.github.huherto.springyRecords.generator.tools.TableTool;
 
 public class DataBaseGenerator {
 
@@ -68,22 +60,28 @@ public class DataBaseGenerator {
 
     private final DataSource ds;
 
-    private Path sourceDir = null;
+    private Path mainSourceDir = null;
 
-	private final DatabaseClassWriter databaseClassWriter = new DatabaseClassWriter();
+    private Path baseDir = null;
 
-	private final BaseRecordClassWriter baseRecordClassWriter = new BaseRecordClassWriter();
+    private Path testSourceDir = null;
 
-	private final ConcreteRecordClassWriter concreteRecordClassWriter = new ConcreteRecordClassWriter();
+  private final DatabaseClassWriter databaseClassWriter = new DatabaseClassWriter();
 
-	private final BaseTableClassWriter baseTableClassWriter = new BaseTableClassWriter();
+  private final BaseRecordClassWriter baseRecordClassWriter = new BaseRecordClassWriter();
 
-	private final ConcreteTableClassWriter concreteTableClassWriter = new ConcreteTableClassWriter();
+  private final ConcreteRecordClassWriter concreteRecordClassWriter = new ConcreteRecordClassWriter();
+
+  private final BaseTableClassWriter baseTableClassWriter = new BaseTableClassWriter();
+
+  private final ConcreteTableClassWriter concreteTableClassWriter = new ConcreteTableClassWriter();
+
+  private final CommonBaseTableClassWriter commonBaseTableClassWriter = new CommonBaseTableClassWriter();
 
     public DataBaseGenerator(DataSource ds, String packageName) {
         this.ds = ds;
         this.packageName = packageName;
-
+        this.baseDir = FileSystems.getDefault().getPath(System.getProperty("user.dir"));
     }
 
     private Database crawl(Connection dbconn, SchemaCrawlerOptions options) {
@@ -95,43 +93,34 @@ public class DataBaseGenerator {
         }
     }
 
-    public Path getSourceDir() {
-    	String userDir = System.getProperty("user.dir");
-    	if (sourceDir == null) {
-            sourceDir = FileSystems.getDefault().getPath(userDir, "src", "main", "java");
-    	}
-    	return sourceDir;
+    public Path getBaseDir() {
+      return baseDir;
     }
 
-    public void setSourceDir(Path path) {
-    	this.sourceDir = path;
+    public void setBaseDir(Path path) {
+      baseDir = path;
     }
 
-    public File sourceFile(String packageName, String className) throws IOException {
-
-        String[] segments = packageName.split("\\.");
-
-        File dir = getSourceDir().toFile();
-        for(String seg : segments) {
-            dir = new File(dir, seg);
-        }
-
-        File sourceFile = new File(dir, className + ".java");
-        Files.createParentDirs(sourceFile);
-
-        return sourceFile;
+    public Path getMainSourceDir() {
+      if (mainSourceDir == null) {
+            return baseDir.resolve("src").resolve("main").resolve("java");
+      }
+      return mainSourceDir;
     }
 
-    public void writeCode(File sourceFile, Mustache template, BaseTool tableTool) {
-        try {
-            logger.info("Creating source "+sourceFile);
-            Writer writer = new FileWriter(sourceFile);
-            template.execute(writer, tableTool);
-            writer.flush();
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
+    public void setMainSourceDir(Path path) {
+      this.mainSourceDir = path;
+    }
+
+    public Path getTestSourceDir() {
+      if (testSourceDir == null) {
+            return baseDir.resolve("src").resolve("test").resolve("java");
+      }
+      return mainSourceDir;
+    }
+
+    public void setTestSourceDir(Path path) {
+      this.testSourceDir = path;
     }
 
     private TableTool createTableTool(Table table, String basePackage) {
@@ -172,7 +161,8 @@ public class DataBaseGenerator {
             throw new RuntimeException(ex);
         }
 
-        databaseClassWriter.makeClass(getSourceDir(), dbTool);
+        databaseClassWriter.makeClass(getMainSourceDir(), dbTool);
+        commonBaseTableClassWriter.makeClass(getMainSourceDir(), dbTool);
     }
 
     private void processTable(Table table, DatabaseTool dbTool) {
@@ -181,10 +171,11 @@ public class DataBaseGenerator {
 
         TableTool tableTool = createTableTool(table, packageName);
 
-        baseRecordClassWriter.makeClass(getSourceDir(), tableTool);
-        concreteRecordClassWriter.makeClass(getSourceDir(), tableTool);
-        baseTableClassWriter.makeClass(getSourceDir(), tableTool);
-        concreteTableClassWriter.makeClass(getSourceDir(), tableTool);
+        baseRecordClassWriter.makeClass(getMainSourceDir(), tableTool);
+        concreteRecordClassWriter.makeClass(getMainSourceDir(), tableTool);
+        baseTableClassWriter.makeClass(getMainSourceDir(), tableTool);
+        concreteTableClassWriter.makeClass(getMainSourceDir(), tableTool);
+        // testTableClassWriter.makeClass(getTestSourceDir(), tableTool);
 
         dbTool.add(tableTool);
     }
@@ -211,9 +202,9 @@ public class DataBaseGenerator {
             }
             Database database = crawl(con, options);
 
-        	System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
+          System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
             for(Table table : database.getTables()) {
-            	System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
+              System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
             }
         }
         catch(SQLException ex) {
@@ -231,7 +222,7 @@ public class DataBaseGenerator {
             List<String> tableNames = new ArrayList<>();
 
             for(Table table : database.getTables(database.getSchema(schemaName))) {
-            	tableNames.add(table.getName());
+              tableNames.add(table.getName());
             }
             System.out.println("Found "+tableNames.size()+" tables");
             processTableList(schemaName, tableNames);
@@ -239,7 +230,6 @@ public class DataBaseGenerator {
         catch(SQLException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
 }

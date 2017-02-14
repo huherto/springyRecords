@@ -36,8 +36,8 @@
     </developers>
     <properties>
         <releaseCandidate>1</releaseCandidate>
-        <spring.version>3.2.4.RELEASE</spring.version>
-        <java.version>1.7</java.version>
+        <spring.version>4.3.6.RELEASE</spring.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.javadoc.reporting.version>2.7</maven.javadoc.reporting.version>
@@ -58,8 +58,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

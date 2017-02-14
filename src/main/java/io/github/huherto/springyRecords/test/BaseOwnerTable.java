@@ -1,14 +1,20 @@
-package io.github.huherto.springyRecords.test;
+ package io.github.huherto.springyRecords.test;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
-import io.github.huherto.springyRecords.BaseTable;
-import io.github.huherto.springyRecords.DtoRowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Optional;
 
-public class BaseOwnerTable extends BaseTable<OwnerRecord> {
+public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
 
-    private RowMapper<OwnerRecord> rm = DtoRowMapper.newInstance(OwnerRecord.class);
+    private RowMapper<OwnerRecord> rm = new RowMapper<OwnerRecord>() {
+        @Override
+        public OwnerRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+             return new OwnerRecord(rs, rowNum);
+        }
+    };
 
     public BaseOwnerTable(DataSource dataSource) {
         super(dataSource);
@@ -24,22 +30,22 @@ public class BaseOwnerTable extends BaseTable<OwnerRecord> {
         return "OWNER";
     }
 
-    public OwnerRecord findObject(int ownerId) {
+    public Optional<OwnerRecord> findOptional(int ownerId) {
         String sql =
             "select * "+
             "from OWNER "+
             "where OWNER_ID  = ? ";
 
-        return singleResult(sql, ownerId);
+        return optionalSingle(sql, ownerId);
     }
 
-    public OwnerRecord fetchObject(int ownerId) {
+    public OwnerRecord findRequired(int ownerId) {
         String sql =
             "select * "+
             "from OWNER "+
             "where OWNER_ID  = ? ";
 
-        return requiredSingleResult(sql, ownerId);
+        return requiredSingle(sql, ownerId);
     }
 
 

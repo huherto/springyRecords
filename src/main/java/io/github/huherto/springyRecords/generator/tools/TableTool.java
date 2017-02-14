@@ -48,12 +48,12 @@ public class TableTool extends BaseTool {
 
     public class ColumnTool {
 
-    	private final Column col;
-    	private final boolean isAutoincrement;
+        private final Column col;
+        private final boolean isAutoincrement;
 
         public ColumnTool(schemacrawler.schema.Column col) {
-        	this.col = col;
-        	isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
+            this.col = col;
+            isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
         }
 
         public String javaTypeName() {
@@ -68,6 +68,27 @@ public class TableTool extends BaseTool {
             return findSqlTypeConstant(col.getColumnDataType().getJavaSqlType().getJavaSqlType());
         }
 
+        public String resultSetGetter() {
+            String tname = javaTypeName();
+            switch(tname) {
+            case "String":
+            case "boolean":
+            case "byte":
+            case "int":
+            case "short":
+            case "long":
+            case "float":
+            case "double":
+            case "Date":
+            case "Timestamp":
+            case "BigDecimal":
+                return String.format("get%s(\"%s\")", upperCaseFirst(tname), columnName() );
+            case "byte[]":
+                return String.format("get%s(\"%s\")", "Bytes", columnName() );
+            }
+            return String.format("getObject(\"%s\", %s.class)",  columnName() );
+        }
+
         public String columnName() {
             String columnName = col.getName();
             if (columnName.startsWith("\"") && columnName.endsWith("\""))
@@ -76,11 +97,11 @@ public class TableTool extends BaseTool {
                 columnName = columnName.replaceAll("'", "");
             if (columnName.startsWith("`") && columnName.endsWith("`"))
                 columnName = columnName.replaceAll("`", "");
-        	return columnName;
+            return columnName;
         }
 
         public boolean isAutoincrement() {
-        	return isAutoincrement;
+            return isAutoincrement;
         }
     }
 
@@ -148,15 +169,12 @@ public class TableTool extends BaseTool {
                 importSet.add("import java.sql.Blob;");
             if (column.javaTypeName().contains("Clob"))
                 importSet.add("import java.sql.Clob;");
-//            if (column.isAutoincrement)
-//                importSet.add("import "+mydomain+".Autoincrement;");
         }
-
-        // importSet.add("import "+mydomain+".Column;");
-        // importSet.add("import "+mydomain+".BaseRecord;");
 
         importSet.add("import java.util.HashMap;");
         importSet.add("import java.util.Map;");
+        importSet.add("import java.sql.SQLException;");
+        importSet.add("import java.sql.ResultSet;");
 
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
@@ -172,17 +190,18 @@ public class TableTool extends BaseTool {
                     importSet.add("import java.math.BigDecimal;");
                 }
             }
+            importSet.add("import java.util.Optional;");
         }
-        importSet.add("import io.github.huherto.springyRecords.BaseTable;");
-        importSet.add("import io.github.huherto.springyRecords.DtoRowMapper;");
+        importSet.add("import java.sql.SQLException;");
+        importSet.add("import java.sql.ResultSet;");
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
         return imports;
     }
 
-	public String concreteTablePackageName() {
-		return basePackageName;
-	}
+    public String concreteTablePackageName() {
+        return basePackageName;
+    }
 
     public String concreteTableClassName() {
         return convertToCamelCase(tableName(), true) + "Table";
@@ -200,15 +219,15 @@ public class TableTool extends BaseTool {
         return lowerCaseFirst(concreteTableClassName());
     }
 
-	public String javaTypeName(ColumnTool columnTool) {
+    public String javaTypeName(ColumnTool columnTool) {
 
         return convertJavaTypeName(
-        			columnTool.col.getColumnDataType().getName(),
-        			columnTool.col.isNullable());
+                    columnTool.col.getColumnDataType().getName(),
+                    columnTool.col.isNullable());
     }
 
     public String javaFieldName(ColumnTool columnTool) {
-    	String columnName = columnTool.columnName();
+        String columnName = columnTool.columnName();
         String javaFieldName =  convertToCamelCase(columnName, false);
         List<String> reservedWords = Arrays.asList("protected");
         if (reservedWords.contains(javaFieldName)) {

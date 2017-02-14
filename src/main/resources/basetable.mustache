@@ -1,4 +1,4 @@
-package {{baseTablePackageName}};
+ package {{baseTablePackageName}};
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -7,9 +7,14 @@ import javax.sql.DataSource;
 {{toString}}
 {{/baseTableImports}}
 
-public class {{baseTableClassName}} extends BaseTable<{{concreteRecordClassName}}> {
+public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordClassName}}> {
 
-    private RowMapper<{{concreteRecordClassName}}> rm = DtoRowMapper.newInstance({{concreteRecordClassName}}.class);
+    private RowMapper<{{concreteRecordClassName}}> rm = new RowMapper<{{concreteRecordClassName}}>() {
+        @Override
+        public {{concreteRecordClassName}} mapRow(ResultSet rs, int rowNum) throws SQLException {
+             return new {{concreteRecordClassName}}(rs, rowNum);
+        }
+    };
 
     public {{baseTableClassName}}(DataSource dataSource) {
         super(dataSource);
@@ -26,22 +31,22 @@ public class {{baseTableClassName}} extends BaseTable<{{concreteRecordClassName}
     }
 
     {{#primaryKey}}
-    public {{concreteRecordClassName}} findObject({{pkMethodParameterList}}) {
+    public Optional<{{concreteRecordClassName}}> findOptional({{pkMethodParameterList}}) {
         String sql =
             "select * "+
             "from {{tableName}} "+
             "where {{pkSqlCondition}} ";
 
-        return singleResult(sql, {{pkArgumentList}});
+        return optionalSingle(sql, {{pkArgumentList}});
     }
 
-    public {{concreteRecordClassName}} fetchObject({{pkMethodParameterList}}) {
+    public {{concreteRecordClassName}} findRequired({{pkMethodParameterList}}) {
         String sql =
             "select * "+
             "from {{tableName}} "+
             "where {{pkSqlCondition}} ";
 
-        return requiredSingleResult(sql, {{pkArgumentList}});
+        return requiredSingle(sql, {{pkArgumentList}});
     }
 
     {{/primaryKey}}

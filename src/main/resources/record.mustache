@@ -1,10 +1,18 @@
 package {{concreteRecordPackageName}};
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class {{concreteRecordClassName}} extends {{baseRecordClassName}} {
+
     public {{concreteRecordClassName}}() {
     }
 
     public {{concreteRecordClassName}}({{concreteRecordClassName}} other) {
         super(other);
+    }
+
+    public {{concreteRecordClassName}}(ResultSet rs, int rowNum) throws SQLException {
+        super(rs, rowNum);
     }
 }

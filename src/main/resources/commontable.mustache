@@ -1,7 +1,8 @@
-package io.github.huherto.springyRecords;
+package {{baseDatabasePackageName}};
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -11,12 +12,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-public abstract class  BaseTable<R extends BaseRecord> extends JdbcDaoSupport {
+public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSupport {
 
     private SimpleJdbcInsert insert = null;
     private NamedParameterJdbcTemplate namedTemplate = null;
 
-    public BaseTable(DataSource dataSource) {
+    public AbstractBaseTable(DataSource dataSource) {
         setDataSource(dataSource);
     }
 
@@ -65,16 +66,11 @@ public abstract class  BaseTable<R extends BaseRecord> extends JdbcDaoSupport {
         return getJdbcTemplate().query(sql, rowMapper(), args);
     }
 
-    // deprecated. Use requieredSingleResult.
-    protected R queryForObject(String sql, Object...args) {
-        return getJdbcTemplate().queryForObject(sql, rowMapper(), args);
+    protected Optional<R> optionalSingle(String sql, Object...args) {
+        return Optional.of(DataAccessUtils.singleResult(query(sql, args)));
     }
 
-    protected R singleResult(String sql, Object...args) {
-        return DataAccessUtils.singleResult(query(sql, args));
-    }
-
-    protected R requiredSingleResult(String sql, Object...args) {
+    protected R requiredSingle(String sql, Object...args) {
         return DataAccessUtils.requiredSingleResult(query(sql, args));
     }
 

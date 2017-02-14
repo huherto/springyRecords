@@ -1,6 +1,7 @@
 package io.github.huherto.springyRecords.test;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -14,8 +15,8 @@ public class OwnerTable extends BaseOwnerTable {
         super(dataSource);
     }
 
-    public OwnerRecord findOwnerById(int id) {
-		return queryForObject("select * from owner where owner_id = ?", id);
+    public Optional<OwnerRecord> findOwnerById(int id) {
+		return optionalSingle("select * from owner where owner_id = ?", id);
     }
 
 	public List<OwnerRecord> findByName(String name) {

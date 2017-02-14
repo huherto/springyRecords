@@ -1,10 +1,12 @@
 package io.github.huherto.springyRecords.test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasePetRecord extends BaseRecord {
+public class BasePetRecord implements BaseRecord {
     public String name;
     public String owner;
     public String species;
@@ -22,6 +24,15 @@ public class BasePetRecord extends BaseRecord {
         this.sex = other.sex;
         this.birthDate = other.birthDate;
         this.death = other.death;
+    }
+
+    public BasePetRecord(ResultSet rs, int rowNum) throws SQLException {
+        this.name = rs.getString("NAME");
+        this.owner = rs.getString("OWNER");
+        this.species = rs.getString("SPECIES");
+        this.sex = rs.getString("SEX");
+        this.birthDate = rs.getDate("BIRTH_DATE");
+        this.death = rs.getDate("DEATH");
     }
 
     @Override
