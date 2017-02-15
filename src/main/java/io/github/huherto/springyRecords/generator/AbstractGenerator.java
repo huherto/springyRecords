@@ -5,7 +5,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.huherto.springyRecords.generator.classWriters.ABTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BTableITClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BaseDatabaseClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BaseRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BaseTableClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.ClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.InterfaceRecordClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.TableITClassWriter;
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
 import io.github.huherto.springyRecords.generator.tools.TableTool;
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
@@ -51,8 +61,23 @@ public class AbstractGenerator {
     public TableTool createTableTool() {
         return new TableToolImpl();
     }
-
+  
+    protected void registerClassWriters() {        
+        addClassWriterForTable(new BaseRecordClassWriter(getBaseDir()));
+        addClassWriterForTable(new ConcreteRecordClassWriter(getBaseDir()));
+        addClassWriterForTable(new BaseTableClassWriter(getBaseDir()));
+        addClassWriterForTable(new ConcreteTableClassWriter(getBaseDir()));
+        addClassWriterForTable(new TableITClassWriter(getBaseDir()));
+        addClassWriter(new DatabaseClassWriter(getBaseDir()));
+        addClassWriter(new ABTableClassWriter(getBaseDir()));
+        addClassWriter(new InterfaceRecordClassWriter(getBaseDir()));
+        addClassWriter(new BaseDatabaseClassWriter(getBaseDir()));        
+        addClassWriter(new BTableITClassWriter(getBaseDir()));        
+    }
+    
     public void writeAllClasses(DatabaseTool dbTool) {
+        
+        registerClassWriters();
 
         for(ClassWriter<DatabaseTool> cw : classWritersForAll) {
             cw.makeClass(dbTool);

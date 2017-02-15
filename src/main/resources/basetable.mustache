@@ -30,8 +30,8 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
         return "{{tableName}}";
     }
 
-    {{#primaryKey}}
-    public Optional<{{concreteRecordClassName}}> findOptional({{pkMethodParameterList}}) {
+    {{#hasPrimaryKey}}
+    public Optional<{{concreteRecordClassName}}> findByPK({{pkMethodParameterList}}) {
         String sql =
             "select * "+
             "from {{tableName}} "+
@@ -39,16 +39,5 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
 
         return optionalSingle(sql, {{pkArgumentList}});
     }
-
-    public {{concreteRecordClassName}} findRequired({{pkMethodParameterList}}) {
-        String sql =
-            "select * "+
-            "from {{tableName}} "+
-            "where {{pkSqlCondition}} ";
-
-        return requiredSingle(sql, {{pkArgumentList}});
-    }
-
-    {{/primaryKey}}
-
+    {{/hasPrimaryKey}}
 }

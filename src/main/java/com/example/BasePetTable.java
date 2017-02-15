@@ -30,7 +30,7 @@ public class BasePetTable extends AbstractBaseTable<PetRecord> {
         return "PET";
     }
 
-    public Optional<PetRecord> findOptional(String name) {
+    public Optional<PetRecord> findByPK(String name) {
         String sql =
             "select * "+
             "from PET "+
@@ -38,15 +38,4 @@ public class BasePetTable extends AbstractBaseTable<PetRecord> {
 
         return optionalSingle(sql, name);
     }
-
-    public PetRecord findRequired(String name) {
-        String sql =
-            "select * "+
-            "from PET "+
-            "where NAME  = ? ";
-
-        return requiredSingle(sql, name);
-    }
-
-
 }

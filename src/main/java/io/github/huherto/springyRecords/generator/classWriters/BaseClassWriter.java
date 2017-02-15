@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
 
 public abstract class BaseClassWriter<T> implements ClassWriter<T> {
-
-	protected static final Logger logger = Logger.getLogger(BaseClassWriter.class);
+    
+    protected static final Log logger = LogFactory.getLog(BaseClassWriter.class);
 
 	private Path baseDir;
 

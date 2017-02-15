@@ -29,7 +29,6 @@ import javax.sql.DataSource;
 
 import org.junit.Test;
 
-import io.github.huherto.springyRecords.generator.DefaultSchemaCrawlerGenerator;
 import io.github.huherto.springyRecords.generator.SchemaCrawlerGenerator;
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 
@@ -39,7 +38,7 @@ public class TestDatabaseGenerator extends BaseTest {
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        SchemaCrawlerGenerator dbGenerator = new DefaultSchemaCrawlerGenerator(ds, "com.example", "PetStore") {
+        SchemaCrawlerGenerator dbGenerator = new SchemaCrawlerGenerator(ds, "com.example", "PetStore") {
 
             @Override
             public TableToolImpl createTableTool() {

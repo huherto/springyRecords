@@ -30,7 +30,7 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
         return "OWNER";
     }
 
-    public Optional<OwnerRecord> findOptional(int ownerId) {
+    public Optional<OwnerRecord> findByPK(int ownerId) {
         String sql =
             "select * "+
             "from OWNER "+
@@ -38,15 +38,4 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
 
         return optionalSingle(sql, ownerId);
     }
-
-    public OwnerRecord findRequired(int ownerId) {
-        String sql =
-            "select * "+
-            "from OWNER "+
-            "where OWNER_ID  = ? ";
-
-        return requiredSingle(sql, ownerId);
-    }
-
-
 }

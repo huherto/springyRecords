@@ -5,15 +5,19 @@ import java.util.List;
 
 public class ColumnToolImpl extends BaseTool implements ColumnTool {
 
-    private final boolean isAutoincrement;
-    private String physicalName;
-    private String logicalName;
-    private String dataTypeName;
-    private boolean isNullable;
+    protected boolean isAutoincrement = false;
+    protected String physicalName;
+    protected String logicalName;
+    protected String dataTypeName;
+    protected boolean isNullable;
+    
+    public ColumnToolImpl() {
+        
+    }
 
     public ColumnToolImpl(schemacrawler.schema.Column col) {
         this.physicalName = removeQuotes(col.getName());
-        this.logicalName  = physicalName;
+        this.logicalName  = convertToCamelCase(physicalName, true);
         this.dataTypeName = col.getColumnDataType().getName();
         isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
     }
@@ -27,7 +31,7 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
 
     @Override
     public String javaFieldName() {
-        String javaFieldName =  convertToCamelCase(logicalName, false);
+        String javaFieldName =  lowerCaseFirst(logicalName);
         List<String> reservedWords = Arrays.asList("protected");
         if (reservedWords.contains(javaFieldName)) {
             return "_" + javaFieldName;

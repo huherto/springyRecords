@@ -37,7 +37,7 @@ public interface TableTool {
 
     String tableInstanceName();
 
-    List<ColumnTool> getPrimaryKey();
+    boolean hasPrimaryKey();
 
     String pkSqlCondition();
 

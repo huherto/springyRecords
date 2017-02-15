@@ -18,19 +18,20 @@ public class OwnerTableIT extends BaseTableIT {
     @Test
     public void testNotNull() {
         assertNotNull(table());
+        
     }
 
     @Test
     public void insertOwner() {
         DataSource ds = createDs();
 
-        OwnerTable table = new OwnerTable(ds);
         OwnerRecord r = new OwnerRecord();
         r.setName("Humberto");
 
-        table.insert(r);
+        table().insert(r);
+        table().findByPK(1);
 
-        List<OwnerRecord> owners = table.queryAll();
+        List<OwnerRecord> owners = table().queryAll();
         assertTrue(owners.size() >= 1);
 
     }

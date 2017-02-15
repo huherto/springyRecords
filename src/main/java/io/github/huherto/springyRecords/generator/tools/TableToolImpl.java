@@ -30,26 +30,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import schemacrawler.schema.Table;
 
 public class TableToolImpl extends BaseTool implements TableTool {
 
-    @SuppressWarnings("unused")
-    private static final Logger logger = Logger.getLogger(TableToolImpl.class);
+    protected String physicalName;
+    protected String logicalName;
+    protected final List<ColumnTool> columns = new ArrayList<ColumnTool>();
+    protected final List<ColumnTool> primaryKey = new ArrayList<ColumnTool>();
 
-    private String physicalName;
-    private String logicalName;
-    private final List<ColumnTool> columns = new ArrayList<ColumnTool>();
-    private final List<ColumnTool> primaryKey = new ArrayList<ColumnTool>();
-
+    public TableToolImpl() {
+    }
+    
     @Override
     public void initialize(Table table, String basePackage) throws SQLException {
         this.basePackageName = basePackage;
 
         physicalName = table.getName();
-        logicalName = table.getName();
+        logicalName = convertToCamelCase(physicalName, true);
 
         for(schemacrawler.schema.Column column :table.getColumns() ) {
             columns.add(new ColumnToolImpl(column));
@@ -97,24 +95,12 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String concreteRecordClassName() {
-        return convertToCamelCase(logicalName ,true) + "Record";
+        return logicalName  + "Record";
     }
 
     @Override
     public List<String> baseRecordImports() {
-        Set<String> importSet = new HashSet<String>();
-        for(ColumnTool column : getColumns() ) {
-            if (column.javaTypeName().contains("BigDecimal"))
-                importSet.add("import java.math.BigDecimal;");
-            if (column.javaTypeName().contains("Date"))
-                importSet.add("import java.util.Date;");
-            if (column.javaTypeName().contains("Timestamp"))
-                importSet.add("import java.sql.Timestamp;");
-            if (column.javaTypeName().contains("Blob"))
-                importSet.add("import java.sql.Blob;");
-            if (column.javaTypeName().contains("Clob"))
-                importSet.add("import java.sql.Clob;");
-        }
+        Set<String> importSet = importsForColumns(getColumns());
 
         importSet.add("import java.util.HashMap;");
         importSet.add("import java.util.Map;");
@@ -126,17 +112,29 @@ public class TableToolImpl extends BaseTool implements TableTool {
         return imports;
     }
 
+    private static Set<String> importsForColumns(List<ColumnTool> cols) {
+        Set<String> importSet = new HashSet<String>();
+        for(ColumnTool column :  cols ) {
+            String javaTypeName = column.javaTypeName();
+            if (javaTypeName.contains("BigDecimal"))
+                importSet.add("import java.math.BigDecimal;");
+            if (javaTypeName.contains("Date"))
+                importSet.add("import java.util.Date;");
+            if (javaTypeName.contains("Timestamp"))
+                importSet.add("import java.sql.Timestamp;");
+            if (javaTypeName.contains("Blob"))
+                importSet.add("import java.sql.Blob;");
+            if (javaTypeName.contains("Clob"))
+                importSet.add("import java.sql.Clob;");
+        }
+        return importSet;
+    }
+    
     @Override
     public List<String> baseTableImports() {
         Set<String> importSet = new HashSet<String>();
-        if (getPrimaryKey() != null) {
-            for(ColumnTool col : primaryKey) {
-
-                String javaType = col.javaTypeName();
-                if (javaType.contains("BigDecimal")) {
-                    importSet.add("import java.math.BigDecimal;");
-                }
-            }
+        if (hasPrimaryKey()) {
+            importSet = importsForColumns(primaryKey);            
             importSet.add("import java.util.Optional;");
         }
         importSet.add("import java.sql.SQLException;");
@@ -153,7 +151,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String concreteTableClassName() {
-        return convertToCamelCase(logicalName, true) + "Table";
+        return logicalName + "Table";
     }
 
     @Override
@@ -163,7 +161,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String baseTableClassName() {
-        return "Base" + convertToCamelCase(logicalName, true) + "Table";
+        return "Base" + logicalName + "Table";
     }
 
     @Override
@@ -172,8 +170,8 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public List<ColumnTool> getPrimaryKey() {
-        return primaryKey;
+    public boolean hasPrimaryKey() {
+        return !primaryKey.isEmpty();
     }
 
     @Override
@@ -232,6 +230,4 @@ public class TableToolImpl extends BaseTool implements TableTool {
         }
         return sb.toString();
     }
-
-
 }
