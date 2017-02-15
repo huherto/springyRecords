@@ -37,10 +37,10 @@ import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Table;
 
-public class TableToolImp extends BaseTool implements TableTool {
+public class TableToolImpl extends BaseTool implements TableTool {
 
     @SuppressWarnings("unused")
-    private static final Logger logger = Logger.getLogger(TableToolImp.class);
+    private static final Logger logger = Logger.getLogger(TableToolImpl.class);
 
     private Table table;
     private final List<ColumnTool> columns = new ArrayList<ColumnTool>();
@@ -51,7 +51,7 @@ public class TableToolImp extends BaseTool implements TableTool {
         this.table = table;
 
         for(schemacrawler.schema.Column column :table.getColumns() ) {
-            columns.add(new ColumnTool(column));
+            columns.add(new ColumnToolImpl(column));
         }
 
     }

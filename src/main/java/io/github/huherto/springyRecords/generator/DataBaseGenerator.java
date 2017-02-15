@@ -43,7 +43,8 @@ import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordCla
 import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
-import io.github.huherto.springyRecords.generator.tools.TableToolImp;
+import io.github.huherto.springyRecords.generator.tools.TableTool;
+import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
 import schemacrawler.schema.Table;
@@ -123,9 +124,9 @@ public class DataBaseGenerator {
       this.testSourceDir = path;
     }
 
-    private TableToolImp createTableTool(Table table, String basePackage) {
+    private TableTool createTableTool(Table table, String basePackage) {
         try {
-            TableToolImp tableTool = createTableTool();
+            TableTool tableTool = createTableTool();
             tableTool.initialize(table, basePackage);
             return tableTool;
         }
@@ -134,8 +135,8 @@ public class DataBaseGenerator {
         }
     }
 
-    public TableToolImp createTableTool() {
-        return new TableToolImp();
+    public TableTool createTableTool() {
+        return new TableToolImpl();
     }
 
     public void processTableList(String schemaName, List<String> tableNames) {
@@ -169,7 +170,7 @@ public class DataBaseGenerator {
 
         System.out.println("tableName="+table.getName());
 
-        TableToolImp tableTool = createTableTool(table, packageName);
+        TableTool tableTool = createTableTool(table, packageName);
 
         baseRecordClassWriter.makeClass(getMainSourceDir(), tableTool);
         concreteRecordClassWriter.makeClass(getMainSourceDir(), tableTool);

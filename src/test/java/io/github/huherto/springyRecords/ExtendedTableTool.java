@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import io.github.huherto.springyRecords.generator.tools.TableToolImp;
+import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 
-public class ExtendedTableTool extends TableToolImp {
+public class ExtendedTableTool extends TableToolImpl {
 
 }

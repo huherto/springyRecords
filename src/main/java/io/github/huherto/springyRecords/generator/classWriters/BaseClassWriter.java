@@ -11,8 +11,6 @@ import org.apache.log4j.Logger;
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
 
-import io.github.huherto.springyRecords.generator.tools.BaseTool;
-
 public abstract class BaseClassWriter {
 
 	static final Logger logger = Logger.getLogger(DatabaseClassWriter.class);
@@ -32,7 +30,7 @@ public abstract class BaseClassWriter {
         return sourceFile;
     }
 
-	public void writeCode(File sourceFile, Mustache template, BaseTool tableTool) {
+	public void writeCode(File sourceFile, Mustache template, Object tableTool) {
 	    try {
 	        logger.info("Creating source "+sourceFile);
 	        Writer writer = new FileWriter(sourceFile);

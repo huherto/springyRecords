@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import io.github.huherto.springyRecords.generator.DataBaseGenerator;
-import io.github.huherto.springyRecords.generator.tools.TableToolImp;
+import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 import io.github.huherto.springyRecords.test.OwnerRecord;
 import io.github.huherto.springyRecords.test.OwnerTable;
 import io.github.huherto.springyRecords.test.PetRecord;
@@ -50,7 +50,7 @@ public class TestDatabaseGenerator extends BaseTest {
         DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "io.github.huherto.springyRecords.test") {
 
             @Override
-            public TableToolImp createTableTool() {
+            public TableToolImpl createTableTool() {
                 return new ExtendedTableTool();
             }
 

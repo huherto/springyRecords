@@ -107,4 +107,14 @@ public class BaseTool {
         return "" + sqlType;
     }
 
+    public static String removeQuotes(String str) {
+        if (str.startsWith("\"") && str.endsWith("\""))
+            return str.replaceAll("\"", "");
+        if (str.startsWith("'") && str.endsWith("'"))
+            return str.replaceAll("'", "");
+        if (str.startsWith("`") && str.endsWith("`"))
+            return str.replaceAll("`", "");
+        return str;
+    }
+
 }
