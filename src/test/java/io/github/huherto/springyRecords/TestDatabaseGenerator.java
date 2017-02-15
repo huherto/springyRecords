@@ -34,13 +34,14 @@ import javax.sql.DataSource;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.example.OwnerRecord;
+import com.example.OwnerTable;
+import com.example.PetRecord;
+import com.example.PetTable;
+
 import io.github.huherto.springyRecords.generator.DefaultSchemaCrawlerGenerator;
 import io.github.huherto.springyRecords.generator.SchemaCrawlerGenerator;
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
-import io.github.huherto.springyRecords.test.OwnerRecord;
-import io.github.huherto.springyRecords.test.OwnerTable;
-import io.github.huherto.springyRecords.test.PetRecord;
-import io.github.huherto.springyRecords.test.PetTable;
 
 public class TestDatabaseGenerator extends BaseTest {
 
@@ -48,7 +49,7 @@ public class TestDatabaseGenerator extends BaseTest {
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        SchemaCrawlerGenerator dbGenerator = new DefaultSchemaCrawlerGenerator(ds, "io.github.huherto.springyRecords.test") {
+        SchemaCrawlerGenerator dbGenerator = new DefaultSchemaCrawlerGenerator(ds, "com.example") {
 
             @Override
             public TableToolImpl createTableTool() {

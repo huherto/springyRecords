@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.github.huherto.springyRecords.test.OwnerRecord;
-import io.github.huherto.springyRecords.test.PetStoreDatabase;
+import com.example.OwnerRecord;
+import com.example.PetStoreDatabase;
 
 public class SimpleQueries extends BaseTest {
 

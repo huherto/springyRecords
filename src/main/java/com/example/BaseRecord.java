@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.test;
+package com.example;
 
 import java.util.Map;
 
