@@ -9,11 +9,16 @@ import com.github.mustachejava.MustacheFactory;
 
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
 
-public class DatabaseClassWriter extends BaseClassWriter {
+public class DatabaseClassWriter extends BaseClassWriter<DatabaseTool> {
 
-	public void makeClass(Path sourceDir, DatabaseTool dbTool) {
+	public DatabaseClassWriter(Path baseDir) {
+        super(baseDir);
+    }
+
+    @Override
+    public void makeClass(DatabaseTool dbTool) {
 	    try {
-	    	File sourceFile = sourceFile(sourceDir, dbTool.baseDatabasePackageName(), dbTool.baseDatabaseClassName());
+	    	File sourceFile = sourceFile(getMainSourceDir(), dbTool.baseDatabasePackageName(), dbTool.baseDatabaseClassName());
 	        if (sourceFile.exists()) {
 	            sourceFile.delete();
 	            sourceFile.createNewFile();

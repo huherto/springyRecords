@@ -9,12 +9,17 @@ import com.github.mustachejava.MustacheFactory;
 
 import io.github.huherto.springyRecords.generator.tools.TableTool;
 
-public class ConcreteTableClassWriter extends BaseClassWriter {
+public class ConcreteTableClassWriter extends BaseClassWriter<TableTool>  {
 
-	public void makeClass(Path sourceDir, TableTool tableTool) {
+	public ConcreteTableClassWriter(Path baseDir) {
+        super(baseDir);
+    }
+
+    @Override
+    public void makeClass(TableTool tableTool) {
 	    try {
 	    	File sourceFile =
-	    		sourceFile(sourceDir,
+	    		sourceFile(getMainSourceDir(),
 	    				tableTool.concreteTablePackageName(),
 	    				tableTool.concreteTableClassName());
 	        if (sourceFile.exists()) {

@@ -34,7 +34,7 @@ import javax.sql.DataSource;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import io.github.huherto.springyRecords.generator.DataBaseGenerator;
+import io.github.huherto.springyRecords.generator.SchemaCrawlerGenerator;
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 import io.github.huherto.springyRecords.test.OwnerRecord;
 import io.github.huherto.springyRecords.test.OwnerTable;
@@ -47,7 +47,7 @@ public class TestDatabaseGenerator extends BaseTest {
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        DataBaseGenerator dbGenerator = new DataBaseGenerator(ds, "io.github.huherto.springyRecords.test") {
+        SchemaCrawlerGenerator dbGenerator = new SchemaCrawlerGenerator(ds, "io.github.huherto.springyRecords.test") {
 
             @Override
             public TableToolImpl createTableTool() {

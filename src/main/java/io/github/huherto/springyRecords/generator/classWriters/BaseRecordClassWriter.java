@@ -9,12 +9,17 @@ import com.github.mustachejava.MustacheFactory;
 
 import io.github.huherto.springyRecords.generator.tools.TableTool;
 
-public class BaseRecordClassWriter extends BaseClassWriter {
+public class BaseRecordClassWriter extends BaseClassWriter<TableTool> {
 
-	public void makeClass(Path sourceDir, TableTool tableTool) {
+	public BaseRecordClassWriter(Path baseDir) {
+        super(baseDir);
+    }
+
+    @Override
+    public void makeClass(TableTool tableTool) {
 	    try {
 	    	File sourceFile =
-	    		sourceFile(sourceDir,
+	    		sourceFile(getMainSourceDir(),
 	    				tableTool.baseRecordPackageName(),
 	    				tableTool.baseRecordClassName());
 	        if (sourceFile.exists()) {
@@ -32,6 +37,4 @@ public class BaseRecordClassWriter extends BaseClassWriter {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("baserecord.mustache");
     }
-
-
 }

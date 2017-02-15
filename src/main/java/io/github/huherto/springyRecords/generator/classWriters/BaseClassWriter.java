@@ -11,9 +11,23 @@ import org.apache.log4j.Logger;
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
 
-public abstract class BaseClassWriter {
+public abstract class BaseClassWriter<T> implements ClassWriter<T> {
 
-	static final Logger logger = Logger.getLogger(DatabaseClassWriter.class);
+	protected static final Logger logger = Logger.getLogger(BaseClassWriter.class);
+
+	private Path baseDir;
+
+    public BaseClassWriter(Path baseDir) {
+        this.baseDir = baseDir;
+    }
+
+    public Path getMainSourceDir() {
+        return baseDir.resolve("src").resolve("main").resolve("java");
+    }
+
+    public Path getTestSourceDir() {
+        return baseDir.resolve("src").resolve("test").resolve("java");
+    }
 
     public File sourceFile(Path sourceDir, String packageName, String className) throws IOException {
 
@@ -30,11 +44,11 @@ public abstract class BaseClassWriter {
         return sourceFile;
     }
 
-	public void writeCode(File sourceFile, Mustache template, Object tableTool) {
+	public void writeCode(File sourceFile, Mustache template, T tool) {
 	    try {
 	        logger.info("Creating source "+sourceFile);
 	        Writer writer = new FileWriter(sourceFile);
-	        template.execute(writer, tableTool);
+	        template.execute(writer, tool);
 	        writer.flush();
 	    }
 	    catch(Exception ex) {

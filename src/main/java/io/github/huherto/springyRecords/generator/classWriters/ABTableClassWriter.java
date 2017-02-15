@@ -9,12 +9,17 @@ import com.github.mustachejava.MustacheFactory;
 
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
 
-public class CommonBaseTableClassWriter extends BaseClassWriter {
-	
-	public void makeClass(Path sourceDir, DatabaseTool dbTool) {
+public class ABTableClassWriter extends BaseClassWriter<DatabaseTool> {
+
+	public ABTableClassWriter(Path baseDir) {
+        super(baseDir);
+    }
+
+    @Override
+    public void makeClass(DatabaseTool dbTool) {
 	    try {
 	    	File sourceFile =
-	    		sourceFile(sourceDir,
+	    		sourceFile(getMainSourceDir(),
 	    				dbTool.baseDatabasePackageName(),
 	    				"AbstractBaseTable");
 	        if (sourceFile.exists()) {
@@ -30,7 +35,7 @@ public class CommonBaseTableClassWriter extends BaseClassWriter {
 
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("commontable.mustache");
-    }	
+        return mf.compile("abtable.mustache");
+    }
 
 }
