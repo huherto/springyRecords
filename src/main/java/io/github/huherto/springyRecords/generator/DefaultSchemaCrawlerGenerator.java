@@ -3,6 +3,7 @@ package io.github.huherto.springyRecords.generator;
 import javax.sql.DataSource;
 
 import io.github.huherto.springyRecords.generator.classWriters.ABTableClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.BaseDatabaseClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.BaseRecordClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.BaseTableClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
@@ -13,8 +14,8 @@ import io.github.huherto.springyRecords.generator.classWriters.TableITClassWrite
 
 public class DefaultSchemaCrawlerGenerator extends SchemaCrawlerGenerator {
 
-    public DefaultSchemaCrawlerGenerator(DataSource ds, String packageName) {
-        super(ds, packageName);
+    public DefaultSchemaCrawlerGenerator(DataSource ds, String packageName, String databaseClassName) {
+        super(ds, packageName, databaseClassName);
 
         addClassWriterForTable(new BaseRecordClassWriter(getBaseDir()));
         addClassWriterForTable(new ConcreteRecordClassWriter(getBaseDir()));
@@ -24,6 +25,7 @@ public class DefaultSchemaCrawlerGenerator extends SchemaCrawlerGenerator {
         addClassWriter(new DatabaseClassWriter(getBaseDir()));
         addClassWriter(new ABTableClassWriter(getBaseDir()));
         addClassWriter(new InterfaceRecordClassWriter(getBaseDir()));
+        addClassWriter(new BaseDatabaseClassWriter(getBaseDir()));
 
 
     }

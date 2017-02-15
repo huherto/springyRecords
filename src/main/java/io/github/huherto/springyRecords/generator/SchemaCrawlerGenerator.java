@@ -46,8 +46,8 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
 
     private final DataSource ds;
 
-    public SchemaCrawlerGenerator(DataSource ds, String packageName) {
-        super(packageName);
+    public SchemaCrawlerGenerator(DataSource ds, String packageName, String databaseClassName) {
+        super(packageName, databaseClassName);
         this.ds = ds;
     }
 
@@ -73,7 +73,7 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
 
     public void processTableList(String schemaName, List<String> tableNames) {
 
-        DatabaseTool dbTool = new DatabaseTool(getPackageName());
+        DatabaseTool dbTool = new DatabaseTool(getPackageName(), getDatabaseClassName() );
 
         try(Connection con = ds.getConnection()) {
             for(String tableName : tableNames) {

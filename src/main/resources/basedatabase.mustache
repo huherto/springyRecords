@@ -2,22 +2,22 @@ package {{baseDatabasePackageName}};
 
 import javax.sql.DataSource;
 
-public class {{baseDatabaseClassName}} {
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-    private DataSource dataSource;
+public class {{baseDatabaseClassName}} extends JdbcDaoSupport {
 
     {{#tables}}
     private {{concreteTableClassName}} {{tableInstanceName}} = null;
     {{/tables}}
 
     protected {{baseDatabaseClassName}}(DataSource dataSource) {
-        this.dataSource = dataSource;
+        setDataSource(dataSource);
     }
 
     {{#tables}}
     public {{concreteTableClassName}} {{tableInstanceName}}() {
         if ({{tableInstanceName}} == null) {
-            {{tableInstanceName}} = new {{concreteTableClassName}}(dataSource);
+            {{tableInstanceName}} = new {{concreteTableClassName}}(getDataSource());
         }
         return {{tableInstanceName}};
     }

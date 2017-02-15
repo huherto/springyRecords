@@ -13,12 +13,14 @@ import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 public class AbstractGenerator {
 
     private String packageName;
+    private String databaseClassName;
     private Path baseDir = null;
     private List< ClassWriter<TableTool> > classWritersForTables = new ArrayList<>();
     private List< ClassWriter<DatabaseTool> > classWritersForAll = new ArrayList<>();
 
-    public AbstractGenerator(String packageName) {
+    public AbstractGenerator(String packageName, String databaseClassName) {
         this.packageName = packageName;
+        this.databaseClassName = databaseClassName;
         this.baseDir = FileSystems.getDefault().getPath(System.getProperty("user.dir"));
     }
 
@@ -32,6 +34,10 @@ public class AbstractGenerator {
 
     public String getPackageName() {
         return packageName;
+    }
+
+    public String getDatabaseClassName() {
+        return databaseClassName;
     }
 
     public Path getBaseDir() {

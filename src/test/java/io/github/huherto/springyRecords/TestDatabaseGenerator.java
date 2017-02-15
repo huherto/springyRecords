@@ -23,21 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.junit.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-import com.example.OwnerRecord;
-import com.example.OwnerTable;
-import com.example.PetRecord;
-import com.example.PetTable;
 
 import io.github.huherto.springyRecords.generator.DefaultSchemaCrawlerGenerator;
 import io.github.huherto.springyRecords.generator.SchemaCrawlerGenerator;
@@ -49,7 +39,7 @@ public class TestDatabaseGenerator extends BaseTest {
     public void generateExtendTableTool() {
         DataSource ds = createDs();
 
-        SchemaCrawlerGenerator dbGenerator = new DefaultSchemaCrawlerGenerator(ds, "com.example") {
+        SchemaCrawlerGenerator dbGenerator = new DefaultSchemaCrawlerGenerator(ds, "com.example", "PetStore") {
 
             @Override
             public TableToolImpl createTableTool() {
@@ -61,42 +51,6 @@ public class TestDatabaseGenerator extends BaseTest {
         dbGenerator.printInformationSchema(null);
         dbGenerator.processTableList("PUBLIC.PUBLIC", Arrays.asList("ONWER", "pet"));
         dbGenerator.processAllTables("PUBLIC.PUBLIC");
-    }
-
-    @Test
-    public void insertPet() {
-        DataSource ds = createDs();
-
-        JdbcTemplate jt = new JdbcTemplate(ds);
-        jt.execute("delete from pet");
-
-        PetTable table = new PetTable(ds);
-        PetRecord r = new PetRecord();
-        r.setBirthDate(new Date());
-        r.setName("Manchas");
-        r.setOwner("Humberto");
-        r.setSex("M");
-        r.setSpecies("Dog");
-        table.insert(r);
-
-        List<PetRecord> pets = table.queryAll();
-        assertTrue(pets.size() >= 1);
-
-    }
-
-    @Test
-    public void insertOwner() {
-        DataSource ds = createDs();
-
-        OwnerTable table = new OwnerTable(ds);
-        OwnerRecord r = new OwnerRecord();
-        r.setName("Humberto");
-
-        table.insert(r);
-
-        List<OwnerRecord> owners = table.queryAll();
-        assertTrue(owners.size() >= 1);
-
     }
 
 }

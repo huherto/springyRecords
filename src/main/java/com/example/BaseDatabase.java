@@ -2,27 +2,27 @@ package com.example;
 
 import javax.sql.DataSource;
 
-public class BaseDatabase {
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-    private DataSource dataSource;
+public class BaseDatabase extends JdbcDaoSupport {
 
     private OwnerTable ownerTable = null;
     private PetTable petTable = null;
 
     protected BaseDatabase(DataSource dataSource) {
-        this.dataSource = dataSource;
+        setDataSource(dataSource);
     }
 
     public OwnerTable ownerTable() {
         if (ownerTable == null) {
-            ownerTable = new OwnerTable(dataSource);
+            ownerTable = new OwnerTable(getDataSource());
         }
         return ownerTable;
     }
 
     public PetTable petTable() {
         if (petTable == null) {
-            petTable = new PetTable(dataSource);
+            petTable = new PetTable(getDataSource());
         }
         return petTable;
     }

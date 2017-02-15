@@ -7,8 +7,11 @@ public class DatabaseTool extends BaseTool {
 
     private List<TableTool> tables = new ArrayList<>();
 
-    public DatabaseTool(String packageName) {
+    private String databaseClassName;
+
+    public DatabaseTool(String packageName, String databaseClassName) {
         this.basePackageName = packageName;
+        this.databaseClassName = databaseClassName;
     }
 
     public void add(TableTool tableTool) {
@@ -27,4 +30,7 @@ public class DatabaseTool extends BaseTool {
         return basePackageName;
     }
 
+    public String databaseClassName() {
+        return databaseClassName + "Database";
+    }
 }
