@@ -57,6 +57,14 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
         return String.format("getObject(\"%s\", %s.class)",  physicalName, tname );
     }
 
+    public String getterName() {
+        return "get" + upperCaseFirst(javaFieldName());
+    }
+
+    public String setterName() {
+        return "set" + upperCaseFirst(javaFieldName());
+    }
+
     @Override
     public String columnName() {
         String columnName = physicalName;

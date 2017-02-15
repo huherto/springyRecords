@@ -3,7 +3,6 @@ package io.github.huherto.springyRecords.generator.tools;
 import java.sql.SQLException;
 import java.util.List;
 
-import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Table;
 
 public interface TableTool {
@@ -38,7 +37,7 @@ public interface TableTool {
 
     String tableInstanceName();
 
-    PrimaryKey getPrimaryKey();
+    List<ColumnTool> getPrimaryKey();
 
     String pkSqlCondition();
 

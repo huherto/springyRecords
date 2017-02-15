@@ -32,9 +32,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import schemacrawler.schema.Column;
-import schemacrawler.schema.IndexColumn;
-import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Table;
 
 public class TableToolImpl extends BaseTool implements TableTool {
@@ -42,18 +39,25 @@ public class TableToolImpl extends BaseTool implements TableTool {
     @SuppressWarnings("unused")
     private static final Logger logger = Logger.getLogger(TableToolImpl.class);
 
-    private Table table;
+    private String physicalName;
+    private String logicalName;
     private final List<ColumnTool> columns = new ArrayList<ColumnTool>();
+    private final List<ColumnTool> primaryKey = new ArrayList<ColumnTool>();
 
     @Override
     public void initialize(Table table, String basePackage) throws SQLException {
         this.basePackageName = basePackage;
-        this.table = table;
+
+        physicalName = table.getName();
+        logicalName = table.getName();
 
         for(schemacrawler.schema.Column column :table.getColumns() ) {
             columns.add(new ColumnToolImpl(column));
         }
 
+        for(schemacrawler.schema.Column column :table.getPrimaryKey().getColumns() ) {
+            primaryKey.add(new ColumnToolImpl(column));
+        }
     }
 
     @Override
@@ -73,7 +77,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String tableName(){
-        return table.getName();
+        return physicalName;
     }
 
     @Override
@@ -93,7 +97,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String concreteRecordClassName() {
-        return convertToCamelCase(tableName() ,true) + "Record";
+        return convertToCamelCase(logicalName ,true) + "Record";
     }
 
     @Override
@@ -126,8 +130,9 @@ public class TableToolImpl extends BaseTool implements TableTool {
     public List<String> baseTableImports() {
         Set<String> importSet = new HashSet<String>();
         if (getPrimaryKey() != null) {
-            for(IndexColumn column : getPrimaryKey().getColumns()) {
-                String javaType = convertJavaTypeName(column.getColumnDataType().getName(), false);
+            for(ColumnTool col : primaryKey) {
+
+                String javaType = col.javaTypeName();
                 if (javaType.contains("BigDecimal")) {
                     importSet.add("import java.math.BigDecimal;");
                 }
@@ -148,7 +153,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String concreteTableClassName() {
-        return convertToCamelCase(tableName(), true) + "Table";
+        return convertToCamelCase(logicalName, true) + "Table";
     }
 
     @Override
@@ -158,7 +163,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String baseTableClassName() {
-        return "Base" + convertToCamelCase(tableName(), true) + "Table";
+        return "Base" + convertToCamelCase(logicalName, true) + "Table";
     }
 
     @Override
@@ -167,25 +172,24 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public PrimaryKey getPrimaryKey() {
-        return table.getPrimaryKey();
+    public List<ColumnTool> getPrimaryKey() {
+        return primaryKey;
     }
 
     @Override
     public String pkSqlCondition() {
-        return sqlCondition(table.getPrimaryKey());
+        return sqlCondition(primaryKey);
     }
 
-    public String sqlCondition(PrimaryKey pk) {
+    public String sqlCondition(List<ColumnTool> pk) {
         StringBuilder sb = new StringBuilder();
 
-        for(Column col : pk.getColumns()) {
+        for(ColumnTool col : pk) {
 
             if (sb.length() > 0)
                 sb.append(" and ");
 
-            String columnName = col.getName();
-            sb.append(columnName);
+            sb.append(col.columnName());
             sb.append("  = ?");
         }
         return sb.toString();
@@ -193,41 +197,38 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String pkMethodParameterList() {
-        return methodParameterList(table.getPrimaryKey());
+        return methodParameterList(primaryKey);
     }
 
-    private String methodParameterList(PrimaryKey pk) {
+    private String methodParameterList(List<ColumnTool> pk) {
         StringBuilder sb = new StringBuilder();
 
-        for(Column col : pk.getColumns()) {
+        for(ColumnTool col : pk) {
 
             if (sb.length() > 0)
                 sb.append(", ");
 
-            String columnType = col.getColumnDataType().getName();
-            String columnName = col.getName();
-            sb.append(convertJavaTypeName(columnType, col.isNullable()));
+            sb.append(col.javaTypeName());
             sb.append(" ");
-            sb.append(convertToCamelCase(columnName, false));
+            sb.append(col.javaFieldName());
         }
         return sb.toString();
     }
 
     @Override
     public String pkArgumentList() {
-        return argumentList(table.getPrimaryKey());
+        return argumentList(primaryKey);
     }
 
-    private String argumentList(PrimaryKey pk) {
+    private String argumentList(List<ColumnTool> pk) {
         StringBuilder sb = new StringBuilder();
 
-        for(Column col : pk.getColumns()) {
+        for(ColumnTool col : pk) {
 
             if (sb.length() > 0)
                 sb.append(", ");
 
-            String columnName = col.getName();
-            sb.append(convertToCamelCase(columnName, false));
+            sb.append(col.javaFieldName());
         }
         return sb.toString();
     }
