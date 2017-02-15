@@ -1,0 +1,19 @@
+package {{concreteTablePackageName}};
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
+
+public class {{concreteTableClassName}}IT extends BaseTableIT {
+
+    public {{concreteTableClassName}} table() {
+        return database().{{tableInstanceName}}();
+    }
+
+    @Test
+    public void testNotNull() {
+        assertNotNull(table());
+    }
+
+
+}

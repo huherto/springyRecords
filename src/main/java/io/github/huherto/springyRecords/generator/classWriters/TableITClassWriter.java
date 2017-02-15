@@ -21,7 +21,7 @@ public class TableITClassWriter extends BaseClassWriter<TableTool> {
             File sourceFile =
                 sourceFile(getTestSourceDir(),
                         tableTool.concreteTablePackageName(),
-                        tableTool.concreteTableClassName());
+                        tableTool.concreteTableClassName() + "IT");
             if (sourceFile.exists()) {
                 logger.info("Skipping source "+sourceFile);
                 return;
