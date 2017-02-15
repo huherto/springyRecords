@@ -23,11 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -35,80 +32,20 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import io.github.huherto.springyRecords.BaseRecord;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Table;
 
-public class TableTool extends BaseTool {
+public class TableToolImp extends BaseTool implements TableTool {
 
     @SuppressWarnings("unused")
-    private static final Logger logger = Logger.getLogger(TableTool.class);
-
-    public class ColumnTool {
-
-        private final Column col;
-        private final boolean isAutoincrement;
-
-        public ColumnTool(schemacrawler.schema.Column col) {
-            this.col = col;
-            isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
-        }
-
-        public String javaTypeName() {
-            return TableTool.this.javaTypeName(this);
-        }
-
-        public String javaFieldName() {
-            return TableTool.this.javaFieldName(this);
-        }
-
-        public String sqlTypeConstant() {
-            return findSqlTypeConstant(col.getColumnDataType().getJavaSqlType().getJavaSqlType());
-        }
-
-        public String resultSetGetter() {
-            String tname = javaTypeName();
-            switch(tname) {
-            case "String":
-            case "boolean":
-            case "byte":
-            case "int":
-            case "short":
-            case "long":
-            case "float":
-            case "double":
-            case "Date":
-            case "Timestamp":
-            case "BigDecimal":
-                return String.format("get%s(\"%s\")", upperCaseFirst(tname), columnName() );
-            case "byte[]":
-                return String.format("get%s(\"%s\")", "Bytes", columnName() );
-            }
-            return String.format("getObject(\"%s\", %s.class)",  columnName() );
-        }
-
-        public String columnName() {
-            String columnName = col.getName();
-            if (columnName.startsWith("\"") && columnName.endsWith("\""))
-                columnName = columnName.replaceAll("\"", "");
-            if (columnName.startsWith("'") && columnName.endsWith("'"))
-                columnName = columnName.replaceAll("'", "");
-            if (columnName.startsWith("`") && columnName.endsWith("`"))
-                columnName = columnName.replaceAll("`", "");
-            return columnName;
-        }
-
-        public boolean isAutoincrement() {
-            return isAutoincrement;
-        }
-    }
+    private static final Logger logger = Logger.getLogger(TableToolImp.class);
 
     private Table table;
-    private final String mydomain = BaseRecord.class.getPackage().getName();
-    private final List<TableTool.ColumnTool> columns = new ArrayList<TableTool.ColumnTool>();
+    private final List<ColumnTool> columns = new ArrayList<ColumnTool>();
 
+    @Override
     public void initialize(Table table, String basePackage) throws SQLException {
         this.basePackageName = basePackage;
         this.table = table;
@@ -119,6 +56,7 @@ public class TableTool extends BaseTool {
 
     }
 
+    @Override
     public List<ColumnTool> getColumns() {
         List<ColumnTool> cols = new ArrayList<>();
         for(ColumnTool col : columns) {
@@ -128,34 +66,37 @@ public class TableTool extends BaseTool {
         return cols;
     }
 
+    @Override
     public boolean ignoreColumn(ColumnTool col) {
         return false;
     }
 
-    public String mydomain() {
-        return mydomain;
-    }
-
+    @Override
     public String tableName(){
         return table.getName();
     }
 
+    @Override
     public String baseRecordPackageName() {
         return basePackageName;
     }
 
+    @Override
     public String baseRecordClassName() {
         return "Base" + concreteRecordClassName();
     }
 
+    @Override
     public String concreteRecordPackageName() {
         return basePackageName;
     }
 
+    @Override
     public String concreteRecordClassName() {
         return convertToCamelCase(tableName() ,true) + "Record";
     }
 
+    @Override
     public List<String> baseRecordImports() {
         Set<String> importSet = new HashSet<String>();
         for(ColumnTool column : getColumns() ) {
@@ -181,6 +122,7 @@ public class TableTool extends BaseTool {
         return imports;
     }
 
+    @Override
     public List<String> baseTableImports() {
         Set<String> importSet = new HashSet<String>();
         if (getPrimaryKey() != null) {
@@ -199,64 +141,37 @@ public class TableTool extends BaseTool {
         return imports;
     }
 
+    @Override
     public String concreteTablePackageName() {
         return basePackageName;
     }
 
+    @Override
     public String concreteTableClassName() {
         return convertToCamelCase(tableName(), true) + "Table";
     }
 
+    @Override
     public String baseTablePackageName() {
         return basePackageName;
     }
 
+    @Override
     public String baseTableClassName() {
         return "Base" + convertToCamelCase(tableName(), true) + "Table";
     }
 
+    @Override
     public String tableInstanceName() {
         return lowerCaseFirst(concreteTableClassName());
     }
 
-    public String javaTypeName(ColumnTool columnTool) {
-
-        return convertJavaTypeName(
-                    columnTool.col.getColumnDataType().getName(),
-                    columnTool.col.isNullable());
-    }
-
-    public String javaFieldName(ColumnTool columnTool) {
-        String columnName = columnTool.columnName();
-        String javaFieldName =  convertToCamelCase(columnName, false);
-        List<String> reservedWords = Arrays.asList("protected");
-        if (reservedWords.contains(javaFieldName)) {
-            return "_" + javaFieldName;
-        }
-        return javaFieldName;
-    }
-
-    private static String findSqlTypeConstant(int sqlType) {
-        for(Field field : java.sql.Types.class.getFields()) {
-
-            int mod = field.getModifiers();
-            if (field.getType() == int.class && Modifier.isPublic(mod) && Modifier.isStatic(mod)) {
-                try {
-                    if (field.getInt(null) == sqlType) {
-                        return "java.sql.Types."+field.getName();
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return "" + sqlType;
-    }
-
+    @Override
     public PrimaryKey getPrimaryKey() {
         return table.getPrimaryKey();
     }
 
+    @Override
     public String pkSqlCondition() {
         return sqlCondition(table.getPrimaryKey());
     }
@@ -276,6 +191,7 @@ public class TableTool extends BaseTool {
         return sb.toString();
     }
 
+    @Override
     public String pkMethodParameterList() {
         return methodParameterList(table.getPrimaryKey());
     }
@@ -297,6 +213,7 @@ public class TableTool extends BaseTool {
         return sb.toString();
     }
 
+    @Override
     public String pkArgumentList() {
         return argumentList(table.getPrimaryKey());
     }

@@ -1,5 +1,7 @@
 package io.github.huherto.springyRecords.generator.tools;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class BaseTool {
 
@@ -87,5 +89,22 @@ public class BaseTool {
     	        return str;
     	    return str.substring(0, 1).toLowerCase() + str.substring(1);
 	}
+
+    public static String findSqlTypeConstant(int sqlType) {
+        for(Field field : java.sql.Types.class.getFields()) {
+
+            int mod = field.getModifiers();
+            if (field.getType() == int.class && Modifier.isPublic(mod) && Modifier.isStatic(mod)) {
+                try {
+                    if (field.getInt(null) == sqlType) {
+                        return "java.sql.Types."+field.getName();
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return "" + sqlType;
+    }
 
 }

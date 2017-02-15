@@ -7,11 +7,11 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-import io.github.huherto.springyRecords.generator.tools.TableTool;
+import io.github.huherto.springyRecords.generator.tools.TableToolImp;
 
 public class ConcreteTableClassWriter extends BaseClassWriter {
 
-	public void makeClass(Path sourceDir, TableTool tableTool) {
+	public void makeClass(Path sourceDir, TableToolImp tableTool) {
 	    try {
 	    	File sourceFile =
 	    		sourceFile(sourceDir,
