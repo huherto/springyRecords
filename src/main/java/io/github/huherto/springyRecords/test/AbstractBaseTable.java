@@ -47,7 +47,7 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
         return insert;
     }
 
-    public int insert(R rec) {
+    public int insert(BaseRecord rec) {
         SimpleJdbcInsert insert = getInsert();
         if (insert.getGeneratedKeyNames().length > 0) {
             return insertAndReturnKey(rec).intValue();
@@ -55,7 +55,7 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
         return insert.execute(rec.asMap());
     }
 
-    public Number insertAndReturnKey(R rec) {
+    public Number insertAndReturnKey(BaseRecord rec) {
         SimpleJdbcInsert insert = getInsert();
         Map<String, Object> map = rec.asMap();
         map.remove(insert.getGeneratedKeyNames()[0]);

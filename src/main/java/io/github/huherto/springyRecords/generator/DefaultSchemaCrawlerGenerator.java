@@ -8,6 +8,7 @@ import io.github.huherto.springyRecords.generator.classWriters.BaseTableClassWri
 import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.InterfaceRecordClassWriter;
 
 public class DefaultSchemaCrawlerGenerator extends SchemaCrawlerGenerator {
 
@@ -20,6 +21,7 @@ public class DefaultSchemaCrawlerGenerator extends SchemaCrawlerGenerator {
         addClassWriterForTable(new ConcreteTableClassWriter(getBaseDir()));
         addClassWriter(new DatabaseClassWriter(getBaseDir()));
         addClassWriter(new ABTableClassWriter(getBaseDir()));
+        addClassWriter(new InterfaceRecordClassWriter(getBaseDir()));
 
     }
 
