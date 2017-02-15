@@ -70,11 +70,11 @@ public class TestDatabaseGenerator extends BaseTest {
 
         PetTable table = new PetTable(ds);
         PetRecord r = new PetRecord();
-        r.birthDate = new Date();
-        r.name = "Manchas";
-        r.owner = "Humberto";
-        r.sex = "M";
-        r.species = "Dog";
+        r.setBirthDate(new Date());
+        r.setName("Manchas");
+        r.setOwner("Humberto");
+        r.setSex("M");
+        r.setSpecies("Dog");
         table.insert(r);
 
         List<PetRecord> pets = table.queryAll();
@@ -88,7 +88,7 @@ public class TestDatabaseGenerator extends BaseTest {
 
         OwnerTable table = new OwnerTable(ds);
         OwnerRecord r = new OwnerRecord();
-        r.name = "Humberto";
+        r.setName("Humberto");
 
         table.insert(r);
 

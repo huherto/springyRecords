@@ -2,12 +2,13 @@ package io.github.huherto.springyRecords;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import io.github.huherto.springyRecords.test.OwnerRecord;
-import io.github.huherto.springyRecords.test.PetStoreDatabase;
 
 import java.util.List;
 
 import org.junit.Test;
+
+import io.github.huherto.springyRecords.test.OwnerRecord;
+import io.github.huherto.springyRecords.test.PetStoreDatabase;
 
 public class SimpleQueries extends BaseTest {
 
@@ -29,7 +30,7 @@ public class SimpleQueries extends BaseTest {
 
         OwnerRecord ownerRecord = petStoreDb.ownerTable().findOwnerById(10).get();
 
-        assertEquals("Humberto", ownerRecord.name);
+        assertEquals("Humberto", ownerRecord.getName());
 
     }
 

@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaseOwnerRecord implements BaseRecord {
-    public int ownerId;
-    public String name;
+    private int ownerId;
+    private String name;
 
     public BaseOwnerRecord() {
     }
@@ -21,6 +21,23 @@ public class BaseOwnerRecord implements BaseRecord {
         this.ownerId = rs.getInt("OWNER_ID");
         this.name = rs.getString("NAME");
     }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     @Override
     public Map<String, Object> asMap() {

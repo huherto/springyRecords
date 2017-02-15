@@ -6,7 +6,7 @@ package {{baseRecordPackageName}};
 
 public class {{baseRecordClassName}} implements BaseRecord {
     {{#columns}}
-    public {{javaTypeName}} {{javaFieldName}};
+    private {{javaTypeName}} {{javaFieldName}};
     {{/columns}}
 
     public {{baseRecordClassName}}() {
@@ -23,6 +23,17 @@ public class {{baseRecordClassName}} implements BaseRecord {
         this.{{javaFieldName}} = rs.{{{resultSetGetter}}};
     {{/columns}}
     }
+
+    {{#columns}}
+    public {{javaTypeName}} {{getterName}}() {
+        return {{javaFieldName}};
+    }
+
+    public void {{setterName}}({{javaTypeName}} {{javaFieldName}}) {
+        this.{{javaFieldName}} = {{javaFieldName}};
+    }
+
+    {{/columns}}
 
     @Override
     public Map<String, Object> asMap() {

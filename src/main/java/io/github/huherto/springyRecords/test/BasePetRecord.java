@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BasePetRecord implements BaseRecord {
-    public String name;
-    public String owner;
-    public String species;
-    public String sex;
-    public Date birthDate;
-    public Date death;
+    private String name;
+    private String owner;
+    private String species;
+    private String sex;
+    private Date birthDate;
+    private Date death;
 
     public BasePetRecord() {
     }
@@ -34,6 +34,55 @@ public class BasePetRecord implements BaseRecord {
         this.birthDate = rs.getDate("BIRTH_DATE");
         this.death = rs.getDate("DEATH");
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(String species) {
+        this.species = species;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Date getDeath() {
+        return death;
+    }
+
+    public void setDeath(Date death) {
+        this.death = death;
+    }
+
 
     @Override
     public Map<String, Object> asMap() {
