@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import schemacrawler.schema.Table;
 
@@ -36,12 +37,13 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     protected String physicalName;
     protected String logicalName;
-    protected final List<ColumnTool> columns = new ArrayList<ColumnTool>();
-    protected final List<ColumnTool> primaryKey = new ArrayList<ColumnTool>();
+    protected final ColumnList columns = new ColumnList();
+    protected final ColumnList primaryKey = new ColumnList();
+    protected final List<ColumnList> indexes = new ArrayList<>();
 
     public TableToolImpl() {
     }
-    
+
     @Override
     public void initialize(Table table, String basePackage) throws SQLException {
         this.basePackageName = basePackage;
@@ -56,16 +58,26 @@ public class TableToolImpl extends BaseTool implements TableTool {
         for(schemacrawler.schema.Column column :table.getPrimaryKey().getColumns() ) {
             primaryKey.add(new ColumnToolImpl(column));
         }
+
+        for(schemacrawler.schema.Index index :table.getIndices() ) {
+            ColumnList cols = new ColumnList();
+            for(schemacrawler.schema.Column column : index.getColumns() ) {
+                cols.add(new ColumnToolImpl(column));
+            }
+            indexes.add(cols);
+        }
     }
 
     @Override
     public List<ColumnTool> getColumns() {
-        List<ColumnTool> cols = new ArrayList<>();
-        for(ColumnTool col : columns) {
-            if (!ignoreColumn(col))
-                cols.add(col);
-        }
-        return cols;
+        return columns
+                .stream()
+                .filter( x -> !ignoreColumn(x))
+                .collect(Collectors.toList());
+    }
+
+    public List<ColumnList> getIndexes() {
+        return indexes;
     }
 
     @Override
@@ -129,12 +141,12 @@ public class TableToolImpl extends BaseTool implements TableTool {
         }
         return importSet;
     }
-    
+
     @Override
     public List<String> baseTableImports() {
         Set<String> importSet = new HashSet<String>();
         if (hasPrimaryKey()) {
-            importSet = importsForColumns(primaryKey);            
+            importSet = importsForColumns(primaryKey);
             importSet.add("import java.util.Optional;");
         }
         importSet.add("import java.sql.SQLException;");
@@ -176,58 +188,17 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String pkSqlCondition() {
-        return sqlCondition(primaryKey);
-    }
-
-    public String sqlCondition(List<ColumnTool> pk) {
-        StringBuilder sb = new StringBuilder();
-
-        for(ColumnTool col : pk) {
-
-            if (sb.length() > 0)
-                sb.append(" and ");
-
-            sb.append(col.columnName());
-            sb.append("  = ?");
-        }
-        return sb.toString();
+        return primaryKey.sqlCondition();
     }
 
     @Override
     public String pkMethodParameterList() {
-        return methodParameterList(primaryKey);
-    }
-
-    private String methodParameterList(List<ColumnTool> pk) {
-        StringBuilder sb = new StringBuilder();
-
-        for(ColumnTool col : pk) {
-
-            if (sb.length() > 0)
-                sb.append(", ");
-
-            sb.append(col.javaTypeName());
-            sb.append(" ");
-            sb.append(col.javaFieldName());
-        }
-        return sb.toString();
+        return primaryKey.methodParameterList();
     }
 
     @Override
     public String pkArgumentList() {
-        return argumentList(primaryKey);
+        return primaryKey.argumentList();
     }
 
-    private String argumentList(List<ColumnTool> pk) {
-        StringBuilder sb = new StringBuilder();
-
-        for(ColumnTool col : pk) {
-
-            if (sb.length() > 0)
-                sb.append(", ");
-
-            sb.append(col.javaFieldName());
-        }
-        return sb.toString();
-    }
 }

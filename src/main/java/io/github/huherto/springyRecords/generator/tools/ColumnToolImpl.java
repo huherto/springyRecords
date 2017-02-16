@@ -5,28 +5,29 @@ import java.util.List;
 
 public class ColumnToolImpl extends BaseTool implements ColumnTool {
 
-    protected boolean isAutoincrement = false;
     protected String physicalName;
     protected String logicalName;
     protected String dataTypeName;
     protected boolean isNullable;
-    
+    protected String logicalType;
+    protected boolean isAutoincrement;
+
     public ColumnToolImpl() {
-        
+
     }
 
     public ColumnToolImpl(schemacrawler.schema.Column col) {
         this.physicalName = removeQuotes(col.getName());
         this.logicalName  = convertToCamelCase(physicalName, true);
         this.dataTypeName = col.getColumnDataType().getName();
-        isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
+        this.isNullable = col.isNullable();
+        this.logicalType = convertJavaTypeName(dataTypeName, isNullable);
+        this.isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
     }
 
     @Override
     public String javaTypeName() {
-        return convertJavaTypeName(
-                this.dataTypeName,
-                this.isNullable);
+        return logicalType;
     }
 
     @Override
@@ -71,8 +72,7 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
 
     @Override
     public String columnName() {
-        String columnName = physicalName;
-        return columnName;
+        return physicalName;
     }
 
     @Override
