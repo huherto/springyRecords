@@ -13,10 +13,11 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
     protected boolean isAutoincrement;
 
     public ColumnToolImpl() {
-
+        super("");
     }
 
     public ColumnToolImpl(schemacrawler.schema.Column col) {
+        super("");
         this.physicalName = removeQuotes(col.getName());
         this.logicalName  = convertToCamelCase(physicalName, true);
         this.dataTypeName = col.getColumnDataType().getName();

@@ -23,6 +23,7 @@ import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 public class AbstractGenerator {
 
     private String packageName;
+    private String packageNameForBaseTypes;
     private String databaseClassName;
     private Path baseDir = null;
     private List< ClassWriter<TableTool> > classWritersForTables = new ArrayList<>();
@@ -58,10 +59,6 @@ public class AbstractGenerator {
       baseDir = path;
     }
 
-    public TableTool createTableTool() {
-        return new TableToolImpl();
-    }
-  
     protected void registerClassWriters() {        
         addClassWriterForTable(new BaseRecordClassWriter(getBaseDir()));
         addClassWriterForTable(new ConcreteRecordClassWriter(getBaseDir()));

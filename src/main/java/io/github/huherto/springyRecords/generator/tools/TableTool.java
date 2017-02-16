@@ -1,20 +1,16 @@
 package io.github.huherto.springyRecords.generator.tools;
 
-import java.sql.SQLException;
 import java.util.List;
-
-import schemacrawler.schema.Table;
+import java.util.Set;
 
 public interface TableTool {
-
-    void initialize(Table table, String basePackage) throws SQLException;
 
     List<ColumnTool> getColumns();
 
     boolean ignoreColumn(ColumnTool col);
 
     String tableName();
-
+    
     String baseRecordPackageName();
 
     String baseRecordClassName();
@@ -23,6 +19,8 @@ public interface TableTool {
 
     String concreteRecordClassName();
 
+    List<String> concreteRecordImports();
+    
     List<String> baseRecordImports();
 
     List<String> baseTableImports();
@@ -44,5 +42,12 @@ public interface TableTool {
     String pkMethodParameterList();
 
     String pkArgumentList();
+
+    List<String> concreteTableImports();
+
+    List<CoreQuery> coreQueries();
+
+    List<String> coreColumnNames();
+
 
 }

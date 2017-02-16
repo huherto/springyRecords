@@ -23,8 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+import static java.lang.String.format;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -34,19 +37,18 @@ import java.util.stream.Collectors;
 import schemacrawler.schema.Table;
 
 public class TableToolImpl extends BaseTool implements TableTool {
-
+    
     protected String physicalName;
     protected String logicalName;
     protected final ColumnList columns = new ColumnList();
     protected final ColumnList primaryKey = new ColumnList();
-    protected final List<ColumnList> indexes = new ArrayList<>();
+    protected final List<ColumnList> indexes = new ArrayList<>();    
 
-    public TableToolImpl() {
+    public TableToolImpl(String packageName) {
+        super(packageName);
     }
 
-    @Override
-    public void initialize(Table table, String basePackage) throws SQLException {
-        this.basePackageName = basePackage;
+    public void initialize(Table table) throws SQLException {
 
         physicalName = table.getName();
         logicalName = convertToCamelCase(physicalName, true);
@@ -90,26 +92,20 @@ public class TableToolImpl extends BaseTool implements TableTool {
         return physicalName;
     }
 
+    private static String makeImport(String packageName, String className) {
+        return format("import %s.%s;",packageName, className);
+    }
+        
     @Override
     public String baseRecordPackageName() {
-        return basePackageName;
+        return getPackageNameForBaseTypes();
     }
 
     @Override
     public String baseRecordClassName() {
         return "Base" + concreteRecordClassName();
     }
-
-    @Override
-    public String concreteRecordPackageName() {
-        return basePackageName;
-    }
-
-    @Override
-    public String concreteRecordClassName() {
-        return logicalName  + "Record";
-    }
-
+    
     @Override
     public List<String> baseRecordImports() {
         Set<String> importSet = importsForColumns(getColumns());
@@ -122,6 +118,88 @@ public class TableToolImpl extends BaseTool implements TableTool {
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
         return imports;
+    }
+
+    @Override
+    public String concreteRecordPackageName() {
+        return getPackageName();
+    }
+
+    @Override
+    public String concreteRecordClassName() {
+        return logicalName  + "Record";
+    }
+
+    @Override
+    public List<String> concreteRecordImports() {
+        Set<String> importSet = new HashSet<>();
+        if (!concreteRecordPackageName().equals(baseRecordPackageName())) {
+            importSet.add(makeImport(baseRecordPackageName(), baseRecordClassName()));
+        }
+        importSet.add("import java.sql.SQLException;");
+        importSet.add("import java.sql.ResultSet;");
+        
+        List<String> imports = new ArrayList<String>(importSet);
+        Collections.sort(imports);
+        return imports;
+    }
+
+    @Override
+    public String baseTablePackageName() {
+        return getPackageNameForBaseTypes();
+    }
+
+    @Override
+    public String baseTableClassName() {
+        return "Base" + logicalName + "Table";
+    }
+
+    @Override
+    public List<String> baseTableImports() {
+        Set<String> importSet = new HashSet<String>();
+        if (hasPrimaryKey()) {
+            importSet = importsForColumns(primaryKey);
+            importSet.add("import java.util.Optional;");
+        }
+        if (!baseTablePackageName().equals(concreteRecordPackageName())) {
+            importSet.add(makeImport(concreteRecordPackageName(), concreteRecordClassName()));
+        }        
+        if (coreQueries().size() > 0) {
+            importSet.add("import java.util.List;");
+        }
+        importSet.add("import java.sql.SQLException;");
+        importSet.add("import java.sql.ResultSet;");
+        List<String> imports = new ArrayList<String>(importSet);
+        Collections.sort(imports);
+        return imports;
+    }
+
+    @Override
+    public String concreteTablePackageName() {
+        return getPackageName();
+    }
+
+    @Override
+    public String concreteTableClassName() {
+        return logicalName + "Table";
+    }
+
+    @Override
+    public List<String> concreteTableImports() {
+        Set<String> importSet = new HashSet<>();
+        if (!concreteTablePackageName().equals(baseTablePackageName())) {
+            importSet.add(makeImport(baseTablePackageName(), baseTableClassName()));
+        }
+        importSet.add("import javax.sql.DataSource;");
+        
+        List<String> imports = new ArrayList<String>(importSet);
+        Collections.sort(imports);
+        return imports;
+    }
+    
+    @Override
+    public String tableInstanceName() {
+        return lowerCaseFirst(concreteTableClassName());
     }
 
     private static Set<String> importsForColumns(List<ColumnTool> cols) {
@@ -143,45 +221,6 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public List<String> baseTableImports() {
-        Set<String> importSet = new HashSet<String>();
-        if (hasPrimaryKey()) {
-            importSet = importsForColumns(primaryKey);
-            importSet.add("import java.util.Optional;");
-        }
-        importSet.add("import java.sql.SQLException;");
-        importSet.add("import java.sql.ResultSet;");
-        List<String> imports = new ArrayList<String>(importSet);
-        Collections.sort(imports);
-        return imports;
-    }
-
-    @Override
-    public String concreteTablePackageName() {
-        return basePackageName;
-    }
-
-    @Override
-    public String concreteTableClassName() {
-        return logicalName + "Table";
-    }
-
-    @Override
-    public String baseTablePackageName() {
-        return basePackageName;
-    }
-
-    @Override
-    public String baseTableClassName() {
-        return "Base" + logicalName + "Table";
-    }
-
-    @Override
-    public String tableInstanceName() {
-        return lowerCaseFirst(concreteTableClassName());
-    }
-
-    @Override
     public boolean hasPrimaryKey() {
         return !primaryKey.isEmpty();
     }
@@ -200,5 +239,26 @@ public class TableToolImpl extends BaseTool implements TableTool {
     public String pkArgumentList() {
         return primaryKey.argumentList();
     }
-
+    
+    @Override
+    public List<CoreQuery> coreQueries() {        
+        List<CoreQuery> result = new ArrayList<>();
+        Set<String> columnNames = 
+                coreColumnNames()
+                    .stream()
+                    .map( x -> x.toLowerCase())
+                    .collect(Collectors.toSet());
+        for (ColumnTool col : columns) {
+            if (columnNames.contains(col.javaFieldName().toLowerCase())) {
+                result.add(new CoreQuery(col));
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    public List<String> coreColumnNames() {
+        return new ArrayList<>();
+    }
+    
 }

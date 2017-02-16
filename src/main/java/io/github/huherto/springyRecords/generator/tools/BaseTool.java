@@ -5,9 +5,18 @@ import java.lang.reflect.Modifier;
 
 public class BaseTool {
 
-    protected String basePackageName;
+    protected String packageName;
+    
+    public BaseTool(String packageName) {
+        this.packageName = packageName;
+    }
 
-    public BaseTool() {
+    public String getPackageNameForBaseTypes() {
+        return packageName;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public static String convertToCamelCase(String columnName, boolean upperCaseFirst) {

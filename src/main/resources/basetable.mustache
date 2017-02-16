@@ -40,4 +40,17 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
         return optionalSingle(sql, {{pkArgumentList}});
     }
     {{/hasPrimaryKey}}
+    
+    {{#coreQueries}}
+    public List<{{concreteRecordClassName}}> {{queryName}}({{methodParameterList}}) {
+        String sql =
+            "select * "+
+            "from {{tableName}} "+
+            "where {{sqlCondition}} ";
+
+        return query(sql, {{argumentList}});
+    }
+
+    {{/coreQueries}}
+    
 }

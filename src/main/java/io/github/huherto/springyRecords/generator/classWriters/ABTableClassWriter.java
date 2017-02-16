@@ -20,7 +20,7 @@ public class ABTableClassWriter extends BaseClassWriter<DatabaseTool> {
 	    try {
 	    	File sourceFile =
 	    		sourceFile(getMainSourceDir(),
-	    				dbTool.baseDatabasePackageName(),
+	    				dbTool.getPackageNameForBaseTypes(),
 	    				"AbstractBaseTable");
 	        if (sourceFile.exists()) {
                 logger.info("Skipping source "+sourceFile);

@@ -1,5 +1,6 @@
 package com.example;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -36,5 +37,30 @@ public class OwnerTableIT extends BaseTableIT {
 
     }
 
+    @Test
+    public void queryAll() {
+
+        List<OwnerRecord> all = table().queryAll();
+
+        assertTrue(all.size() >= 0);
+
+    }
+
+    @Test
+    public void queryOne() {
+
+        OwnerRecord ownerRecord = table().findOwnerById(10).get();
+
+        assertEquals("Humberto", ownerRecord.getName());
+
+    }
+
+    @Test
+    public void querySome() {
+        List<OwnerRecord> result = table().findByName("Humberto");
+
+        assertTrue(result.size() >= 0);
+
+    }
 
 }

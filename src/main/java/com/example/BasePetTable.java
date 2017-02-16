@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class BasePetTable extends AbstractBaseTable<PetRecord> {
@@ -38,4 +39,15 @@ public class BasePetTable extends AbstractBaseTable<PetRecord> {
 
         return optionalSingle(sql, name);
     }
+    
+    public List<PetRecord> queryByName(String name) {
+        String sql =
+            "select * "+
+            "from PET "+
+            "where NAME  = ? ";
+
+        return query(sql, name);
+    }
+
+    
 }

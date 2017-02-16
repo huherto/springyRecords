@@ -34,6 +34,7 @@ import javax.sql.DataSource;
 
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
 import io.github.huherto.springyRecords.generator.tools.TableTool;
+import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
 import schemacrawler.schema.Table;
@@ -51,15 +52,8 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
         this.ds = ds;
     }
 
-    private TableTool createTableTool(Table table) {
-        try {
-            TableTool tableTool = createTableTool();
-            tableTool.initialize(table, getPackageName());
-            return tableTool;
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
+    protected TableToolImpl createTableTool(String packageName) {
+        return new TableToolImpl(packageName);
     }
 
     private Database crawl(Connection dbconn, SchemaCrawlerOptions options) {
@@ -82,7 +76,8 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
                 Database database = crawl(con, schemaName, tableName);
                 Table table = database.getTable(database.getSchema(schemaName), tableName);
                 if (table != null) {
-                    TableTool tableTool = createTableTool(table);
+                    TableToolImpl tableTool = createTableTool(getPackageName());
+                    tableTool.initialize(table);                    
                     dbTool.add(tableTool);
                 }
                 else {

@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
@@ -38,4 +39,15 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
 
         return optionalSingle(sql, ownerId);
     }
+    
+    public List<OwnerRecord> queryByName(String name) {
+        String sql =
+            "select * "+
+            "from OWNER "+
+            "where NAME  = ? ";
+
+        return query(sql, name);
+    }
+
+    
 }

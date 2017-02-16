@@ -10,7 +10,7 @@ public class DatabaseTool extends BaseTool {
     private String databaseClassName;
 
     public DatabaseTool(String packageName, String databaseClassName) {
-        this.basePackageName = packageName;
+        super(packageName);
         this.databaseClassName = databaseClassName;
     }
 
@@ -27,7 +27,7 @@ public class DatabaseTool extends BaseTool {
     }
 
     public String baseDatabasePackageName() {
-        return basePackageName;
+        return getPackageName();
     }
 
     public String databaseClassName() {

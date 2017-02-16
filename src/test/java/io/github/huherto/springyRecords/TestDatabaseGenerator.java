@@ -41,8 +41,8 @@ public class TestDatabaseGenerator extends BaseTest {
         SchemaCrawlerGenerator dbGenerator = new SchemaCrawlerGenerator(ds, "com.example", "PetStore") {
 
             @Override
-            public TableToolImpl createTableTool() {
-                return new ExtendedTableTool();
+            protected TableToolImpl createTableTool(String packageName) {
+                return new ExtendedTableTool(packageName);
             }
 
         };

@@ -1,6 +1,8 @@
 package {{concreteTablePackageName}};
 
-import javax.sql.DataSource;
+{{#concreteTableImports}}
+{{toString}}
+{{/concreteTableImports}}
 
 public class {{concreteTableClassName}} extends {{baseTableClassName}} {
     public {{concreteTableClassName}}(DataSource dataSource) {

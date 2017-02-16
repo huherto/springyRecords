@@ -1,7 +1,8 @@
 package {{concreteRecordPackageName}};
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+{{#concreteRecordImports}}
+{{toString}}
+{{/concreteRecordImports}}
 
 public class {{concreteRecordClassName}} extends {{baseRecordClassName}} {
 

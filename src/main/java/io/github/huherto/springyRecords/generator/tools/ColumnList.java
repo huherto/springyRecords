@@ -1,8 +1,20 @@
 package io.github.huherto.springyRecords.generator.tools;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ColumnList extends ArrayList<ColumnTool> {
+
+    public ColumnList() {
+    }
+
+    public ColumnList(Collection<? extends ColumnTool> c) {
+        super(c);
+    }
+
+    public ColumnList(int initialCapacity) {
+        super(initialCapacity);
+    }
 
     private static final long serialVersionUID = 1L;
 

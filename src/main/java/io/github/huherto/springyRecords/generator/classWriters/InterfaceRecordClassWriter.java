@@ -18,7 +18,7 @@ public class InterfaceRecordClassWriter extends BaseClassWriter<DatabaseTool> {
     @Override
     public void makeClass(DatabaseTool dbTool) {
         try {
-            File sourceFile = sourceFile(getMainSourceDir(), dbTool.baseDatabasePackageName(), "BaseRecord" );
+            File sourceFile = sourceFile(getMainSourceDir(), dbTool.getPackageNameForBaseTypes(), "BaseRecord" );
             if (sourceFile.exists()) {
                 sourceFile.delete();
                 sourceFile.createNewFile();
