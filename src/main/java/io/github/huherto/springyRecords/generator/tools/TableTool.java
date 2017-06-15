@@ -11,6 +11,8 @@ public interface TableTool {
 
     String tableName();
     
+    String fullTableName();
+    
     String baseRecordPackageName();
 
     String baseRecordClassName();

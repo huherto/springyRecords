@@ -67,7 +67,7 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
     }
 
     protected Optional<R> optionalSingle(String sql, Object...args) {
-        return Optional.of(DataAccessUtils.singleResult(query(sql, args)));
+        return Optional.ofNullable(DataAccessUtils.singleResult(query(sql, args)));
     }
 
     protected R requiredSingle(String sql, Object...args) {

@@ -33,8 +33,7 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
 
     public Optional<OwnerRecord> findByPK(int ownerId) {
         String sql =
-            "select * "+
-            "from OWNER "+
+            selectStar() +
             "where OWNER_ID  = ? ";
 
         return optionalSingle(sql, ownerId);
@@ -42,8 +41,7 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
     
     public List<OwnerRecord> queryByName(String name) {
         String sql =
-            "select * "+
-            "from OWNER "+
+            selectStar() +
             "where NAME  = ? ";
 
         return query(sql, name);

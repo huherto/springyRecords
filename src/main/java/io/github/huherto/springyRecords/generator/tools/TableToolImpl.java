@@ -38,6 +38,7 @@ import schemacrawler.schema.Table;
 
 public class TableToolImpl extends BaseTool implements TableTool {
     
+    protected String schemaName;
     protected String physicalName;
     protected String logicalName;
     protected final ColumnList columns = new ColumnList();
@@ -259,6 +260,14 @@ public class TableToolImpl extends BaseTool implements TableTool {
     @Override
     public List<String> coreColumnNames() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public String fullTableName() {
+        if (schemaName != null && !schemaName.isEmpty()) {
+            return schemaName + "." + tableName();
+        }
+        return tableName();
     }
     
 }
