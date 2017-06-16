@@ -39,13 +39,13 @@ public class BasePetTable extends AbstractBaseTable<PetRecord> {
         return optionalSingle(sql, name);
     }
     
-    public List<PetRecord> queryByName(String name) {
+    public List<PetRecord> findByName(String name) {
         String sql =
             selectStar() +
             "where NAME  = ? ";
 
         return query(sql, name);
     }
-
+    
     
 }

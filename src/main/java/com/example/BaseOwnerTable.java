@@ -39,13 +39,13 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
         return optionalSingle(sql, ownerId);
     }
     
-    public List<OwnerRecord> queryByName(String name) {
+    public List<OwnerRecord> findByOwnerId(int ownerId) {
         String sql =
             selectStar() +
-            "where NAME  = ? ";
+            "where OWNER_ID  = ? ";
 
-        return query(sql, name);
+        return query(sql, ownerId);
     }
-
+    
     
 }

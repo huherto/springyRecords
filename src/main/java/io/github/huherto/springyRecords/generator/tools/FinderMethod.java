@@ -3,22 +3,22 @@ package io.github.huherto.springyRecords.generator.tools;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class CoreQuery {
+public class FinderMethod {
     
     private ColumnList columns;
     
-    public CoreQuery(Collection< ? extends ColumnTool> cols) {
+    public FinderMethod(Collection< ? extends ColumnTool> cols) {
         this.columns = new ColumnList(cols);
     }
     
-    public CoreQuery(ColumnTool col) {
+    public FinderMethod(ColumnTool col) {
         this.columns = new ColumnList();
         this.columns.add(col);
     }
     
-    public String queryName() {
+    public String methodName() {
 
-        return "queryBy" + 
+        return "findBy" + 
                 columns
                     .stream()
                     .map( x-> BaseTool.upperCaseFirst(x.javaFieldName()) )

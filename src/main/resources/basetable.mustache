@@ -40,15 +40,15 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
     }
     {{/hasPrimaryKey}}
     
-    {{#coreQueries}}
-    public List<{{concreteRecordClassName}}> {{queryName}}({{methodParameterList}}) {
+    {{#finderMethods}}
+    public List<{{concreteRecordClassName}}> {{methodName}}({{methodParameterList}}) {
         String sql =
             selectStar() +
             "where {{sqlCondition}} ";
 
         return query(sql, {{argumentList}});
     }
-
-    {{/coreQueries}}
+    
+    {{/finderMethods}}
     
 }

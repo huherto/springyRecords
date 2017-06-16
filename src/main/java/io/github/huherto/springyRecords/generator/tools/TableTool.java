@@ -47,9 +47,6 @@ public interface TableTool {
 
     List<String> concreteTableImports();
 
-    List<CoreQuery> coreQueries();
-
-    List<String> coreColumnNames();
-
+    List<FinderMethod> finderMethods();
 
 }

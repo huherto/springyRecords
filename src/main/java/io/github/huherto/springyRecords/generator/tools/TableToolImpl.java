@@ -27,7 +27,6 @@ import static java.lang.String.format;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -165,7 +164,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
         if (!baseTablePackageName().equals(concreteRecordPackageName())) {
             importSet.add(makeImport(concreteRecordPackageName(), concreteRecordClassName()));
         }        
-        if (coreQueries().size() > 0) {
+        if (finderMethods().size() > 0) {
             importSet.add("import java.util.List;");
         }
         importSet.add("import java.sql.SQLException;");
@@ -242,26 +241,30 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
     
     @Override
-    public List<CoreQuery> coreQueries() {        
-        List<CoreQuery> result = new ArrayList<>();
-        Set<String> columnNames = 
-                coreColumnNames()
-                    .stream()
-                    .map( x -> x.toLowerCase())
-                    .collect(Collectors.toSet());
-        for (ColumnTool col : columns) {
-            if (columnNames.contains(col.javaFieldName().toLowerCase())) {
-                result.add(new CoreQuery(col));
+    public List<FinderMethod> finderMethods() {
+        
+        Set<String> methodNames = new HashSet<>();
+        List<FinderMethod> result = new ArrayList<>();
+        for (ColumnList index : indexes) {
+            for(int i = 0; i < index.size(); i++) {
+                ColumnList list = new ColumnList(i + 1);                
+                for(int j = 0; j <= i; j++) {
+                    list.add(index.get(j));                    
+                }
+                
+                FinderMethod method = new FinderMethod(list);
+                if (!methodNames.contains(method.methodName())) {
+                    result.add(new FinderMethod(list));
+                    methodNames.add(method.methodName());
+                }
+                
             }
+            
         }
+        
         return result;
     }
     
-    @Override
-    public List<String> coreColumnNames() {
-        return new ArrayList<>();
-    }
-
     @Override
     public String fullTableName() {
         if (schemaName != null && !schemaName.isEmpty()) {
