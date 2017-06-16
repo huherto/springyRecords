@@ -27,7 +27,13 @@ public class ColumnList extends ArrayList<ColumnTool> {
                 sb.append(" and ");
 
             sb.append(col.columnName());
-            sb.append("  = ?");
+            String dataTypeName = col.dataTypeName().toLowerCase().trim();
+            if (dataTypeName.equalsIgnoreCase("char")) {
+                sb.append(" = cast(? as char("+col.dataTypeSize()+"))");                
+            }
+            else {
+                sb.append("  = ?");
+            }
         }
         return sb.toString();
     }

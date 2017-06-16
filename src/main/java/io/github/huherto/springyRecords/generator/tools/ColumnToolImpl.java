@@ -11,6 +11,7 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
     protected boolean isNullable;
     protected String logicalType;
     protected boolean isAutoincrement;
+    protected int dataTypeSize;
 
     public ColumnToolImpl() {
         super("");
@@ -21,6 +22,7 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
         this.physicalName = removeQuotes(col.getName());
         this.logicalName  = convertToCamelCase(physicalName, true);
         this.dataTypeName = col.getColumnDataType().getName();
+        this.dataTypeSize = col.getSize();
         this.isNullable = col.isNullable();
         this.logicalType = convertJavaTypeName(dataTypeName, isNullable);
         this.isAutoincrement = "YES".equalsIgnoreCase((String)col.getAttribute("IS_AUTOINCREMENT"));
@@ -79,5 +81,15 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
     @Override
     public boolean isAutoincrement() {
         return isAutoincrement;
+    }
+    
+    @Override 
+    public String dataTypeName() {
+        return dataTypeName;
+    }
+    
+    @Override
+    public int dataTypeSize() {
+        return dataTypeSize;
     }
 }

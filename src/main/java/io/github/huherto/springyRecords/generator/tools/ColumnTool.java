@@ -12,4 +12,8 @@ public interface ColumnTool {
 
     boolean isAutoincrement();
 
+    String dataTypeName();
+
+    int dataTypeSize();
+
 }
