@@ -33,7 +33,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
-import io.github.huherto.springyRecords.generator.tools.TableTool;
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 import schemacrawler.crawl.SchemaCrawler;
 import schemacrawler.schema.Database;
@@ -43,6 +42,9 @@ import schemacrawler.schemacrawler.SchemaCrawlerException;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaInfoLevel;
 
+/**
+ * This implementation uses the schema crawler to read the database schema.
+ */
 public class SchemaCrawlerGenerator extends AbstractGenerator {
 
     private final DataSource ds;

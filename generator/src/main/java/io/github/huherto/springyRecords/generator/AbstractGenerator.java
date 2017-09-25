@@ -18,12 +18,10 @@ import io.github.huherto.springyRecords.generator.classWriters.InterfaceRecordCl
 import io.github.huherto.springyRecords.generator.classWriters.TableITClassWriter;
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
 import io.github.huherto.springyRecords.generator.tools.TableTool;
-import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 
 public class AbstractGenerator {
 
     private String packageName;
-    private String packageNameForBaseTypes;
     private String databaseClassName;
     private Path baseDir = null;
     private List< ClassWriter<TableTool> > classWritersForTables = new ArrayList<>();

@@ -23,9 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import java.util.Arrays;
-import java.util.List;
-
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 
 public class ExtendedTableTool extends TableToolImpl {
@@ -34,9 +31,5 @@ public class ExtendedTableTool extends TableToolImpl {
         super(packageName);
     }
 
-    @Override
-    public List<String> coreColumnNames() {
-        return Arrays.asList("name");
-    }
 
 }

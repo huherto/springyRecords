@@ -27,30 +27,28 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
 
     @Override
     public String tableName() {
-        return "{{tableName}}";
+        return "{{fullTableName}}";
     }
 
     {{#hasPrimaryKey}}
     public Optional<{{concreteRecordClassName}}> findByPK({{pkMethodParameterList}}) {
         String sql =
-            "select * "+
-            "from {{tableName}} "+
+            selectStar() +
             "where {{pkSqlCondition}} ";
 
         return optionalSingle(sql, {{pkArgumentList}});
     }
     {{/hasPrimaryKey}}
     
-    {{#coreQueries}}
-    public List<{{concreteRecordClassName}}> {{queryName}}({{methodParameterList}}) {
+    {{#finderMethods}}
+    public List<{{concreteRecordClassName}}> {{methodName}}({{methodParameterList}}) {
         String sql =
-            "select * "+
-            "from {{tableName}} "+
+            selectStar() +
             "where {{sqlCondition}} ";
 
         return query(sql, {{argumentList}});
     }
-
-    {{/coreQueries}}
+    
+    {{/finderMethods}}
     
 }

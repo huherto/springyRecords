@@ -48,7 +48,7 @@ public class BaseTool {
             typeName = typeName.replaceAll("\\s*unsigned\\s*", "");
         }
 
-        if (typeName.equals("timestamp"))
+        if (typeName.contains("timestamp"))
             return "Timestamp";
 
         if (typeName.equals("numeric"))
