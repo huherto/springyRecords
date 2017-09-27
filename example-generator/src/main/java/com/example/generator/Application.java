@@ -31,10 +31,15 @@ public class Application implements CommandLineRunner {
 	    
 	    dbGenerator.setBaseDir(Paths.get("../example-generated"));
 	    
+	    // Use this to discover schemas and tables.
 	    dbGenerator.printInformationSchema(null);
+
+	    // Use this if you only want a subset of tables in a schema.
 	    dbGenerator.processTableList("PUBLIC.PUBLIC", Arrays.asList("OWNER","pet"));
+
+	    // Use this if you want to generate code for all the tables in a schema.
         dbGenerator.processAllTables("PUBLIC.PUBLIC");
-        
+
     }
 
     public static void main(String[] args) throws Exception {

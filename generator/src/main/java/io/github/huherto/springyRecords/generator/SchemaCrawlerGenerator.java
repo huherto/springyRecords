@@ -32,6 +32,9 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
 import io.github.huherto.springyRecords.generator.tools.TableToolImpl;
 import schemacrawler.crawl.SchemaCrawler;
@@ -46,6 +49,8 @@ import schemacrawler.schemacrawler.SchemaInfoLevel;
  * This implementation uses the schema crawler to read the database schema.
  */
 public class SchemaCrawlerGenerator extends AbstractGenerator {
+    
+    protected static final Log logger = LogFactory.getLog(SchemaCrawlerGenerator.class);
 
     private final DataSource ds;
 
@@ -74,17 +79,16 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
         try(Connection con = ds.getConnection()) {
             for(String tableName : tableNames) {
 
-                System.out.println(format("process schema:[%s] table:[%s] ", schemaName, tableName));
                 Database database = crawl(con, schemaName, tableName);
                 Table table = database.getTable(database.getSchema(schemaName), tableName);
                 if (table != null) {
                     TableToolImpl tableTool = createTableTool(getPackageName());
                     tableTool.initialize(table);                    
                     dbTool.add(tableTool);
+                    logger.info(format("Will process schema:[%s] table:[%s]", schemaName, tableName));
                 }
                 else {
-
-                    System.out.println("not found");
+                    logger.warn(format("schema:[%s] table:[%s] Not found", schemaName, tableName));
                 }
             }
         }
@@ -117,9 +121,9 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
             }
             Database database = crawl(con, options);
 
-          System.out.println(format("%-20s %-20s", "table_schema", "table_name"));
+            logger.info(format("%-20s %-20s", "table_schema", "table_name"));
             for(Table table : database.getTables()) {
-              System.out.println(format("%-20s %-20s", table.getSchema(), table.getName()));
+              logger.info(format("%-20s %-20s", table.getSchema(), table.getName()));
             }
         }
         catch(SQLException ex) {
@@ -139,7 +143,7 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
             for(Table table : database.getTables(database.getSchema(schemaName))) {
               tableNames.add(table.getName());
             }
-            System.out.println("Found "+tableNames.size()+" tables");
+            logger.info("Found "+tableNames.size()+" tables");
             processTableList(schemaName, tableNames);
         }
         catch(SQLException ex) {

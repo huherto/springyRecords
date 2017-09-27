@@ -2,7 +2,9 @@
 layout: page
 title: Goals
 ---
-Generate record and table data gateway classes that run on top of spring-jdbc.
+
+SpringyRecords is a framework to generate Data Access Classes based on a database schema. It can be used out of the box or it can be extended to generate the code according to your preferences.
+
 
 ## Goals of the project:
 
@@ -12,11 +14,11 @@ Generate record and table data gateway classes that run on top of spring-jdbc.
 
 - Make it light, simple and flexible.
 
-- It is a Record Mapper, but it is not an ORM.
+- It is a light ORM or a micro ORM.
 
-## Why do we need another Object-Relational Mapper?
+## How is it compares with an ORM.
 
-It is not an ORM. It maps records and tables not domain objects. This approach is better if you are dealing with a legacy relational database that may not be perfectly designed. It doesn't attempt to map complex structures.
+It is lighter than a traditional ORM. It maps records and tables not domain objects. This approach is better if you are dealing with a legacy relational database that may not be perfectly designed. It doesn't attempt to map complex structures.
 
 Other benefits:
 
@@ -24,8 +26,5 @@ Other benefits:
 
  * You handcraft your database access code. Furthermore, your code is reusable and it is organized by table.
 
- * It is flexible, you can customize the generated code.
+ * It is very flexible, you can customize the generated code.
 
-### Why the Records classes don't have getters and setters?
- 
-Because there is nothing to encapsulate on the records. Remember, the records are not domain objects. They are simple data transfer objects that hold the same information as a record in a database table.
