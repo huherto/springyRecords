@@ -79,3 +79,4 @@ public class BaseOwnerTable extends BaseTable<OwnerRecord> {
     }
 }
 {% endhighlight %}
+
