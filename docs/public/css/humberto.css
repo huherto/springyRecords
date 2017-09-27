@@ -1,0 +1,9 @@
+pre code {
+  font-size: 80%;
+}
+
+@media (min-width: 48rem) {
+  .content {
+    max-width: 42rem;
+  }
+}

@@ -1,0 +1,25 @@
+# Dependencies
+markdown:         redcarpet
+pygments:         true
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            springyRecords
+tagline:          'A Record Mapper on top of spring-jdbc'
+description:      'Generate record and table data gateway classes that run on top of spring-jdbc.'
+url:              http://huherto.github.io/springyRecords/
+baseurl:          /springyRecords
+
+author:
+  name:           'Humberto Hernandez'
+  url:            https://twitter.com/huherto
+
+paginate:         5
+
+# Custom vars
+version:          master
+
+github:
+  repo:           https://github.com/huherto/springyRecords
