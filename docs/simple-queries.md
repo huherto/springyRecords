@@ -5,9 +5,6 @@ title: Simple Queries
 
 ## Simple Query Examples
 
-
-This was added.
-
 ### Get all the records from a table.
 
 {% highlight java %}

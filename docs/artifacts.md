@@ -7,7 +7,7 @@ title: Artifacts
 ### Class Diagram
 
 <p class="message">
-<img src="../public/sr-d1.png"> </img>
+<img src="../public/sr-d1.png" />
 </p>
 
 1 - Concrete Record class, that you can modify. The Record classes follow the DTO (Data Transfer Object) pattern. 
