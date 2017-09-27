@@ -5,7 +5,7 @@ permalink:        pretty
 
 # Setup
 title:            springyRecords
-tagline:          'A frawework to generate Data Access Classes.'
+tagline:          'A flexible frawework to generate Data Access Classes.'
 description:      'Generate record and table data gateway classes that run on top of spring-jdbc.'
 url:              http://huherto.github.io/springyRecords/
 baseurl:          /springyRecords

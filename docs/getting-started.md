@@ -60,7 +60,7 @@ You will also need the dependencies for the driver to connect to your database.
 
 ### Executing the code generator.
 
-If you already have JUnit set up. This is the easiest way is to execute the generator.
+You need to create an Application class to set up and execute the code generator.
 
 {% highlight java %}
 package com.example.generator;
@@ -96,12 +96,17 @@ public class Application implements CommandLineRunner {
 	    
 	    dbGenerator.setBaseDir(Paths.get("../example-generated"));
 	    
+	    // Use this to discover schemas and tables.
 	    dbGenerator.printInformationSchema(null);
-	    dbGenerator.processTableList("PUBLIC.PUBLIC", Arrays.asList("OWNER","pet"));
-        dbGenerator.processAllTables("PUBLIC.PUBLIC");
-        
-    }
 
+	    // Use this if you only want a subset of tables in a schema.
+	    dbGenerator.processTableList("PUBLIC.PUBLIC", Arrays.asList("OWNER","pet"));
+
+	    // Use this if you want to generate code for all the tables in a schema.
+        dbGenerator.processAllTables("PUBLIC.PUBLIC");
+
+    }
+    
     public static void main(String[] args) throws Exception {
 		SpringApplication.run(Application.class, args);
 	}
