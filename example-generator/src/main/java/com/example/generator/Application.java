@@ -1,6 +1,7 @@
 package com.example.generator;
 
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import javax.sql.DataSource;
@@ -8,8 +9,6 @@ import javax.sql.DataSource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -26,7 +25,11 @@ public class Application implements CommandLineRunner {
 
 	private void generateExample() {
 	    
+	    System.out.println("start generateExample");
+	    
 	    SchemaCrawlerGenerator dbGenerator = new SchemaCrawlerGenerator(dataSource(), "com.example", "Example");
+	    
+	    dbGenerator.setBaseDir(Paths.get("../example-generated"));
 	    
 	    dbGenerator.printInformationSchema(null);
 	    dbGenerator.processTableList("PUBLIC.PUBLIC", Arrays.asList("OWNER","pet"));
@@ -38,6 +41,7 @@ public class Application implements CommandLineRunner {
 		SpringApplication.run(Application.class, args);
 	}
 	
+    @Bean
 	public DataSource dataSource() {
 
         return new EmbeddedDatabaseBuilder()
