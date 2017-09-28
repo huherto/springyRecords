@@ -4,7 +4,6 @@ package com.example.generator;
 import static java.util.Arrays.asList;
 
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 import javax.sql.DataSource;
 
@@ -56,7 +55,7 @@ public class Application implements CommandLineRunner {
         return new EmbeddedDatabaseBuilder()
                 .setName("test")
                 .setType(EmbeddedDatabaseType.HSQL)
-                .addScript("classpath:schema.sql")
+                .addScript("classpath:hsql-schema.sql")
                 .build();	    	    
 	}
 }

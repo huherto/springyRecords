@@ -11,7 +11,9 @@ Download, build and install the springRecords jar in your local maven repository
 
 git clone https://github.com/huherto/springyRecords.git
 
-cd springyRecords/generator
+cd springyRecords
+
+cd generator
 
 mvn install
 
@@ -29,7 +31,7 @@ cd ~/workspace/my-generator
 
 {% endhighlight %}
 
-Add database driver dependencies in the pom.xml <a href="{{ site.github.repo}}/tree/master/example-generator/pom.xml">pom.xml</a>
+Add database driver dependencies in the <a href="{{ site.github.repo}}/tree/master/example-generator/pom.xml">pom.xml</a>
 
 {% highlight bash %}
 
@@ -41,7 +43,7 @@ Create datasource and customize code generation modifing this file <a href="{{ s
 
 {% highlight bash %}
 
-vim src/main/java/com/example/Application.java
+vim src/main/java/com/example/gnerator/Application.java
 
 {% endhighlight %}
 
@@ -55,4 +57,4 @@ java -jar target/example-generator-0.1.jar
 
 {% endhighlight %}
 
-That is all, checkout your project.
+That is all, your code is ready to be used.
