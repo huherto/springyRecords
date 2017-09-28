@@ -19,27 +19,25 @@ cd ../..
 
 {% endhighlight %}
 
-Make a copy of example-generator to start your project.
+Make a copy of this directory to start your project.
 
 {% highlight bash %}
 
-cp -r springyRecords/example-generator  ~/workspace/yourdir
+cp -r springyRecords/example-generator  ~/workspace/my-generator
+
+cd ~/workspace/my-generator
 
 {% endhighlight %}
 
-Add database driver dependencies in the pom.xml <a href="{{ site.github.repo}}/tree/master/example-generator/pom.xml">"pom.xml</a>
+Add database driver dependencies in the pom.xml <a href="{{ site.github.repo}}/tree/master/example-generator/pom.xml">pom.xml</a>
 
 {% highlight bash %}
-
-cd ~/workspace/yourdir
 
 vim pom.xml 
 
 {% endhighlight %}
 
-Create datasource and customize code generation. 
-
-<a href="{{ site.github.repo}}/tree/master/example-generator/src/main/java/com/example/Application.java">Application.java</a>
+Create datasource and customize code generation modifing this file <a href="{{ site.github.repo}}/tree/master/example-generator/src/main/java/com/example/generator/Application.java">Application.java</a>
 
 {% highlight bash %}
 
@@ -57,4 +55,4 @@ java -jar target/example-generator-0.1.jar
 
 {% endhighlight %}
 
-That is all. You can now check your project.
+That is all, checkout your project.
