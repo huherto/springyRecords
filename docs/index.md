@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Goals
+title: Home
 ---
 
 SpringyRecords is a framework to generate Data Access Classes based on a database schema. It can be used out of the box or it can be extended to generate the code according to your preferences.
@@ -26,5 +26,5 @@ Other benefits:
 
  * You handcraft your database access code. Furthermore, your code is reusable and it is organized by table.
 
- * It is very flexible, you can customize the generated code.
+ * It is very flexible and highly customizable.
 
