@@ -36,13 +36,13 @@ import java.util.stream.Collectors;
 import schemacrawler.schema.Table;
 
 public class TableToolImpl extends BaseTool implements TableTool {
-    
+
     protected String schemaName;
     protected String physicalName;
     protected String logicalName;
     protected final ColumnList columns = new ColumnList();
     protected final ColumnList primaryKey = new ColumnList();
-    protected final List<ColumnList> indexes = new ArrayList<>();    
+    protected final List<ColumnList> indexes = new ArrayList<>();
 
     public TableToolImpl(String packageName) {
         super(packageName);
@@ -55,6 +55,10 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
         for(schemacrawler.schema.Column column :table.getColumns() ) {
             columns.add(new ColumnToolImpl(column));
+        }
+
+        if (table.getPrimaryKey() == null) {
+            throw new RuntimeException(String.format("Table [%s] doesn't have primary key", table.getFullName()));
         }
 
         for(schemacrawler.schema.Column column :table.getPrimaryKey().getColumns() ) {
@@ -95,7 +99,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
     private static String makeImport(String packageName, String className) {
         return format("import %s.%s;",packageName, className);
     }
-        
+
     @Override
     public String baseRecordPackageName() {
         return getPackageNameForBaseTypes();
@@ -105,7 +109,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
     public String baseRecordClassName() {
         return "Base" + concreteRecordClassName();
     }
-    
+
     @Override
     public List<String> baseRecordImports() {
         Set<String> importSet = importsForColumns(getColumns());
@@ -138,7 +142,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
         }
         importSet.add("import java.sql.SQLException;");
         importSet.add("import java.sql.ResultSet;");
-        
+
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
         return imports;
@@ -163,7 +167,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
         }
         if (!baseTablePackageName().equals(concreteRecordPackageName())) {
             importSet.add(makeImport(concreteRecordPackageName(), concreteRecordClassName()));
-        }        
+        }
         if (finderMethods().size() > 0) {
             importSet.add("import java.util.List;");
         }
@@ -191,12 +195,12 @@ public class TableToolImpl extends BaseTool implements TableTool {
             importSet.add(makeImport(baseTablePackageName(), baseTableClassName()));
         }
         importSet.add("import javax.sql.DataSource;");
-        
+
         List<String> imports = new ArrayList<String>(importSet);
         Collections.sort(imports);
         return imports;
     }
-    
+
     @Override
     public String tableInstanceName() {
         return lowerCaseFirst(concreteTableClassName());
@@ -239,32 +243,32 @@ public class TableToolImpl extends BaseTool implements TableTool {
     public String pkArgumentList() {
         return primaryKey.argumentList();
     }
-    
+
     @Override
     public List<FinderMethod> finderMethods() {
-        
+
         Set<String> methodNames = new HashSet<>();
         List<FinderMethod> result = new ArrayList<>();
         for (ColumnList index : indexes) {
             for(int i = 0; i < index.size(); i++) {
-                ColumnList list = new ColumnList(i + 1);                
+                ColumnList list = new ColumnList(i + 1);
                 for(int j = 0; j <= i; j++) {
-                    list.add(index.get(j));                    
+                    list.add(index.get(j));
                 }
-                
+
                 FinderMethod method = new FinderMethod(list);
                 if (!methodNames.contains(method.methodName())) {
                     result.add(new FinderMethod(list));
                     methodNames.add(method.methodName());
                 }
-                
+
             }
-            
+
         }
-        
+
         return result;
     }
-    
+
     @Override
     public String fullTableName() {
         if (schemaName != null && !schemaName.isEmpty()) {
@@ -272,5 +276,5 @@ public class TableToolImpl extends BaseTool implements TableTool {
         }
         return tableName();
     }
-    
+
 }
