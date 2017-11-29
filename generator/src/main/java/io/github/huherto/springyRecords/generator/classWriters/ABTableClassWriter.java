@@ -15,27 +15,21 @@ public class ABTableClassWriter extends BaseClassWriter<DatabaseTool> {
         super(baseDir);
     }
 
-    @Override
-    public void makeClass(DatabaseTool dbTool) {
-	    try {
-	    	File sourceFile =
-	    		sourceFile(getMainSourceDir(),
-	    				dbTool.getPackageNameForBaseTypes(),
-	    				"AbstractBaseTable");
-	        if (sourceFile.exists()) {
-                logger.info("Skipping source "+sourceFile);
-                return;
-	        }
-	        writeCode(sourceFile, createTemplate(), dbTool);
-	    }
-	    catch(Exception ex) {
-	        throw new RuntimeException(ex);
-	    }
-	}
-
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("abtable.mustache");
+    }
+
+    @Override
+    public File sourceFile(DatabaseTool dbTool) {
+        return sourceFile(getMainSourceDir(),
+                dbTool.getPackageNameForBaseTypes(),
+                "AbstractBaseTable");
+    }
+
+    @Override
+    public boolean overwriteExistingFile() {
+        return false;
     }
 
 }

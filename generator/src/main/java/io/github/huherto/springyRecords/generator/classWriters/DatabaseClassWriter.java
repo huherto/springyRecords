@@ -15,25 +15,23 @@ public class DatabaseClassWriter extends BaseClassWriter<DatabaseTool> {
         super(baseDir);
     }
 
-    @Override
-    public void makeClass(DatabaseTool dbTool) {
-	    try {
-	    	File sourceFile = sourceFile(getMainSourceDir(), dbTool.baseDatabasePackageName(), dbTool.databaseClassName());
-            if (sourceFile.exists()) {
-                logger.info("Skipping source "+sourceFile);
-                return;
-            }
-	        writeCode(sourceFile, createTemplate(), dbTool);
-	    }
-	    catch(Exception ex) {
-	        logger.error(ex);
-	        throw new RuntimeException(ex);
-	    }
-	}
-
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("database.mustache");
+    }
+
+    @Override
+    public File sourceFile(DatabaseTool dbTool) {
+        return 
+                sourceFile(
+                        getMainSourceDir(),
+                        dbTool.baseDatabasePackageName(), 
+                        dbTool.databaseClassName());
+    }
+
+    @Override
+    public boolean overwriteExistingFile() {
+        return false;
     }
 
 }

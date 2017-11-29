@@ -15,27 +15,22 @@ public class BTableITClassWriter extends BaseClassWriter<DatabaseTool> {
         super(baseDir);
     }
 
-    @Override
-    public void makeClass(DatabaseTool dbTool) {
-        try {
-            File sourceFile =
-                sourceFile(getTestSourceDir(),
-                        dbTool.baseDatabasePackageName(),
-                        "BaseTableIT");
-            if (sourceFile.exists()) {
-                logger.info("Skipping source "+sourceFile);
-                return;
-            }
-            writeCode(sourceFile, createTemplate(), dbTool);
-        }
-        catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("btableit.mustache");
+    }
+
+    @Override
+    public File sourceFile(DatabaseTool dbTool) {
+        return
+                sourceFile(getTestSourceDir(),
+                        dbTool.baseDatabasePackageName(),
+                        "BaseTableIT");
+    }
+
+    @Override
+    public boolean overwriteExistingFile() {
+        return false;
     }
 
 }

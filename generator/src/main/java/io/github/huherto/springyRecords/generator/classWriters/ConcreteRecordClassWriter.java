@@ -15,27 +15,22 @@ public class ConcreteRecordClassWriter extends BaseClassWriter<TableTool> {
         super(baseDir);
     }
 
-    @Override
-    public void makeClass(TableTool tableTool) {
-	    try {
-	    	File sourceFile =
-	    		sourceFile(getMainSourceDir(),
-	    				tableTool.concreteRecordPackageName(),
-	    				tableTool.concreteRecordClassName());
-	        if (sourceFile.exists()) {
-                logger.info("Skipping source "+sourceFile);
-                return;
-	        }
-	        writeCode(sourceFile, createTemplate(), tableTool);
-	    }
-	    catch(Exception ex) {
-	        throw new RuntimeException(ex);
-	    }
-	}
-
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("record.mustache");
+    }
+
+    @Override
+    public File sourceFile(TableTool tableTool) {
+        return
+                sourceFile(getMainSourceDir(),
+                        tableTool.concreteRecordPackageName(),
+                        tableTool.concreteRecordClassName());
+    }
+
+    @Override
+    public boolean overwriteExistingFile() {
+        return false;
     }
 
 

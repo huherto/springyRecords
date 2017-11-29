@@ -30,19 +30,24 @@ public abstract class BaseClassWriter<T> implements ClassWriter<T> {
         return baseDir.resolve("src").resolve("test").resolve("java");
     }
 
-    public File sourceFile(Path sourceDir, String packageName, String className) throws IOException {
+    public File sourceFile(Path sourceDir, String packageName, String className) {
 
-        String[] segments = packageName.split("\\.");
-
-        File dir = sourceDir.toFile();
-        for(String seg : segments) {
-            dir = new File(dir, seg);
+        try {
+            String[] segments = packageName.split("\\.");
+    
+            File dir = sourceDir.toFile();
+            for(String seg : segments) {
+                dir = new File(dir, seg);
+            }
+    
+            File sourceFile = new File(dir, className + ".java");
+            Files.createParentDirs(sourceFile);
+    
+            return sourceFile;
         }
-
-        File sourceFile = new File(dir, className + ".java");
-        Files.createParentDirs(sourceFile);
-
-        return sourceFile;
+        catch(IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 	public void writeCode(File sourceFile, Mustache template, T tool) {
@@ -56,5 +61,35 @@ public abstract class BaseClassWriter<T> implements ClassWriter<T> {
 	        throw new RuntimeException(ex);
 	    }
 	}
+	
+    @Override
+    public void makeClass(T tool) {
+        try {
+            File sourceFile = sourceFile(tool);
+            if (overwriteExistingFile()) {
+                if (sourceFile.exists()) {
+                    sourceFile.delete();
+                    sourceFile.createNewFile();
+                }
+            }
+            else {            
+                if (sourceFile.exists()) {
+                    logger.info("Skipping source "+sourceFile);
+                    return;                    
+                }
+            }
+            writeCode(sourceFile, createTemplate(), tool);
+            
+        }
+        catch(Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    public abstract File sourceFile(T tool);
+	
+	public abstract boolean overwriteExistingFile();
+	
+	public abstract Mustache createTemplate();
 
 }

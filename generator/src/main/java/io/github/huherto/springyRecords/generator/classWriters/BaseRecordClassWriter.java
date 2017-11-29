@@ -15,26 +15,21 @@ public class BaseRecordClassWriter extends BaseClassWriter<TableTool> {
         super(baseDir);
     }
 
-    @Override
-    public void makeClass(TableTool tableTool) {
-	    try {
-	    	File sourceFile =
-	    		sourceFile(getMainSourceDir(),
-	    				tableTool.baseRecordPackageName(),
-	    				tableTool.baseRecordClassName());
-	        if (sourceFile.exists()) {
-	            sourceFile.delete();
-	            sourceFile.createNewFile();
-	        }
-	        writeCode(sourceFile, createTemplate(), tableTool);
-	    }
-	    catch(Exception ex) {
-	        throw new RuntimeException(ex);
-	    }
-	}
-
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("baserecord.mustache");
+    }
+
+    @Override
+    public File sourceFile(TableTool tableTool) {
+        return
+            sourceFile(getMainSourceDir(),
+                    tableTool.baseRecordPackageName(),
+                    tableTool.baseRecordClassName());
+    }
+
+    @Override
+    public boolean overwriteExistingFile() {
+        return true;
     }
 }
