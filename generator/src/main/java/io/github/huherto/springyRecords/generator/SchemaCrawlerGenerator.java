@@ -49,7 +49,7 @@ import schemacrawler.schemacrawler.SchemaInfoLevel;
  * This implementation uses the schema crawler to read the database schema.
  */
 public class SchemaCrawlerGenerator extends AbstractGenerator {
-    
+
     protected static final Log logger = LogFactory.getLog(SchemaCrawlerGenerator.class);
 
     private final DataSource ds;
@@ -70,33 +70,6 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
         } catch (SchemaCrawlerException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void processTableList(String schemaName, List<String> tableNames) {
-
-        DatabaseTool dbTool = new DatabaseTool(getPackageName(), getDatabaseClassName() );
-
-        try(Connection con = ds.getConnection()) {
-            for(String tableName : tableNames) {
-
-                Database database = crawl(con, schemaName, tableName);
-                Table table = database.getTable(database.getSchema(schemaName), tableName);
-                if (table != null) {
-                    TableToolImpl tableTool = createTableTool(getPackageName());
-                    tableTool.initialize(table);                    
-                    dbTool.add(tableTool);
-                    logger.info(format("Will process schema:[%s] table:[%s]", schemaName, tableName));
-                }
-                else {
-                    logger.warn(format("schema:[%s] table:[%s] Not found", schemaName, tableName));
-                }
-            }
-        }
-        catch(SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        writeAllClasses(dbTool);
     }
 
     private Database crawl(Connection con, String schemaName, String tableName) {
@@ -121,9 +94,8 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
             }
             Database database = crawl(con, options);
 
-            logger.info(format("%-20s %-20s", "table_schema", "table_name"));
             for(Table table : database.getTables()) {
-              logger.info(format("%-20s %-20s", table.getSchema(), table.getName()));
+              logger.info(format("schema:%s, table:%s", table.getSchema(), table.getName()));
             }
         }
         catch(SQLException ex) {
@@ -131,24 +103,63 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
         }
     }
 
-    public void processAllTables(String schemaName) {
+    public void processAllTables(String... schemaNameList) {
+
+        DatabaseTool dbTool = new DatabaseTool(getPackageName(), getDatabaseClassName() );
         try (Connection con = ds.getConnection()) {
-            SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-            options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
-            options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
-            Database database = crawl(con, options);
+            for(String schemaName : schemaNameList) {
+                SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+                options.setSchemaInfoLevel(SchemaInfoLevel.minimum());
+                options.setSchemaInclusionRule(new RegularExpressionInclusionRule(schemaName));
+                Database database = crawl(con, options);
 
-            List<String> tableNames = new ArrayList<>();
+                List<String> tableNames = new ArrayList<>();
 
-            for(Table table : database.getTables(database.getSchema(schemaName))) {
-              tableNames.add(table.getName());
+                for(Table table : database.getTables(database.getSchema(schemaName))) {
+                  tableNames.add(table.getName());
+                }
+                logger.info("Found "+tableNames.size()+" tables");
+
+                prepareTableList(schemaName, tableNames, dbTool);
             }
-            logger.info("Found "+tableNames.size()+" tables");
-            processTableList(schemaName, tableNames);
+        }
+        catch(SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        writeAllClasses(dbTool);
+    }
+
+    public void processTableList(String schemaName, List<String> tableNames) {
+
+        DatabaseTool dbTool = new DatabaseTool(getPackageName(), getDatabaseClassName() );
+
+        prepareTableList(schemaName, tableNames, dbTool);
+
+        writeAllClasses(dbTool);
+    }
+
+    private void prepareTableList(String schemaName, List<String> tableNames,
+            DatabaseTool dbTool) {
+        try(Connection con = ds.getConnection()) {
+            for(String tableName : tableNames) {
+
+                Database database = crawl(con, schemaName, tableName);
+                Table table = database.getTable(database.getSchema(schemaName), tableName);
+                if (table != null) {
+                    TableToolImpl tableTool = createTableTool(getPackageName());
+                    tableTool.initialize(table);
+                    dbTool.add(tableTool);
+                    logger.info(format("Will process schema:[%s] table:[%s]", schemaName, tableName));
+                }
+                else {
+                    logger.warn(format("schema:[%s] table:[%s] Not found", schemaName, tableName));
+                }
+            }
         }
         catch(SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
+
 
 }
