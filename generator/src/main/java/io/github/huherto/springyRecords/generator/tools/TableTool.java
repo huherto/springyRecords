@@ -22,7 +22,7 @@ public interface TableTool {
 
     List<String> concreteRecordImports();
     
-    List<String> baseRecordImports();
+    Iterable<String> baseRecordImports();
 
     List<String> baseTableImports();
     

@@ -122,17 +122,18 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public List<String> baseRecordImports() {
-        Set<String> importSet = importsForColumns(getColumns());
+    public Iterable<String> baseRecordImports() {
+                
+        ImportSet importSet = new ImportSet(baseRecord().getPackageName());
+        
+        importSet.addImports(importsForColumns(getColumns()));
 
-        importSet.add("import java.util.HashMap;");
-        importSet.add("import java.util.Map;");
-        importSet.add("import java.sql.SQLException;");
-        importSet.add("import java.sql.ResultSet;");
+        importSet.addImport("import java.util.HashMap;");
+        importSet.addImport("import java.util.Map;");
+        importSet.addImport("import java.sql.SQLException;");
+        importSet.addImport("import java.sql.ResultSet;");
 
-        List<String> imports = new ArrayList<String>(importSet);
-        Collections.sort(imports);
-        return imports;
+        return importSet;
     }
 
     @Override
