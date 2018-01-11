@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
 public class {{baseDatabaseClassName}} extends JdbcDaoSupport {
 
     {{#tables}}
-    private {{concreteTableClassName}} {{tableInstanceName}} = null;
+    private {{concreteTable.className}} {{tableInstanceName}} = null;
     {{/tables}}
 
     protected {{baseDatabaseClassName}}(DataSource dataSource) {
@@ -15,9 +15,9 @@ public class {{baseDatabaseClassName}} extends JdbcDaoSupport {
     }
 
     {{#tables}}
-    public {{concreteTableClassName}} {{tableInstanceName}}() {
+    public {{concreteTable.className}} {{tableInstanceName}}() {
         if ({{tableInstanceName}} == null) {
-            {{tableInstanceName}} = new {{concreteTableClassName}}(getDataSource());
+            {{tableInstanceName}} = new {{concreteTable.className}}(getDataSource());
         }
         return {{tableInstanceName}};
     }

@@ -12,6 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import com.github.mustachejava.Mustache;
 import com.google.common.io.Files;
 
+import io.github.huherto.springyRecords.generator.tools.Clazz;
+
 public abstract class BaseClassWriter<T> implements ClassWriter<T> {
     
     protected static final Log logger = LogFactory.getLog(BaseClassWriter.class);
@@ -50,6 +52,11 @@ public abstract class BaseClassWriter<T> implements ClassWriter<T> {
         }
     }
 
+    public File sourceFile(Path sourceDir, Clazz clazz) {
+        return sourceFile(sourceDir, clazz.getPackageName(), clazz.getClassName());
+        
+    }
+    
 	public void writeCode(File sourceFile, Mustache template, T tool) {
 	    try {
 	        logger.info("Creating source "+sourceFile);

@@ -39,13 +39,16 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
 
     protected SimpleJdbcInsert buildInsert() {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(getJdbcTemplate());
-        return insert.withTableName(tableName());
+        insert.withTableName(tableName());
+        insert.withSchemaName(schemaName());
+        return insert;
     }
 
     protected final SimpleJdbcInsert buildInsert(String generatedKeyName) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(getJdbcTemplate());
-        insert.withTableName(tableName());
         insert.setGeneratedKeyName(generatedKeyName);
+        insert.withTableName(tableName());
+        insert.withSchemaName(schemaName());
         return insert;
     }
 
@@ -87,10 +90,16 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
     }
 
     public String selectStar() {
-        return "select * from "+tableName()+" ";
+        return "select * from "+fullTableName()+" ";
     }
 
-    public String tableName() { return null; }
+    public abstract String tableName();
+    
+    public abstract String schemaName();
+    
+    public String fullTableName() {
+        return schemaName() + "." + tableName();
+    }
 
     /** 
      * Support for queries with named parameters.

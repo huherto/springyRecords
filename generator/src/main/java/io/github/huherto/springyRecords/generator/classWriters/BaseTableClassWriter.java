@@ -22,10 +22,7 @@ public class BaseTableClassWriter extends BaseClassWriter<TableTool> {
 
     @Override
     public File sourceFile(TableTool tableTool) {
-        return
-                sourceFile(getMainSourceDir(),
-                        tableTool.baseTablePackageName(),
-                        tableTool.baseTableClassName());
+        return sourceFile(getMainSourceDir(), tableTool.baseTable() );
     }
 
     @Override

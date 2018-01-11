@@ -1,11 +1,11 @@
-package {{concreteTablePackageName}};
+package {{concreteTable.packageName}};
 
 {{#concreteTableImports}}
 {{toString}}
 {{/concreteTableImports}}
 
-public class {{concreteTableClassName}} extends {{baseTableClassName}} {
-    public {{concreteTableClassName}}(DataSource dataSource) {
+public class {{concreteTable.className}} extends {{baseTable.className}} {
+    public {{concreteTable.className}}(DataSource dataSource) {
         super(dataSource);
     }
 }

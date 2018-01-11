@@ -1,19 +1,19 @@
-package {{concreteRecordPackageName}};
+package {{concreteRecord.packageName}};
 
 {{#concreteRecordImports}}
 {{toString}}
 {{/concreteRecordImports}}
 
-public class {{concreteRecordClassName}} extends {{baseRecordClassName}} {
+public class {{concreteRecord.className}} extends {{baseRecord.className}} {
 
-    public {{concreteRecordClassName}}() {
+    public {{concreteRecord.className}}() {
     }
 
-    public {{concreteRecordClassName}}({{concreteRecordClassName}} other) {
+    public {{concreteRecord.className}}({{concreteRecord.className}} other) {
         super(other);
     }
 
-    public {{concreteRecordClassName}}(ResultSet rs, int rowNum) throws SQLException {
+    public {{concreteRecord.className}}(ResultSet rs, int rowNum) throws SQLException {
         super(rs, rowNum);
     }
 }

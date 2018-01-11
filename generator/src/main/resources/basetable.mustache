@@ -1,4 +1,4 @@
- package {{baseTablePackageName}};
+ package {{baseTable.packageName}};
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -7,21 +7,21 @@ import javax.sql.DataSource;
 {{toString}}
 {{/baseTableImports}}
 
-public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordClassName}}> {
+public class {{baseTable.className}} extends AbstractBaseTable<{{concreteRecord.className}}> {
 
-    private RowMapper<{{concreteRecordClassName}}> rm = new RowMapper<{{concreteRecordClassName}}>() {
+    private RowMapper<{{concreteRecord.className}}> rm = new RowMapper<{{concreteRecord.className}}>() {
         @Override
-        public {{concreteRecordClassName}} mapRow(ResultSet rs, int rowNum) throws SQLException {
-             return new {{concreteRecordClassName}}(rs, rowNum);
+        public {{concreteRecord.className}} mapRow(ResultSet rs, int rowNum) throws SQLException {
+             return new {{concreteRecord.className}}(rs, rowNum);
         }
     };
 
-    public {{baseTableClassName}}(DataSource dataSource) {
+    public {{baseTable.className}}(DataSource dataSource) {
         super(dataSource);
     }
 
     @Override
-    public RowMapper<{{concreteRecordClassName}}> rowMapper() {
+    public RowMapper<{{concreteRecord.className}}> rowMapper() {
         return rm;
     }
 
@@ -36,7 +36,7 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
     }
 
     {{#hasPrimaryKey}}
-    public Optional<{{concreteRecordClassName}}> findByPK({{pkMethodParameterList}}) {
+    public Optional<{{concreteRecord.className}}> findByPK({{pkMethodParameterList}}) {
         String sql =
             selectStar() +
             "where {{pkSqlCondition}} ";
@@ -46,7 +46,7 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
     {{/hasPrimaryKey}}
     
     {{#finderMethods}}
-    public List<{{concreteRecordClassName}}> {{methodName}}({{methodParameterList}}) {
+    public List<{{concreteRecord.className}}> {{methodName}}({{methodParameterList}}) {
         String sql =
             selectStar() +
             "where {{sqlCondition}} ";

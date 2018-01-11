@@ -1,12 +1,12 @@
-package {{concreteTablePackageName}};
+package {{concreteTable.packageName}};
 
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-public class {{concreteTableClassName}}IT extends BaseTableIT {
+public class {{concreteTable.className}}IT extends BaseTableIT {
 
-    public {{concreteTableClassName}} table() {
+    public {{concreteTable.className}} table() {
         return database().{{tableInstanceName}}();
     }
 

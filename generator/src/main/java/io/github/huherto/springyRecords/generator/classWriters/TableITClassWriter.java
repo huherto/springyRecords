@@ -24,8 +24,8 @@ public class TableITClassWriter extends BaseClassWriter<TableTool> {
     public File sourceFile(TableTool tableTool) {
         return
                 sourceFile(getTestSourceDir(),
-                        tableTool.concreteTablePackageName(),
-                        tableTool.concreteTableClassName() + "IT");
+                        tableTool.concreteTable().getPackageName(),
+                        tableTool.concreteTable().getClassName() + "IT");
     }
 
     @Override

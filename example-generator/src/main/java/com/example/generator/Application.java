@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -43,19 +42,18 @@ public class Application implements CommandLineRunner {
 	    // Base directory where code will be created.
 	    dbGenerator.setBaseDir(Paths.get("../example-generated"));
 	    
-	    // Use this to discover schemas and tables.
+	    // You could do this to discover schemas and tables.
 	    dbGenerator.printInformationSchema(null);
 
-	    // Use this if you only want a subset of tables in a schema.
+	    // You could do if you only want a subset of tables in a schema.
 	    dbGenerator.processTableList("PUBLIC.PUBLIC", asList("OWNER","PET"));
 
-	    // Use this if you want to generate code for all the tables in a schema.
+	    // You could do if you want to generate code for all the tables in a schema.
         dbGenerator.processAllTables("PUBLIC.PUBLIC");
 
     }
 
 	// Use this data source to create an embedded database.
-    @Bean
 	public DataSource dataSource() {
 
         // Replace this with your own datasource.
@@ -66,8 +64,7 @@ public class Application implements CommandLineRunner {
                 .build();	    	    
 	}
     
-    // Use this data source to connect to an existing database.
-    @Bean
+    // You can use something similar to this to connect to an existing database.
     public DataSource dataSource_plain() {
         
         SimpleDriverDataSource ds =

@@ -14,23 +14,19 @@ public interface TableTool {
     
     Clazz baseRecord();
 
-    String concreteRecordPackageName();
+    Clazz concreteRecord();
 
-    String concreteRecordClassName();
+    Clazz baseTable();
+
+    Clazz concreteTable();
 
     List<String> concreteRecordImports();
     
     List<String> baseRecordImports();
 
     List<String> baseTableImports();
-
-    String concreteTablePackageName();
-
-    String concreteTableClassName();
-
-    String baseTablePackageName();
-
-    String baseTableClassName();
+    
+    List<String> concreteTableImports();
 
     String tableInstanceName();
 
@@ -41,8 +37,6 @@ public interface TableTool {
     String pkMethodParameterList();
 
     String pkArgumentList();
-
-    List<String> concreteTableImports();
 
     List<FinderMethod> finderMethods();
 

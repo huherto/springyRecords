@@ -23,9 +23,9 @@ public class ConcreteRecordClassWriter extends BaseClassWriter<TableTool> {
     @Override
     public File sourceFile(TableTool tableTool) {
         return
-                sourceFile(getMainSourceDir(),
-                        tableTool.concreteRecordPackageName(),
-                        tableTool.concreteRecordClassName());
+                sourceFile(
+                        getMainSourceDir(),
+                        tableTool.concreteRecord());
     }
 
     @Override

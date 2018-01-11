@@ -30,6 +30,11 @@ public class BasePetTable extends AbstractBaseTable<PetRecord> {
     public String tableName() {
         return "PET";
     }
+    
+    @Override
+    public String schemaName() {
+        return "PUBLIC";
+    }
 
     public Optional<PetRecord> findByPK(String name) {
         String sql =

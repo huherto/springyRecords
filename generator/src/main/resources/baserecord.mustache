@@ -1,24 +1,24 @@
-package {{baseRecordPackageName}};
+package {{baseRecord.packageName}};
 
 {{#baseRecordImports}}
 {{toString}}
 {{/baseRecordImports}}
 
-public class {{baseRecordClassName}} implements BaseRecord {
+public class {{baseRecord.className}} implements BaseRecord {
     {{#columns}}
     private {{javaTypeName}} {{javaFieldName}};
     {{/columns}}
 
-    public {{baseRecordClassName}}() {
+    public {{baseRecord.className}}() {
     }
 
-    public {{baseRecordClassName}}({{baseRecordClassName}} other) {
+    public {{baseRecord.className}}({{baseRecord.className}} other) {
     {{#columns}}
         this.{{javaFieldName}} = other.{{javaFieldName}};
     {{/columns}}
     }
 
-    public {{baseRecordClassName}}(ResultSet rs, int rowNum) throws SQLException {
+    public {{baseRecord.className}}(ResultSet rs, int rowNum) throws SQLException {
     {{#columns}}
         this.{{javaFieldName}} = rs.{{{resultSetGetter}}};
     {{/columns}}

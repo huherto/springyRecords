@@ -43,6 +43,12 @@ public class TableToolImpl extends BaseTool implements TableTool {
     protected final ColumnList columns = new ColumnList();
     protected final ColumnList primaryKey = new ColumnList();
     protected final List<ColumnList> indexes = new ArrayList<>();
+    
+    // spring-jdbc
+    private Clazz baseRecord;
+    private Clazz concreteRecord;
+    private Clazz baseTable;
+    private Clazz concreteTable;
 
     public TableToolImpl(String packageName) {
         super(packageName);
@@ -50,12 +56,12 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     public void initialize(Table table) throws SQLException {
 
-        physicalName = table.getName();
-        logicalName = convertToCamelCase(physicalName, true);
-        schemaName = table.getSchema().getName();
+        this.physicalName = table.getName();
+        this.logicalName = convertToCamelCase(physicalName, true);
+        this.schemaName = table.getSchema().getName();
 
         for(schemacrawler.schema.Column column :table.getColumns() ) {
-            columns.add(new ColumnToolImpl(column));
+            this.columns.add(new ColumnToolImpl(column));
         }
 
         if (table.getPrimaryKey() == null) {
@@ -63,7 +69,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
         }
 
         for(schemacrawler.schema.Column column :table.getPrimaryKey().getColumns() ) {
-            primaryKey.add(new ColumnToolImpl(column));
+            this.primaryKey.add(new ColumnToolImpl(column));
         }
 
         for(schemacrawler.schema.Index index :table.getIndices() ) {
@@ -71,8 +77,13 @@ public class TableToolImpl extends BaseTool implements TableTool {
             for(schemacrawler.schema.Column column : index.getColumns() ) {
                 cols.add(new ColumnToolImpl(column));
             }
-            indexes.add(cols);
+            this.indexes.add(cols);
         }
+        
+        this.baseRecord     = new Clazz(getPackageNameForBaseTypes(), "Base" + logicalName + "Record");
+        this.concreteRecord = new Clazz(getPackageName(), logicalName  + "Record");
+        this.baseTable      = new Clazz(getPackageNameForBaseTypes(), "Base" + logicalName + "Table");
+        this.concreteTable  = new Clazz(getPackageName(), logicalName + "Table"); 
     }
 
     @Override
@@ -107,7 +118,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public Clazz baseRecord() {        
-        return new Clazz(getPackageNameForBaseTypes(), "Base" + concreteRecordClassName());
+        return baseRecord; 
     }
 
     @Override
@@ -125,19 +136,14 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public String concreteRecordPackageName() {
-        return getPackageName();
-    }
-
-    @Override
-    public String concreteRecordClassName() {
-        return logicalName  + "Record";
+    public Clazz concreteRecord() {
+        return concreteRecord;
     }
 
     @Override
     public List<String> concreteRecordImports() {
         Set<String> importSet = new HashSet<>();
-        if (!concreteRecordPackageName().equals(baseRecord().getPackageName())) {
+        if (!concreteRecord.samePackage(baseRecord)) {
             importSet.add(makeImport(baseRecord()));
         }
         importSet.add("import java.sql.SQLException;");
@@ -149,13 +155,8 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public String baseTablePackageName() {
-        return getPackageNameForBaseTypes();
-    }
-
-    @Override
-    public String baseTableClassName() {
-        return "Base" + logicalName + "Table";
+    public Clazz baseTable() {
+        return baseTable;
     }
 
     @Override
@@ -165,8 +166,8 @@ public class TableToolImpl extends BaseTool implements TableTool {
             importSet = importsForColumns(primaryKey);
             importSet.add("import java.util.Optional;");
         }
-        if (!baseTablePackageName().equals(concreteRecordPackageName())) {
-            importSet.add(makeImport(concreteRecordPackageName(), concreteRecordClassName()));
+        if (!baseTable.samePackage(concreteRecord)) {
+            importSet.add(makeImport(concreteRecord.getPackageName(), concreteRecord.getClassName()));
         }
         if (finderMethods().size() > 0) {
             importSet.add("import java.util.List;");
@@ -177,22 +178,17 @@ public class TableToolImpl extends BaseTool implements TableTool {
         Collections.sort(imports);
         return imports;
     }
-
+    
     @Override
-    public String concreteTablePackageName() {
-        return getPackageName();
-    }
-
-    @Override
-    public String concreteTableClassName() {
-        return logicalName + "Table";
+    public Clazz concreteTable() {
+        return concreteTable;
     }
 
     @Override
     public List<String> concreteTableImports() {
         Set<String> importSet = new HashSet<>();
-        if (!concreteTablePackageName().equals(baseTablePackageName())) {
-            importSet.add(makeImport(baseTablePackageName(), baseTableClassName()));
+        if (!concreteTable.samePackage(baseTable)) {
+            importSet.add(makeImport(baseTable));
         }
         importSet.add("import javax.sql.DataSource;");
 
@@ -203,7 +199,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
     @Override
     public String tableInstanceName() {
-        return lowerCaseFirst(concreteTableClassName());
+        return lowerCaseFirst(concreteTable.getClassName());
     }
 
     private static Set<String> importsForColumns(List<ColumnTool> cols) {
