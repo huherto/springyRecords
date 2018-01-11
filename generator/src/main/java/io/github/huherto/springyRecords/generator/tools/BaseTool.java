@@ -6,7 +6,7 @@ import java.lang.reflect.Modifier;
 public class BaseTool {
 
     protected String packageName;
-    
+
     public BaseTool(String packageName) {
         this.packageName = packageName;
     }
@@ -56,8 +56,15 @@ public class BaseTool {
         if (typeName.equals("decimal"))
             return "BigDecimal";
 
-        if (typeName.equals("int") || typeName.equals("smallint") || typeName.equals("tinyint") || typeName.equals("integer"))
+        switch(typeName) {
+            case "int":
+            case "smallint":
+            case "tinyint":
+            case "integer":
+            case "int4":
             return nullable?"Integer":"int";
+        }
+
         if (typeName.equals("int identity"))
             return "int";
 

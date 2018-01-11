@@ -27,7 +27,12 @@ public class {{baseTableClassName}} extends AbstractBaseTable<{{concreteRecordCl
 
     @Override
     public String tableName() {
-        return "{{fullTableName}}";
+        return "{{tableName}}";
+    }
+    
+    @Override
+    public String schemaName() {
+        return "{{schemaName}}";
     }
 
     {{#hasPrimaryKey}}

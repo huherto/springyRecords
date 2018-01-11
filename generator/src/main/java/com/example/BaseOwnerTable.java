@@ -30,6 +30,11 @@ public class BaseOwnerTable extends AbstractBaseTable<OwnerRecord> {
     public String tableName() {
         return "OWNER";
     }
+    
+    @Override
+    public String schemaName() {
+        return "PUBLIC";
+    }
 
     public Optional<OwnerRecord> findByPK(int ownerId) {
         String sql =

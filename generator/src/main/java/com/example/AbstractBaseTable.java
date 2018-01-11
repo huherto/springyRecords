@@ -8,9 +8,11 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+
 
 public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSupport {
 
@@ -37,13 +39,16 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
 
     protected SimpleJdbcInsert buildInsert() {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(getJdbcTemplate());
-        return insert.withTableName(tableName());
+        insert.withTableName(tableName());
+        insert.withSchemaName(schemaName());
+        return insert;
     }
 
     protected final SimpleJdbcInsert buildInsert(String generatedKeyName) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(getJdbcTemplate());
-        insert.withTableName(tableName());
         insert.setGeneratedKeyName(generatedKeyName);
+        insert.withTableName(tableName());
+        insert.withSchemaName(schemaName());
         return insert;
     }
 
@@ -67,7 +72,7 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
     }
 
     protected Optional<R> optionalSingle(String sql, Object...args) {
-        return Optional.of(DataAccessUtils.singleResult(query(sql, args)));
+        return Optional.ofNullable(DataAccessUtils.singleResult(query(sql, args)));
     }
 
     protected R requiredSingle(String sql, Object...args) {
@@ -85,9 +90,49 @@ public abstract class  AbstractBaseTable<R extends BaseRecord> extends JdbcDaoSu
     }
 
     public String selectStar() {
-        return "select * from "+tableName()+" ";
+        return "select * from "+fullTableName()+" ";
     }
 
-    public String tableName() { return null; }
+    public abstract String tableName();
+    
+    public abstract String schemaName();
+    
+    public String fullTableName() {
+        return schemaName() + "." + tableName();
+    }
 
+    /** 
+     * Support for queries with named parameters.
+     */
+     
+    public static class ParamValue {
+        private String name;
+        private  Object value;
+        
+        
+        public ParamValue(String name, Object value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Object getValue() {
+            return value;
+        }    
+    }
+    
+    public static ParamValue param(String name, Object value) {
+        return new ParamValue(name, value);
+    }
+    
+    public List<R> namedQuery(String sql, ParamValue... args) {
+        MapSqlParameterSource source = new MapSqlParameterSource();
+        for(ParamValue pv : args) {
+            source.addValue(pv.getName(), pv.getValue());
+        }
+        return this.getNamedTemplate().query(sql, source ,rowMapper() );        
+    }
 }

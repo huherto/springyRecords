@@ -52,6 +52,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
 
         physicalName = table.getName();
         logicalName = convertToCamelCase(physicalName, true);
+        schemaName = table.getSchema().getName();
 
         for(schemacrawler.schema.Column column :table.getColumns() ) {
             columns.add(new ColumnToolImpl(column));

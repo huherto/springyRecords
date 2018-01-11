@@ -118,7 +118,7 @@ public class SchemaCrawlerGenerator extends AbstractGenerator {
                 for(Table table : database.getTables(database.getSchema(schemaName))) {
                   tableNames.add(table.getName());
                 }
-                logger.info("Found "+tableNames.size()+" tables");
+                logger.info("Schema:"+schemaName+" found "+tableNames.size()+" tables");
 
                 prepareTableList(schemaName, tableNames, dbTool);
             }

@@ -15,6 +15,7 @@ public class ABTableClassWriter extends BaseClassWriter<DatabaseTool> {
         super(baseDir);
     }
 
+    @Override
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
         return mf.compile("abtable.mustache");
@@ -29,7 +30,7 @@ public class ABTableClassWriter extends BaseClassWriter<DatabaseTool> {
 
     @Override
     public boolean overwriteExistingFile() {
-        return false;
+        return true;
     }
 
 }

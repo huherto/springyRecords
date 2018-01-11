@@ -82,12 +82,12 @@ public class ColumnToolImpl extends BaseTool implements ColumnTool {
     public boolean isAutoincrement() {
         return isAutoincrement;
     }
-    
-    @Override 
+
+    @Override
     public String dataTypeName() {
         return dataTypeName;
     }
-    
+
     @Override
     public int dataTypeSize() {
         return dataTypeSize;
