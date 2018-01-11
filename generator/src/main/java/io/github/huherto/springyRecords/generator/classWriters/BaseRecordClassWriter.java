@@ -24,8 +24,8 @@ public class BaseRecordClassWriter extends BaseClassWriter<TableTool> {
     public File sourceFile(TableTool tableTool) {
         return
             sourceFile(getMainSourceDir(),
-                    tableTool.baseRecordPackageName(),
-                    tableTool.baseRecordClassName());
+                    tableTool.baseRecord().getPackageName(),
+                    tableTool.baseRecord().getClassName());
     }
 
     @Override

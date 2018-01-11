@@ -100,15 +100,14 @@ public class TableToolImpl extends BaseTool implements TableTool {
     private static String makeImport(String packageName, String className) {
         return format("import %s.%s;",packageName, className);
     }
-
-    @Override
-    public String baseRecordPackageName() {
-        return getPackageNameForBaseTypes();
+    
+    private static String makeImport(Clazz clazz) {
+        return format("import %s;", clazz);
     }
 
     @Override
-    public String baseRecordClassName() {
-        return "Base" + concreteRecordClassName();
+    public Clazz baseRecord() {        
+        return new Clazz(getPackageNameForBaseTypes(), "Base" + concreteRecordClassName());
     }
 
     @Override
@@ -138,8 +137,8 @@ public class TableToolImpl extends BaseTool implements TableTool {
     @Override
     public List<String> concreteRecordImports() {
         Set<String> importSet = new HashSet<>();
-        if (!concreteRecordPackageName().equals(baseRecordPackageName())) {
-            importSet.add(makeImport(baseRecordPackageName(), baseRecordClassName()));
+        if (!concreteRecordPackageName().equals(baseRecord().getPackageName())) {
+            importSet.add(makeImport(baseRecord()));
         }
         importSet.add("import java.sql.SQLException;");
         importSet.add("import java.sql.ResultSet;");

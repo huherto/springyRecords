@@ -12,9 +12,7 @@ public interface TableTool {
     
     String fullTableName();
     
-    String baseRecordPackageName();
-
-    String baseRecordClassName();
+    Clazz baseRecord();
 
     String concreteRecordPackageName();
 

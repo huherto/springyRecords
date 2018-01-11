@@ -55,6 +55,8 @@ public class BaseTool {
             return "BigDecimal";
         if (typeName.equals("decimal"))
             return "BigDecimal";
+        if (typeName.equals("number"))
+            return "BigDecimal";
 
         switch(typeName) {
             case "int":
