@@ -108,10 +108,6 @@ public class TableToolImpl extends BaseTool implements TableTool {
         return physicalName;
     }
 
-    private static String makeImport(String packageName, String className) {
-        return format("import %s.%s;",packageName, className);
-    }
-    
     private static String makeImport(Clazz clazz) {
         return format("import %s;", clazz);
     }
@@ -124,14 +120,14 @@ public class TableToolImpl extends BaseTool implements TableTool {
     @Override
     public Iterable<String> baseRecordImports() {
                 
-        ImportSet importSet = new ImportSet(baseRecord().getPackageName());
+        ImportSet importSet = new ImportSet(baseRecord());
         
         importSet.addImports(importsForColumns(getColumns()));
 
-        importSet.addImport("import java.util.HashMap;");
-        importSet.addImport("import java.util.Map;");
-        importSet.addImport("import java.sql.SQLException;");
-        importSet.addImport("import java.sql.ResultSet;");
+        importSet.addImport("java.util","HashMap");
+        importSet.addImport("java.util", "Map");
+        importSet.addImport("java.sql","SQLException");
+        importSet.addImport("java.sql","ResultSet");
 
         return importSet;
     }
@@ -142,17 +138,14 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public List<String> concreteRecordImports() {
-        Set<String> importSet = new HashSet<>();
-        if (!concreteRecord.samePackage(baseRecord)) {
-            importSet.add(makeImport(baseRecord()));
-        }
-        importSet.add("import java.sql.SQLException;");
-        importSet.add("import java.sql.ResultSet;");
+    public Iterable<String> concreteRecordImports() {
+        
+        ImportSet importSet = new ImportSet(concreteRecord);
+        importSet.addImport(baseRecord());
+        importSet.addImport("java.sql", "SQLException");
+        importSet.addImport("java.sql", "ResultSet");
 
-        List<String> imports = new ArrayList<String>(importSet);
-        Collections.sort(imports);
-        return imports;
+        return importSet;
     }
 
     @Override
@@ -161,23 +154,19 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public List<String> baseTableImports() {
-        Set<String> importSet = new HashSet<String>();
+    public Iterable<String> baseTableImports() {
+        ImportSet importSet = new ImportSet(baseTable);
         if (hasPrimaryKey()) {
-            importSet = importsForColumns(primaryKey);
-            importSet.add("import java.util.Optional;");
+            importSet.addImports(importsForColumns(primaryKey));
+            importSet.addImport("java.util","Optional");
         }
-        if (!baseTable.samePackage(concreteRecord)) {
-            importSet.add(makeImport(concreteRecord.getPackageName(), concreteRecord.getClassName()));
-        }
+        importSet.addImport(concreteRecord);
         if (finderMethods().size() > 0) {
-            importSet.add("import java.util.List;");
+            importSet.addImport("java.util","List");
         }
-        importSet.add("import java.sql.SQLException;");
-        importSet.add("import java.sql.ResultSet;");
-        List<String> imports = new ArrayList<String>(importSet);
-        Collections.sort(imports);
-        return imports;
+        importSet.addImport("java.sql","SQLException");
+        importSet.addImport("java.sql","ResultSet");        
+        return importSet;
     }
     
     @Override
@@ -186,16 +175,13 @@ public class TableToolImpl extends BaseTool implements TableTool {
     }
 
     @Override
-    public List<String> concreteTableImports() {
-        Set<String> importSet = new HashSet<>();
-        if (!concreteTable.samePackage(baseTable)) {
-            importSet.add(makeImport(baseTable));
-        }
-        importSet.add("import javax.sql.DataSource;");
+    public Iterable<String> concreteTableImports() {
+        
+        ImportSet importSet = new ImportSet(concreteTable());
+        importSet.addImport(baseTable);
+        importSet.addImport("javax.sql","DataSource");
 
-        List<String> imports = new ArrayList<String>(importSet);
-        Collections.sort(imports);
-        return imports;
+        return importSet;
     }
 
     @Override
@@ -203,20 +189,20 @@ public class TableToolImpl extends BaseTool implements TableTool {
         return lowerCaseFirst(concreteTable.getClassName());
     }
 
-    private static Set<String> importsForColumns(List<ColumnTool> cols) {
-        Set<String> importSet = new HashSet<String>();
+    private static List<Clazz> importsForColumns(List<ColumnTool> cols) {
+        List<Clazz> importSet = new ArrayList<Clazz>();
         for(ColumnTool column :  cols ) {
             String javaTypeName = column.javaTypeName();
             if (javaTypeName.contains("BigDecimal"))
-                importSet.add("import java.math.BigDecimal;");
+                importSet.add(new Clazz("java.math","BigDecimal"));
             if (javaTypeName.contains("Date"))
-                importSet.add("import java.util.Date;");
+                importSet.add(new Clazz("java.util","Date"));
             if (javaTypeName.contains("Timestamp"))
-                importSet.add("import java.sql.Timestamp;");
+                importSet.add(new Clazz("java.sql","Timestamp"));
             if (javaTypeName.contains("Blob"))
-                importSet.add("import java.sql.Blob;");
+                importSet.add(new Clazz("java.sql","Blob"));
             if (javaTypeName.contains("Clob"))
-                importSet.add("import java.sql.Clob;");
+                importSet.add(new Clazz("java.sql","Clob"));
         }
         return importSet;
     }

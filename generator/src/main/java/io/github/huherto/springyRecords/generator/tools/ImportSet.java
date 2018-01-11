@@ -9,24 +9,27 @@ import java.util.Set;
 
 public class ImportSet implements Iterable<String> {
 
-    private String myPackageName;
+    private Clazz myClazz;
     
     private Set<String> imports = new HashSet<>();
     
-    public ImportSet(String myPackageName) {
-        this.myPackageName = myPackageName;        
+    public ImportSet(Clazz clazz) {
+        this.myClazz = clazz;        
     }
-    
-    public void addImport(String importLine) {
-        importLine = importLine.trim();
-        if (myPackageName.isEmpty() || !importLine.endsWith(myPackageName + ";")) {
-            imports.add(importLine);
+
+    public void addImport(Clazz clazz) {
+        if (myClazz.getPackageName().isEmpty() || !myClazz.samePackage(clazz)) {
+            imports.add(String.format("import %s;", clazz.getFullname()));
         }        
     }
     
-    public void addImports(Iterable<String> importLines) {
+    public void addImport(String packageName, String className) {
+        addImport(new Clazz(packageName, className));
+    }
+
+    public void addImports(Iterable<Clazz> importLines) {
         
-        for(String importLine : importLines) {
+        for(Clazz importLine : importLines) {
             addImport(importLine);
         }
         

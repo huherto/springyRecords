@@ -20,13 +20,13 @@ public interface TableTool {
 
     Clazz concreteTable();
 
-    List<String> concreteRecordImports();
+    Iterable<String> concreteRecordImports();
     
     Iterable<String> baseRecordImports();
 
-    List<String> baseTableImports();
+    Iterable<String> baseTableImports();
     
-    List<String> concreteTableImports();
+    Iterable<String> concreteTableImports();
 
     String tableInstanceName();
 

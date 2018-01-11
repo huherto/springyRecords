@@ -7,8 +7,8 @@ public class Clazz {
     private final String className;
 
     public Clazz(String packageName, String className) {
-        this.packageName = packageName;
-        this.className = className;
+        this.packageName = packageName.trim();
+        this.className = className.trim();
     }
 
     public String getPackageName() {
