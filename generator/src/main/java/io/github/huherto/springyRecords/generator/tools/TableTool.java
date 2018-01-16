@@ -40,4 +40,6 @@ public interface TableTool {
 
     List<FinderMethod> finderMethods();
 
+    Clazz concreteEntity();
+
 }

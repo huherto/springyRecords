@@ -14,6 +14,7 @@ import io.github.huherto.springyRecords.generator.classWriters.ClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.ConcreteRecordClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.ConcreteTableClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.DatabaseClassWriter;
+import io.github.huherto.springyRecords.generator.classWriters.EntityClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.InterfaceRecordClassWriter;
 import io.github.huherto.springyRecords.generator.classWriters.TableITClassWriter;
 import io.github.huherto.springyRecords.generator.tools.DatabaseTool;
@@ -57,7 +58,11 @@ public class AbstractGenerator {
       baseDir = path;
     }
 
-    protected void registerClassWriters() {        
+    protected void registerClassWriters() {      
+        registerSpringJdbcClassWriters();
+    }
+    
+    protected void registerSpringJdbcClassWriters() {
         addClassWriterForTable(new BaseRecordClassWriter(getBaseDir()));
         addClassWriterForTable(new ConcreteRecordClassWriter(getBaseDir()));
         addClassWriterForTable(new BaseTableClassWriter(getBaseDir()));
@@ -68,6 +73,10 @@ public class AbstractGenerator {
         addClassWriter(new InterfaceRecordClassWriter(getBaseDir()));
         addClassWriter(new BaseDatabaseClassWriter(getBaseDir()));        
         addClassWriter(new BTableITClassWriter(getBaseDir()));        
+    }
+    
+    protected void registerJpaClassWriters() {
+        addClassWriterForTable(new EntityClassWriter(getBaseDir()));
     }
     
     public void writeAllClasses(DatabaseTool dbTool) {

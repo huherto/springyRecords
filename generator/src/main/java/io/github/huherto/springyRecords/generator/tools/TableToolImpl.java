@@ -49,6 +49,9 @@ public class TableToolImpl extends BaseTool implements TableTool {
     private Clazz concreteRecord;
     private Clazz baseTable;
     private Clazz concreteTable;
+    
+    // spring-jpa
+    private Clazz concreteEntity;
 
     public TableToolImpl(String packageName) {
         super(packageName);
@@ -83,7 +86,8 @@ public class TableToolImpl extends BaseTool implements TableTool {
         this.baseRecord     = new Clazz(getPackageNameForBaseTypes(), "Base" + logicalName + "Record");
         this.concreteRecord = new Clazz(getPackageName(), logicalName  + "Record");
         this.baseTable      = new Clazz(getPackageNameForBaseTypes(), "Base" + logicalName + "Table");
-        this.concreteTable  = new Clazz(getPackageName(), logicalName + "Table"); 
+        this.concreteTable  = new Clazz(getPackageName(), logicalName + "Table");         
+        this.concreteEntity = new Clazz(getPackageName(), logicalName + "Entity" );
     }
 
     @Override
@@ -258,6 +262,11 @@ public class TableToolImpl extends BaseTool implements TableTool {
             return schemaName + "." + tableName();
         }
         return tableName();
+    }
+
+    @Override
+    public Clazz concreteEntity() {
+        return concreteEntity;
     }
 
 }
