@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator.classWriters;
+package io.github.huherto.springyRecords.generator.classWriters.springjdbc;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -9,25 +9,28 @@ import com.github.mustachejava.MustacheFactory;
 
 import io.github.huherto.springyRecords.generator.tools.TableTool;
 
-public class BaseTableClassWriter extends BaseClassWriter<TableTool> {
+public class TableITClassWriter extends BaseClassWriter<TableTool> {
 
-	public BaseTableClassWriter(Path baseDir) {
+    public TableITClassWriter(Path baseDir) {
         super(baseDir);
     }
 
     public Mustache createTemplate() {
         MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("basetable.mustache");
+        return mf.compile("tableit.mustache");
     }
 
     @Override
     public File sourceFile(TableTool tableTool) {
-        return sourceFile(getMainSourceDir(), tableTool.baseTable() );
+        return
+                sourceFile(getTestSourceDir(),
+                        tableTool.concreteTable().getPackageName(),
+                        tableTool.concreteTable().getClassName() + "IT");
     }
 
     @Override
     public boolean overwriteExistingFile() {
-        return true;
+        return false;
     }
 
 }

@@ -1,4 +1,4 @@
-package io.github.huherto.springyRecords.generator.classWriters;
+package io.github.huherto.springyRecords.generator.classWriters.springjdbc;
 
 import java.io.File;
 import java.nio.file.Path;
