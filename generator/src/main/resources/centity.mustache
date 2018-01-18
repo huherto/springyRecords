@@ -4,13 +4,28 @@ package {{concreteEntity.packageName}};
 {{toString}}
 {{/concreteEntityImports}}
 
+@Entity
 public class {{concreteEntity.className}} {
+
+    {{#columns}}
+    private {{javaTypeName}} {{javaFieldName}};
+    {{/columns}}
 
     public {{concreteEntity.className}}() {
     }
 
     public {{concreteEntity.className}}({{concreteEntity.className}} other) {
-        super(other);
     }
+
+    {{#columns}}
+    public {{javaTypeName}} {{getterName}}() {
+        return {{javaFieldName}};
+    }
+
+    public void {{setterName}}({{javaTypeName}} {{javaFieldName}}) {
+        this.{{javaFieldName}} = {{javaFieldName}};
+    }
+
+    {{/columns}}
 
 }

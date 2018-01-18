@@ -23,11 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-import static java.lang.String.format;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -112,10 +109,6 @@ public class TableToolImpl extends BaseTool implements TableTool {
         return physicalName;
     }
 
-    private static String makeImport(Clazz clazz) {
-        return format("import %s;", clazz);
-    }
-
     @Override
     public Clazz baseRecord() {        
         return baseRecord; 
@@ -193,7 +186,7 @@ public class TableToolImpl extends BaseTool implements TableTool {
         return lowerCaseFirst(concreteTable.getClassName());
     }
 
-    private static List<Clazz> importsForColumns(List<ColumnTool> cols) {
+    public static List<Clazz> importsForColumns(List<ColumnTool> cols) {
         List<Clazz> importSet = new ArrayList<Clazz>();
         for(ColumnTool column :  cols ) {
             String javaTypeName = column.javaTypeName();
